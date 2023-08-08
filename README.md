@@ -1,1 +1,1 @@
-Horloge + Detection de mouvement + detection de luminosité
+Horloge + Detection de mouvement + detection de luminositÃ©.
