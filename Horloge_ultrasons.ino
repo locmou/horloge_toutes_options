@@ -30,49 +30,43 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 BigFont02_I2C     big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
-#define BRIGHTNESS_PIN      6   // Must be a PWM pin
+#define BRIGHTNESS_PIN  6   // Must be a PWM pin
 #define LDR A7  // composante photorésistance sur la pin A7
 
 int h,m,s,mes,bright,wait=300;
 
 void setup (){     
-    Rtc.Begin();
-    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    RtcDateTime now = Rtc.GetDateTime();
+Rtc.Begin();
+RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+RtcDateTime now = Rtc.GetDateTime();
     
-    //Serial.begin(57600);
-     // Mise à l'heure
-     /*
-    if (now < compiled) 
-    {
-        Serial.println("RTC is older than compile time!  (Updating DateTime)");
-        Rtc.SetDateTime(compiled);
-    }*/
+//Serial.begin(57600);
+// Mise à l'heure
+/*
+if (now < compiled) 
+{
+    Serial.println("RTC is older than compile time!  (Updating DateTime)");
+    Rtc.SetDateTime(compiled);
+}*/
 
-
-
-    lcd.init(); // initialisation de l’afficheur
-    big.begin();
-    lcd.backlight();
-    Retroeclairage();
+lcd.init(); // initialisation de l’afficheur
+big.begin();
+lcd.backlight();
+Retroeclairage();
 }
 
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
-    bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
-    //Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
-    analogWrite(BRIGHTNESS_PIN, bright);
+bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
+//Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
+analogWrite(BRIGHTNESS_PIN, bright);
 }
 
 void loop (){
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;mes=(int)distanceSensor.measureDistanceCm()+1;
     delay (1000);
-    wait--;
-    if (wait<0) {
-      wait=0;
-      analogWrite(BRIGHTNESS_PIN, 0);
-      }
+
          
 // Affichage heure minutes
     big.writeint(0,0,h,2,true); 
@@ -90,8 +84,14 @@ void loop (){
     lcd.print(now.Month(), DEC);
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
-  if (mes<50 and mes!=0) {
+if (mes<50 and mes!=0) {
     Retroeclairage();
     wait=300;
+    }
+
+wait--;
+if (wait<0) {
+    wait=0;
+    analogWrite(BRIGHTNESS_PIN, 0);
     }
 }
