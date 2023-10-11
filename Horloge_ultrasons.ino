@@ -35,8 +35,7 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 
 int h,m,s,mes,bright,wait=300;
 
-void setup () 
-{     
+void setup (){     
     Rtc.Begin();
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
     RtcDateTime now = Rtc.GetDateTime();
@@ -51,18 +50,21 @@ void setup ()
     }*/
 
 
+
     lcd.init(); // initialisation de l’afficheur
     big.begin();
     lcd.backlight();
-    /*//réglage de l'intensité lumineus du LCD selon la lumière ambiante
+    Retroeclairage();
+}
+
+void Retroeclairage(){
+//réglage de l'intensité lumineus du LCD selon la lumière ambiante
     bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
     //Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
     analogWrite(BRIGHTNESS_PIN, bright);
-    */
 }
 
-void loop ()
-{
+void loop (){
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;mes=(int)distanceSensor.measureDistanceCm()+1;
     delay (1000);
@@ -89,10 +91,7 @@ void loop ()
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
   if (mes<50 and mes!=0) {
+    Retroeclairage();
     wait=300;
-    //réglage de l'intensité lumineus du LCD selon la lumière ambiante
-    bright=255-(analogRead(LDR)/4);
-    if (bright<=0) bright=5;
-    analogWrite(BRIGHTNESS_PIN, bright);
     }
 }
