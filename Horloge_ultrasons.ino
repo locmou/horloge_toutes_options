@@ -50,13 +50,15 @@ void setup ()
         Rtc.SetDateTime(compiled);
     }*/
 
+
     lcd.init(); // initialisation de l’afficheur
     big.begin();
     lcd.backlight();
-    //réglage de l'intensité lumineus du LCD selon la lumière ambiante
+    /*//réglage de l'intensité lumineus du LCD selon la lumière ambiante
     bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
     //Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
     analogWrite(BRIGHTNESS_PIN, bright);
+    */
 }
 
 void loop ()
