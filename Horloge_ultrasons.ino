@@ -37,7 +37,7 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 #define BRIGHTNESS_PIN  6   // Must be a PWM pin
 #define LDR A7  // composante photorésistance sur la pin A7
 
-int h,m,s,mes,bright,wait=300;
+int h,m,s,jr,mo,an,mes,bright,wait=300;
 
 void setup (){     
 Rtc.Begin();
@@ -68,7 +68,8 @@ if (IrReceiver.decode())  telecir(IrReceiver.decodedIRData.decodedRawData);
  
 // Requete heure 
     RtcDateTime now = Rtc.GetDateTime();    
-    h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;mes=(int)distanceSensor.measureDistanceCm()+1;
+    h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
+    mes=(int)distanceSensor.measureDistanceCm()+1;
     delay (1000);
         
 // Affichage heure minutes
@@ -80,11 +81,11 @@ if (IrReceiver.decode())  telecir(IrReceiver.decodedIRData.decodedRawData);
     lcd.print(s);
 //Affiche jour mois
     lcd.setCursor(12,1);
-    if (now.Day()<10) lcd.print(" "); 
-    lcd.print(now.Day(), DEC);
+    if (jr<10) lcd.print(" "); 
+    lcd.print(jr);
     lcd.setCursor(14,1);
-    if (now.Month()<10) lcd.print(" "); 
-    lcd.print(now.Month(), DEC);
+    if (mo<10) lcd.print(" "); 
+    lcd.print(mo);
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
