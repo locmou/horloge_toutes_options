@@ -38,7 +38,7 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 #define LDR A7  // composante photorésistance sur la pin A7
 
 int h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
-unsigned long touch;
+//unsigned long int touch=0;
 
 void setup (){     
 Rtc.Begin();
