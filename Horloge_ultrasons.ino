@@ -49,14 +49,6 @@ Serial.begin(57600);
 //irrecv.enableIRIn(); // Start the receiver
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
 
-// Mise à l'heure
-/*
-if (now < compiled) 
-{
-    Serial.println("RTC is older than compile time!  (Updating DateTime)");
-    Rtc.SetDateTime(compiled);
-}*/
-
 lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
