@@ -37,7 +37,7 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 #define BRIGHTNESS_PIN  6   // Must be a PWM pin
 #define LDR A7  // composante photorésistance sur la pin A7
 
-int h,m,s,jr,mo,an,mes,bright,wait=300;
+int h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 
 void setup (){     
 Rtc.Begin();
@@ -64,14 +64,21 @@ Retroeclairage();
 
 void loop (){
 // reception infrarouge        
-if (IrReceiver.decode())  telecir(IrReceiver.decodedIRData.decodedRawData);
- 
+if (IrReceiver.decode())  {
+   telecir(IrReceiver.decodedIRData.decodedRawData);
+   mode=1;
+} else {
+    mode=0;
+}
+
+if (mode==1) reglageheure;
+
+if (mode==0) {
 // Requete heure 
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
     mes=(int)distanceSensor.measureDistanceCm()+1;
-    delay (1000);
-        
+    delay (1000);      
 // Affichage heure minutes
     big.writeint(0,0,h,2,true); 
     big.writeint(0,6,m,2,true); 
@@ -86,6 +93,7 @@ if (IrReceiver.decode())  telecir(IrReceiver.decodedIRData.decodedRawData);
     lcd.setCursor(14,1);
     if (mo<10) lcd.print(" "); 
     lcd.print(mo);
+}
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
@@ -132,4 +140,8 @@ void telecir(unsigned long(touch))
   if (touch==2907897600) Serial.println("8");  
   if (touch==3041591040) Serial.println("9");
  IrReceiver.resume(); // Receive the next value
+}
+
+void reglageheure(){
+
 }
