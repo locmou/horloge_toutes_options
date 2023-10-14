@@ -14,7 +14,7 @@ RtcDS1302<ThreeWire> Rtc(myWire);
 
 #include <IRremote.h>
 //int RECV_PIN = 5; //define input pin on Arduino
-unsigned long touch;
+
 
 // Detecteur ultrasons
 #include <HCSR04.h>
@@ -38,7 +38,8 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 #define LDR A7  // composante photorésistance sur la pin A7
 
 int h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
-//unsigned long int touch=0;
+unsigned long touch;
+String com;
 
 void setup (){     
 Rtc.Begin();
@@ -64,10 +65,49 @@ if (IrReceiver.decode())  {
     mode=0;
 }
 
-if (mode==1) reglageheure;
+if (mode==1) reglageheure();
 
-if (mode==0) {
-// Requete heure 
+if (mode==0) affichheure();
+
+}
+
+void Retroeclairage(){
+//réglage de l'intensité lumineus du LCD selon la lumière ambiante
+bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
+//Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
+analogWrite(BRIGHTNESS_PIN, bright);
+}
+
+void telecir(unsigned long(touch))
+{
+   //Serial.println(touch);
+  if (touch==3125149440) com="ch-";
+  if (touch==3108437760) com="ch"; 
+  if (touch==3091726080) com="ch+"; 
+  if (touch==3141861120) com="tr-";  
+  if (touch==3208707840) com="tr+";
+  if (touch==3158572800) com="pl"; 
+  if (touch==4161273600) com="v-"; 
+  if (touch==3927310080) com="v+";
+  if (touch==4127850240) com="eq";
+  if (touch==3910598400) com="0"; 
+  if (touch==3860463360) com="+100"; 
+  if (touch==4061003520) com="+200";  
+  if (touch==4077715200) com="1";
+  if (touch==3877175040) com="2"; 
+  if (touch==2707357440) com="3"; 
+  if (touch==4144561920) com="4";
+  if (touch==3810328320) com="5";
+  if (touch==2774204160) com="6"; 
+  if (touch==3175284480) com="7"; 
+  if (touch==2907897600) com="8";  
+  if (touch==3041591040) com="9";
+  Serial.println (com);
+ IrReceiver.resume(); // Receive the next value
+}
+
+void affichheure(){
+  // Requete heure 
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
     mes=(int)distanceSensor.measureDistanceCm()+1;
@@ -86,7 +126,7 @@ if (mode==0) {
     lcd.setCursor(14,1);
     if (mo<10) lcd.print(" "); 
     lcd.print(mo);
-}
+
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
@@ -99,40 +139,6 @@ if (wait<0) {
     wait=0;
     analogWrite(BRIGHTNESS_PIN, 0);
     }
-}
-
-void Retroeclairage(){
-//réglage de l'intensité lumineus du LCD selon la lumière ambiante
-bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
-//Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
-analogWrite(BRIGHTNESS_PIN, bright);
-}
-
-void telecir(unsigned long(touch))
-{
-   //Serial.println(touch);
-  if (touch==3125149440) Serial.println("ch-");
-  if (touch==3108437760) Serial.println("ch"); 
-  if (touch==3091726080) Serial.println("ch+"); 
-  if (touch==3141861120) Serial.println("tr-");  
-  if (touch==3208707840) Serial.println("tr+");
-  if (touch==3158572800) Serial.println("pl"); 
-  if (touch==4161273600) Serial.println("v-"); 
-  if (touch==3927310080) Serial.println("v+");
-  if (touch==4127850240) Serial.println("eq");
-  if (touch==3910598400) Serial.println("0"); 
-  if (touch==3860463360) Serial.println("+100"); 
-  if (touch==4061003520) Serial.println("+200");  
-  if (touch==4077715200) Serial.println("1");
-  if (touch==3877175040) Serial.println("2"); 
-  if (touch==2707357440) Serial.println("3"); 
-  if (touch==4144561920) Serial.println("4");
-  if (touch==3810328320) Serial.println("5");
-  if (touch==2774204160) Serial.println("6"); 
-  if (touch==3175284480) Serial.println("7"); 
-  if (touch==2907897600) Serial.println("8");  
-  if (touch==3041591040) Serial.println("9");
- IrReceiver.resume(); // Receive the next value
 }
 
 void reglageheure(){
