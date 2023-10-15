@@ -61,14 +61,12 @@ void loop (){
 if (IrReceiver.decode())  {
    telecir(IrReceiver.decodedIRData.decodedRawData);
    mode=1;
-} else {
-    mode=0;
-}
+} 
 
 if (mode==1) reglageheure();
 
 if (mode==0) affichheure();
-
+  delay (1000); 
 }
 
 void Retroeclairage(){
@@ -111,7 +109,7 @@ void affichheure(){
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
     mes=(int)distanceSensor.measureDistanceCm()+1;
-    delay (1000);      
+       
 // Affichage heure minutes
     big.writeint(0,0,h,2,true); 
     big.writeint(0,6,m,2,true); 
@@ -142,5 +140,9 @@ if (wait<0) {
 }
 
 void reglageheure(){
+lcd.init();
+delay(1000);
+  
+  mode=0;
 
 }
