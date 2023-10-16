@@ -59,8 +59,15 @@ Retroeclairage();
 void loop (){
 // reception infrarouge        
 if (IrReceiver.decode())  {
-   telecir(IrReceiver.decodedIRData.decodedRawData);
-   mode=1;
+  touch=IrReceiver.decodedIRData.decodedRawData;
+  if (touch==3125149440 || touch==3108437760 ||touch==3091726080 || touch==3141861120 ||touch==3208707840 || touch==3158572800 ||touch==4161273600 ||
+  touch==3927310080 ||touch==4127850240   || touch==3910598400  ||touch==3860463360 || touch==4061003520 ||touch==4077715200 || touch==3877175040 ||
+  touch==2707357440 || touch==4144561920 ||touch==3810328320 || touch==2774204160 ||touch==3175284480 || touch==2907897600 ||touch==3041591040 ) {
+    telecir(); 
+    mode=1;
+   //  Serial.println (touch);
+  }
+   
 } 
 
 if (mode==1) reglageheure();
@@ -76,7 +83,7 @@ bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
 }
 
-void telecir(unsigned long(touch))
+void telecir()
 {
    //Serial.println(touch);
   if (touch==3125149440) com="ch-";
@@ -101,7 +108,7 @@ void telecir(unsigned long(touch))
   if (touch==2907897600) com="8";  
   if (touch==3041591040) com="9";
   Serial.println (com);
- IrReceiver.resume(); // Receive the next value
+  IrReceiver.resume(); // Receive the next value
 }
 
 void affichheure(){
