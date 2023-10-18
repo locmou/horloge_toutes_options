@@ -41,13 +41,13 @@ int h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
 String com;
 
-void setup (){     
+void setup (){
 Rtc.Begin();
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
     
-Serial.begin(57600);
-//irrecv.enableIRIn(); // Start the receiver
+Serial.begin(115200);
+
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
 
 lcd.init(); // initialisation de l’afficheur
@@ -65,15 +65,13 @@ if (IrReceiver.decode())  {
   touch==2707357440 || touch==4144561920 ||touch==3810328320 || touch==2774204160 ||touch==3175284480 || touch==2907897600 ||touch==3041591040 ) {
     telecir(); 
     mode=1;
-   //  Serial.println (touch);
   }
-   
 } 
-
 if (mode==1) reglageheure();
-
 if (mode==0) affichheure();
-  delay (1000); 
+
+IrReceiver.resume(); // Receive the next value 
+delay (1000);
 }
 
 void Retroeclairage(){
@@ -83,9 +81,7 @@ bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
 }
 
-void telecir()
-{
-   //Serial.println(touch);
+void telecir(){
   if (touch==3125149440) com="ch-";
   if (touch==3108437760) com="ch"; 
   if (touch==3091726080) com="ch+"; 
@@ -107,8 +103,7 @@ void telecir()
   if (touch==3175284480) com="7"; 
   if (touch==2907897600) com="8";  
   if (touch==3041591040) com="9";
-  Serial.println (com);
-  IrReceiver.resume(); // Receive the next value
+  wait=300;
 }
 
 void affichheure(){
@@ -148,8 +143,8 @@ if (wait<0) {
 
 void reglageheure(){
 lcd.init();
-delay(1000);
-  
-  mode=0;
-
+lcd.setCursor(0,0);
+lcd.print(com);
+delay(300);
+mode=0;
 }
