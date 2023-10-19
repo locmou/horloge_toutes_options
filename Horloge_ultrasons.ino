@@ -64,6 +64,7 @@ if (IrReceiver.decode())  {
   touch==3927310080 ||touch==4127850240   || touch==3910598400  ||touch==3860463360 || touch==4061003520 ||touch==4077715200 || touch==3877175040 ||
   touch==2707357440 || touch==4144561920 ||touch==3810328320 || touch==2774204160 ||touch==3175284480 || touch==2907897600 ||touch==3041591040 ) {
     telecir(); 
+    wait=300;
     mode=1;
   }
 } 
@@ -142,9 +143,17 @@ if (wait<0) {
 }
 
 void reglageheure(){
+
 lcd.init();
 lcd.setCursor(0,0);
-lcd.print(com);
-delay(300);
-mode=0;
+lcd.print("Réglage pendule");
+
+
+
+
+wait--;
+if (wait<0) {
+    wait=0;
+    mode=0;
+    }
 }
