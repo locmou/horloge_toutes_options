@@ -15,7 +15,6 @@ RtcDS1302<ThreeWire> Rtc(myWire);
 #include <IRremote.h>
 //int RECV_PIN = 5; //define input pin on Arduino
 
-
 // Detecteur ultrasons
 #include <HCSR04.h>
 // definition des broches du capteur ultrasons
@@ -46,7 +45,6 @@ Rtc.Begin();
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
 
-
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
 
 lcd.init(); // initialisation de l’afficheur
@@ -75,15 +73,8 @@ IrReceiver.resume();touch=0; // Receive the next value
 delay (800);
 }
 
-void Retroeclairage(){
-//réglage de l'intensité lumineus du LCD selon la lumière ambiante
-bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
-//Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
-analogWrite(BRIGHTNESS_PIN, bright);
-}
-
 void affichheure(){
-  // Requete heure 
+// Requete heure 
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
     mes=(int)distanceSensor.measureDistanceCm()+1;
@@ -102,12 +93,11 @@ void affichheure(){
     lcd.setCursor(14,1);
     if (mo<10) lcd.print(" "); 
     lcd.print(mo);
-
-//delay (200);
-
+    
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
     Retroeclairage();
+    wait=300;
     }
 
 wait--;
@@ -118,10 +108,17 @@ if (wait<0) {
 }
 
 void reglageheure(){
-
+Retroeclairage();
 lcd.init();
 lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
+
+lcd.setCursor(0,1);
+lcd.print("Heure :");
+
+
+lcd.setCursor(9,1);
+lcd.print(atoi("22"));
 
 wait--;
 if (wait<0) {
@@ -129,6 +126,13 @@ if (wait<0) {
     mode=0;
     lcd.init();
     }
+}
+
+void Retroeclairage(){
+//réglage de l'intensité lumineus du LCD selon la lumière ambiante
+bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
+//Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
+analogWrite(BRIGHTNESS_PIN, bright);
 }
 
 void telecir(){
