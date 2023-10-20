@@ -45,8 +45,7 @@ void setup (){
 Rtc.Begin();
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
-    
-Serial.begin(115200);
+
 
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
 
@@ -54,25 +53,26 @@ lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
 Retroeclairage();
+
+Serial.begin(115200);
 }
 
 void loop (){
 // reception infrarouge        
 if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
-  if (touch==3125149440 || touch==3108437760 ||touch==3091726080 || touch==3141861120 ||touch==3208707840 || touch==3158572800 ||touch==4161273600 ||
-  touch==3927310080 ||touch==4127850240   || touch==3910598400  ||touch==3860463360 || touch==4061003520 ||touch==4077715200 || touch==3877175040 ||
-  touch==2707357440 || touch==4144561920 ||touch==3810328320 || touch==2774204160 ||touch==3175284480 || touch==2907897600 ||touch==3041591040 ) {
+  if (touch==3125149440  ||touch==3091726080  ) {
     telecir(); 
-    wait=300;
+    wait=10;
     mode=1;
   }
 } 
-if (mode==1) reglageheure();
-if (mode==0) affichheure();
 
-IrReceiver.resume(); // Receive the next value 
-delay (1000);
+if (mode==0) affichheure();
+if (mode==1) reglageheure();
+
+IrReceiver.resume();touch=0; // Receive the next value 
+delay (800);
 }
 
 void Retroeclairage(){
@@ -80,6 +80,55 @@ void Retroeclairage(){
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 //Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
 analogWrite(BRIGHTNESS_PIN, bright);
+}
+
+void affichheure(){
+  // Requete heure 
+    RtcDateTime now = Rtc.GetDateTime();    
+    h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
+    mes=(int)distanceSensor.measureDistanceCm()+1;
+       
+// Affichage heure minutes
+    big.writeint(0,0,h,2,true); 
+    big.writeint(0,6,m,2,true); 
+//Affichage secondes
+    lcd.setCursor(12,0);
+    if (s<10) lcd.print(" "); 
+    lcd.print(s);
+//Affiche jour mois
+    lcd.setCursor(12,1);
+    if (jr<10) lcd.print(" "); 
+    lcd.print(jr);
+    lcd.setCursor(14,1);
+    if (mo<10) lcd.print(" "); 
+    lcd.print(mo);
+
+//delay (200);
+
+//Affichage lorsque les ultrasons détectent une présence <50cm
+if (mes<50 and mes!=0) {
+    Retroeclairage();
+    }
+
+wait--;
+if (wait<0) {
+    wait=300;
+    analogWrite(BRIGHTNESS_PIN, 0);
+    }
+}
+
+void reglageheure(){
+
+lcd.init();
+lcd.setCursor(0,0);
+lcd.print("Reglage pendule");
+
+wait--;
+if (wait<0) {
+    wait=300;
+    mode=0;
+    lcd.init();
+    }
 }
 
 void telecir(){
@@ -104,56 +153,5 @@ void telecir(){
   if (touch==3175284480) com="7"; 
   if (touch==2907897600) com="8";  
   if (touch==3041591040) com="9";
-  wait=300;
-}
-
-void affichheure(){
-  // Requete heure 
-    RtcDateTime now = Rtc.GetDateTime();    
-    h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
-    mes=(int)distanceSensor.measureDistanceCm()+1;
-       
-// Affichage heure minutes
-    big.writeint(0,0,h,2,true); 
-    big.writeint(0,6,m,2,true); 
-//Affichage secondes
-    lcd.setCursor(12,0);
-    if (s<10) lcd.print(" "); 
-    lcd.print(s);
-//Affiche jour mois
-    lcd.setCursor(12,1);
-    if (jr<10) lcd.print(" "); 
-    lcd.print(jr);
-    lcd.setCursor(14,1);
-    if (mo<10) lcd.print(" "); 
-    lcd.print(mo);
-
-
-//Affichage lorsque les ultrasons détectent une présence <50cm
-if (mes<50 and mes!=0) {
-    Retroeclairage();
-    wait=300;
-    }
-
-wait--;
-if (wait<0) {
-    wait=0;
-    analogWrite(BRIGHTNESS_PIN, 0);
-    }
-}
-
-void reglageheure(){
-
-lcd.init();
-lcd.setCursor(0,0);
-lcd.print("Réglage pendule");
-
-
-
-
-wait--;
-if (wait<0) {
-    wait=0;
-    mode=0;
-    }
+  touch=0;
 }
