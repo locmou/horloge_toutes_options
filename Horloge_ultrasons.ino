@@ -13,7 +13,6 @@ ThreeWire myWire(3,4,2); // IO, SCLK, CE
 RtcDS1302<ThreeWire> Rtc(myWire);
 
 #include <IRremote.h>
-//int RECV_PIN = 5; //define input pin on Arduino
 
 // Detecteur ultrasons
 #include <HCSR04.h>
