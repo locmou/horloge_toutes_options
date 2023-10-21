@@ -35,9 +35,9 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 #define BRIGHTNESS_PIN  6   // Must be a PWM pin
 #define LDR A7  // composante photorésistance sur la pin A7
 
-int h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
+int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
-String com;
+String com,aff="-";
 
 void setup (){
 Rtc.Begin();
@@ -56,20 +56,18 @@ Serial.begin(115200);
 
 void loop (){
 // reception infrarouge        
-if (IrReceiver.decode())  {
-  touch=IrReceiver.decodedIRData.decodedRawData;
-  if (touch==3125149440  ||touch==3091726080  ) {
-    telecir(); 
-    wait=10;
-    mode=1;
+touchir();
+if (touch==3125149440  ||touch==3091726080  ) {
+  //telecir(); 
+  wait=10;
+  mode=1;
   }
-} 
+
 
 if (mode==0) affichheure();
 if (mode==1) reglageheure();
 
-IrReceiver.resume();touch=0; // Receive the next value 
-delay (800);
+
 }
 
 void affichheure(){
@@ -114,10 +112,8 @@ lcd.print("Reglage pendule");
 
 lcd.setCursor(0,1);
 lcd.print("Heure :");
-
-
-lcd.setCursor(9,1);
-lcd.print(atoi("22"));
+settime();
+h=nbr;
 
 wait--;
 if (wait<0) {
@@ -126,6 +122,30 @@ if (wait<0) {
     lcd.init();
     }
 }
+
+void settime(){
+  lcd.setCursor(9,1);
+  
+//lcd.print(atoi("22"));
+if (touch==4077715200  ||touch==3877175040  ) {
+  telecir(); aff=com;
+  wait=10;
+  mode=1;
+  } 
+lcd.print(aff+"-");
+}
+
+void touchir(){
+touch=0;
+if (IrReceiver.decode())  {
+  touch=IrReceiver.decodedIRData.decodedRawData;
+  }
+
+IrReceiver.resume();// Receive the next value
+delay (800); 
+}
+
+
 
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
