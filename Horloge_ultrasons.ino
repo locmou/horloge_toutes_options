@@ -37,7 +37,7 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 
 int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
-String com,aff="-";
+String com,aff="--";
 
 void setup (){
 Rtc.Begin();
@@ -63,10 +63,8 @@ if (touch==3125149440  ||touch==3091726080  ) {
   mode=1;
   }
 
-
 if (mode==0) affichheure();
 if (mode==1) reglageheure();
-
 
 }
 
@@ -106,6 +104,7 @@ if (wait<0) {
 
 void reglageheure(){
 Retroeclairage();
+
 lcd.init();
 lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
@@ -120,6 +119,7 @@ if (wait<0) {
     wait=300;
     mode=0;
     lcd.init();
+    big.begin();
     }
 }
 
@@ -128,11 +128,14 @@ void settime(){
   
 //lcd.print(atoi("22"));
 if (touch==4077715200  ||touch==3877175040  ) {
-  telecir(); aff=com;
+  telecir(); aff=com+"-";
   wait=10;
-  mode=1;
   } 
-lcd.print(aff+"-");
+if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480  ||touch==3877175040  ||touch==2907897600  ||touch==3041591040   ) {
+  telecir(); aff=com+"-";
+  wait=10;
+  }
+lcd.print(aff);
 }
 
 void touchir(){
