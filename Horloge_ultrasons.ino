@@ -124,15 +124,15 @@ if (wait<0) {
 }
 
 void settime(){
-  lcd.setCursor(9,1);
-  
+lcd.setCursor(9,1);
 //lcd.print(atoi("22"));
 if (touch==4077715200  ||touch==3877175040  ) {
   telecir(); aff=com+"-";
   wait=10;
   } 
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480  ||touch==3877175040  ||touch==2907897600  ||touch==3041591040   ) {
-  telecir(); aff=com+"-";
+  telecir();
+ // A corriger   ...  if ((atoi(com))>2) aff="0"+com;
   wait=10;
   }
 lcd.print(aff);
@@ -143,12 +143,9 @@ touch=0;
 if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
   }
-
 IrReceiver.resume();// Receive the next value
 delay (800); 
 }
-
-
 
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
