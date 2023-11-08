@@ -1,16 +1,16 @@
-#include <ThreeWire.h>
-// CONNECTIONS pendule
-// DS1302 CLK/SCLK --> 4
-// DS1302 DAT/IO --> 3
-// DS1302 RST/CE --> 2
-// DS1302 VCC --> 3.3v - 5v
-// DS1302 GND --> GND
-#include <RtcDS1302.h>
-#include "RTClib.h"
-RTC_Millis rtc;
-// definition des broches de la pendule
-ThreeWire myWire(3,4,2); // IO, SCLK, CE
-RtcDS1302<ThreeWire> Rtc(myWire);
+
+// CONNECTIONS:
+// DS1307 SDA --> SDA
+// DS1307 SCL --> SCL
+// DS1307 VCC --> 5v
+// DS1307 GND --> GND
+
+/* for normal hardware wire use below */
+#include <Wire.h> // must be included here so that Arduino library object file references work
+#include <RtcDS1307.h>
+RtcDS1307<TwoWire> Rtc(Wire);
+
+
 
 #include <IRremote.h>
 
@@ -26,9 +26,9 @@ UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 #include <BigFont02_I2C.h>
 
 // Affichage
-#include <LiquidCrystal_I2C.h>
-
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+/* for normal hardware wire use above */
+#include "LiquidCrystal_I2C.h"
+LiquidCrystal_I2C lcd(0x27,16,2);
 BigFont02_I2C     big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
@@ -43,7 +43,11 @@ void setup (){
 Rtc.Begin();
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
-
+// never assume the Rtc was last configured by you, so
+// just clear them to your needed state
+Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
+// Rtc.SetDateTime(compiled);
+    
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
 
 lcd.init(); // initialisation de l’afficheur
