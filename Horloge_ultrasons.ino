@@ -186,3 +186,65 @@ void telecir(){
   if (touch==3041591040) com="9";
   touch=0;
 }
+
+/* Code mémoire ********************
+ *  ********************************
+ *  ********************************
+const char data[] = "memoblablablabla";
+
+void setup () 
+{
+ /*  // comment out on a second run to see that the info is stored long term 
+    // Store something in memory on the RTC
+    Rtc.SetMemory(0, 13);
+    uint8_t written = Rtc.SetMemory(13, (const uint8_t*)data, sizeof(data) - 1); // remove the null terminator strings add
+    Rtc.SetMemory(1, written);
+/* //end of comment out section 
+}
+
+void loop () {
+
+
+    // get the offset we stored our data from address zero
+    uint8_t address = Rtc.GetMemory(0);
+    if (address != 13)
+    {
+        Serial.println("address didn't match");
+    }
+    else
+    {
+        // get the size of the data from address 1
+        uint8_t count = Rtc.GetMemory(1);
+        uint8_t buff[20];
+
+        // get our data from the address with the given size
+        uint8_t gotten = Rtc.GetMemory(address, buff, count);
+
+        if (gotten != count ||
+            count != sizeof(data) - 1) // remove the extra null terminator strings add
+        {
+            Serial.print("something didn't match, count = ");
+            Serial.print(count, DEC);
+            Serial.print(", gotten = ");
+            Serial.print(gotten, DEC);
+            Serial.println();
+        }
+        lcd.setCursor(0,1);
+        //lcd.print("data read (");
+        //lcd.print(gotten);
+        //lcd.print(") = \"");
+        for (uint8_t ch = 0; ch < gotten; ch++)
+        {
+            lcd.print((char)buff[ch]);
+        }
+        //lcd.println("\"");
+    }
+
+    
+ //   delay(500);
+}
+
+
+
+}
+ */
