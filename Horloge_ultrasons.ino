@@ -1,17 +1,14 @@
 
-// CONNECTIONS:
+// CONNECTIONS: LCD Et RTC
 // DS1307 SDA --> SDA
 // DS1307 SCL --> SCL
 // DS1307 VCC --> 5v
 // DS1307 GND --> GND
-
-/* for normal hardware wire use below */
-#include <Wire.h> // must be included here so that Arduino library object file references work
+#include <Wire.h> 
 #include <RtcDS1307.h>
 RtcDS1307<TwoWire> Rtc(Wire);
 
-
-
+// Gestion IR
 #include <IRremote.h>
 
 // Detecteur ultrasons
@@ -25,8 +22,7 @@ UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 // Gros chiffres
 #include <BigFont02_I2C.h>
 
-// Affichage
-/* for normal hardware wire use above */
+// Affichage LCD
 #include "LiquidCrystal_I2C.h"
 LiquidCrystal_I2C lcd(0x27,16,2);
 BigFont02_I2C     big(&lcd); // construct large font object, passing to it the name of our lcd object
