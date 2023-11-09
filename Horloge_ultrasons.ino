@@ -46,8 +46,12 @@ RtcDateTime now = Rtc.GetDateTime();
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
-// Rtc.SetDateTime(compiled);
-    
+
+//Rtc.SetDateTime(compiled);
+// This line sets the RTC with an explicit date & time, for example to set
+// January 21, 2014 at 3am you would call:
+//Rtc.SetDateTime(RtcDateTime(2014, 1, 21, 3, 0, 0));
+
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
 
 lcd.init(); // initialisation de l’afficheur
