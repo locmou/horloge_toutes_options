@@ -61,6 +61,7 @@ Serial.begin(115200);
 void loop (){
 // reception infrarouge        
 touchir();
+// déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   //telecir(); 
   wait=10;
@@ -129,16 +130,26 @@ if (wait<0) {
 
 void settime(){
 lcd.setCursor(9,1);
-//lcd.print(atoi("22"));
-if (touch==4077715200  ||touch==3877175040  ) {
-  telecir(); aff=com+"-";
-  wait=10;
-  } 
-if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480  ||touch==3877175040  ||touch==2907897600  ||touch==3041591040   ) {
+// A compléter en utilisant l'int nbr ... Plus simple
+if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
- // A corriger   ...  if ((atoi(com))>2) aff="0"+com;
+if (com=="0"||com=="1"||com=="2") {
+  //if (aff=!"--") aff=aff+com;
+  if (aff=="--") aff=com;
+  
+  com="";
+}/*
+else {  
+  if (aff=="--") aff="0"+com;
+  if (aff=!"--") aff=aff+com;
+  com="";
+}*/
+
+
+ if (aff.toInt()>24) aff="--";
   wait=10;
-  }
+  
+}  
 lcd.print(aff);
 }
 
