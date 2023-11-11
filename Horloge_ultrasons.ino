@@ -69,8 +69,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
   }
 
 if (mode==0) affichheure();
-if (mode==1) reglageheure();
-
+if (mode==1) reglageheuredate();
 }
 
 void affichheure(){
@@ -78,7 +77,7 @@ void affichheure(){
     RtcDateTime now = Rtc.GetDateTime();    
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
     mes=(int)distanceSensor.measureDistanceCm()+1;
-       
+
 // Affichage heure minutes
     big.writeint(0,0,h,2,true); 
     big.writeint(0,6,m,2,true); 
@@ -99,7 +98,6 @@ if (mes<50 and mes!=0) {
     Retroeclairage();
     wait=300;
     }
-
 wait--;
 if (wait<0) {
     wait=300;
@@ -107,50 +105,57 @@ if (wait<0) {
     }
 }
 
-void reglageheure(){
+void reglageheuredate(){
 Retroeclairage();
-
-lcd.init();
+ecrannet();
 lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
 
-lcd.setCursor(0,1);
-lcd.print("Heure :");
-settime();
+settime(24);
 h=nbr;
 
 wait--;
 if (wait<0) {
     wait=300;
-    mode=0;
-    lcd.init();
-    big.begin();
+    mode=0;aff="--";
+    ecrannet();
     }
+
 }
 
-void settime(){
-lcd.setCursor(9,1);
+void settime(int(maxi)){
+lcd.setCursor(0,1);lcd.print("                            ");lcd.setCursor(0,1);
+if (maxi==24) lcd.print("Heure :");
+if (maxi==60) lcd.print("Minutes :");
+if (maxi==31) lcd.print("Jour :");
+if (maxi==12) lcd.print("Mois :");
+if (maxi==9999) lcd.print("Année :");
+
+
+
 // A compléter en utilisant l'int nbr ... Plus simple
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
-if (com=="0"||com=="1"||com=="2") {
-  //if (aff=!"--") aff=aff+com;
-  if (aff=="--") aff=com;
-  
-  com="";
-}/*
-else {  
-  if (aff=="--") aff="0"+com;
-  if (aff=!"--") aff=aff+com;
-  com="";
-}*/
-
-
- if (aff.toInt()>24) aff="--";
-  wait=10;
-  
-}  
+  if (aff=="--") {
+    if (com=="1"||com=="2") {
+    aff=com+"-";nbr=com.toInt();com="";
+    }
+    else {  
+    aff="0"+com;
+    nbr=com.toInt();com="";mode=0;
+    } 
+  }
+  else{
+    aff=String(nbr)+com;nbr=aff.toInt();
+    if (nbr>=maxi) {aff="--";} else { com="";mode=0; }
+  }
+wait=10; 
+}
+lcd.setCursor(9,1);
 lcd.print(aff);
+if (mode==0) {
+  delay(500);aff="--";ecrannet();wait=300;
+  }
 }
 
 void touchir(){
@@ -159,7 +164,7 @@ if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
   }
 IrReceiver.resume();// Receive the next value
-delay (800); 
+//delay (800); 
 }
 
 void Retroeclairage(){
@@ -192,6 +197,11 @@ void telecir(){
   if (touch==2907897600) com="8";  
   if (touch==3041591040) com="9";
   touch=0;
+}
+
+void ecrannet(){
+lcd.init();
+big.begin();
 }
 
 /* Code mémoire ********************
