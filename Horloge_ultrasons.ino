@@ -64,12 +64,12 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   //telecir(); 
-  wait=10;
-  mode=1;
+  wait=50;
+  mode=1;ecrannet();
   }
 
-if (mode==0) affichheure();
-if (mode==1) reglageheuredate();
+if (mode==0) {affichheure();}
+if (mode==1) {reglageheuredate();}
 }
 
 void affichheure(){
@@ -107,18 +107,19 @@ if (wait<0) {
 
 void reglageheuredate(){
 Retroeclairage();
-ecrannet();
 lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
 
 settime(24);
 h=nbr;
+//settime(60);
+//m=nbr;
 
 wait--;
 if (wait<0) {
     wait=300;
     mode=0;aff="--";
-    ecrannet();
+    Retroeclairage();ecrannet();
     }
 
 }
@@ -142,12 +143,12 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     }
     else {  
     aff="0"+com;
-    nbr=com.toInt();com="";mode=0;
+    nbr=com.toInt();com="";mode=0;Retroeclairage();ecrannet();
     } 
   }
   else{
     aff=String(nbr)+com;nbr=aff.toInt();
-    if (nbr>=maxi) {aff="--";} else { com="";mode=0; }
+    if (nbr>=maxi) {aff="--";} else { com="";mode=0;Retroeclairage();ecrannet(); }
   }
 wait=10; 
 }
