@@ -64,7 +64,7 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   //telecir(); 
-  wait=50;
+  wait=100;
   mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
 
@@ -96,13 +96,12 @@ void affichheure(){
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
     Retroeclairage();
-    wait=300;
+    wait=800;
     }
+    
 wait--;
-if (wait<0) {
-    wait=300;
-    analogWrite(BRIGHTNESS_PIN, 0);
-    }
+if (wait<0)    analogWrite(BRIGHTNESS_PIN, 0);
+    
 }
 
 void reglageheuredate(){
@@ -112,7 +111,8 @@ lcd.print("Reglage pendule");
 
 if (h==0) {
 settime(24);
-h=nbr;}
+h=nbr;
+}
 else{ 
   if (m==0){
     settime(60);
@@ -127,7 +127,7 @@ else{
         mo=nbr;}
       else {
         settime(99);
-        an=nbr;}
+        an=nbr;aff="--";ecrannet();wait=300;Rtc.SetDateTime(RtcDateTime(2023, 11, 13, 18, 22, 0));mode=0;nbr=0;}//Rtc.SetDateTime(RtcDateTime(2023, mo, jr, h, m, 0));
     }
   }
 }
@@ -142,6 +142,7 @@ if (wait<0) {
 }
 
 void settime(float(maxi)){
+nbr=0;
 lcd.setCursor(0,1);lcd.print("                            ");lcd.setCursor(0,1);
 if (maxi==24) lcd.print("Heure :");
 if (maxi==60) lcd.print("Minutes :");
@@ -155,25 +156,22 @@ if (maxi==99) lcd.print("Année :");
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
   if (aff=="--") {
-    if (com.toInt()=!"0" && com.toInt()<=int((maxi-1)/10)) {
-    aff=com+"-";nbr=com.toInt();com="";
+    if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
+    aff=com+"-";
     }
     else {  
-    aff="0"+com;
-    nbr=com.toInt();com="";Retroeclairage();ecrannet();
+    nbr=com.toInt();aff="--";Retroeclairage();ecrannet();
     } 
   }
   else{
-    aff=String(nbr)+com;nbr=aff.toInt();
-    if (nbr>=maxi) {aff="--";} else { com=""; }
+    aff=String(aff.charAt(1))+com;nbr=aff.toInt();aff="--";
+    }
+  if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
+  
+  wait=300;   
   }
-wait=10; 
-}
 lcd.setCursor(9,1);
 lcd.print(aff);
-if (an=!0) {
-  delay(500);aff="--";ecrannet();wait=300;Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));mode=0;
-  }
 }
 
 void touchir(){
@@ -193,6 +191,7 @@ analogWrite(BRIGHTNESS_PIN, bright);
 }
 
 void telecir(){
+  com="";
   if (touch==3125149440) com="ch-";
   if (touch==3108437760) com="ch"; 
   if (touch==3091726080) com="ch+"; 
