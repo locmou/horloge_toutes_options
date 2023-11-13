@@ -116,22 +116,18 @@ h=nbr;}
 else{ 
   if (m==0){
     settime(60);
-    m=nbr;
-    }
+    m=nbr;}
   else {
     if (jr==0) {
       settime(31);
-      jr=nbr;
-    }
+      jr=nbr;}
     else {
       if (mo==0){
         settime(12);
-        mo=nbr;
-      }
+        mo=nbr;}
       else {
         settime(99);
-        an=nbr;        
-      }
+        an=nbr;}
     }
   }
 }
