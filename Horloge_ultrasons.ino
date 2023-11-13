@@ -65,7 +65,7 @@ touchir();
 if (touch==3125149440  ||touch==3091726080  ) {
   //telecir(); 
   wait=50;
-  mode=1;ecrannet();
+  mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
 
 if (mode==0) {affichheure();}
@@ -143,19 +143,19 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     }
     else {  
     aff="0"+com;
-    nbr=com.toInt();com="";mode=0;Retroeclairage();ecrannet();
+    nbr=com.toInt();com="";Retroeclairage();ecrannet();
     } 
   }
   else{
     aff=String(nbr)+com;nbr=aff.toInt();
-    if (nbr>=maxi) {aff="--";} else { com="";mode=0;Retroeclairage();ecrannet(); }
+    if (nbr>=maxi) {aff="--";} else { com="";Retroeclairage();ecrannet(); }
   }
 wait=10; 
 }
 lcd.setCursor(9,1);
 lcd.print(aff);
-if (mode==0) {
-  delay(500);aff="--";ecrannet();wait=300;
+if (an=!0) {
+  delay(500);aff="--";ecrannet();wait=300;Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, s));mode=0;
   }
 }
 
