@@ -119,22 +119,29 @@ else{
     m=nbr;}
   else {
     if (jr==0) {
-      settime(31);
+      settime(32);
       jr=nbr;}
     else {
       if (mo==0){
-        settime(12);
+        settime(13);
         mo=nbr;}
       else {
-        settime(99);
-        an=nbr;aff="--";ecrannet();wait=300;Rtc.SetDateTime(RtcDateTime(2023, 11, 13, 18, 22, 0));mode=0;nbr=0;}//Rtc.SetDateTime(RtcDateTime(2023, mo, jr, h, m, 0));
+        settime(100);
+        an=nbr;
+        if (an!=0) {
+          aff="--";ecrannet();
+          wait=300;
+          Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));
+          mode=0;
+          nbr=0;}
+        }
     }
   }
 }
 
 wait--;
 if (wait<0) {
-    wait=300;
+    wait=800;
     mode=0;aff="--";
     Retroeclairage();ecrannet();
     }
@@ -142,36 +149,34 @@ if (wait<0) {
 }
 
 void settime(float(maxi)){
-nbr=0;
-lcd.setCursor(0,1);lcd.print("                            ");lcd.setCursor(0,1);
+nbr=0;lcd.setCursor(0,1);
 if (maxi==24) lcd.print("Heure :");
 if (maxi==60) lcd.print("Minutes :");
-if (maxi==31) lcd.print("Jour :");
-if (maxi==12) lcd.print("Mois :");
-if (maxi==99) lcd.print("Année :");
+if (maxi==32) lcd.print("Jour :");
+if (maxi==13) lcd.print("Mois :");
+if (maxi==100) lcd.print("Année :");
 
 
 
-// A compléter en utilisant l'int nbr ... Plus simple
+// S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
   if (aff=="--") {
     if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
-    aff=com+"-";
+    aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
     }
     else {  
-    nbr=com.toInt();aff="--";Retroeclairage();ecrannet();
+    nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
     } 
   }
   else{
-    aff=String(aff.charAt(1))+com;nbr=aff.toInt();aff="--";
-    }
+    aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+  }
   if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
   
-  wait=300;   
-  }
-lcd.setCursor(9,1);
-lcd.print(aff);
+wait=800;  
+}
+
 }
 
 void touchir(){
