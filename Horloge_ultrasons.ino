@@ -31,13 +31,13 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 #define BRIGHTNESS_PIN  6   // Must be a PWM pin
 #define LDR A7  // composante photorésistance sur la pin A7
 
-int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
+//int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
 String com,aff="--";
 byte al1[] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al2[] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
-uint8_t h8,m8;
+uint8_t h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 
 
 void setup (){
