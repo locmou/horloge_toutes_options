@@ -73,14 +73,14 @@ void loop (){
 touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
-  wait=100;
+  wait=800;
   mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
 
 // délenché par +100, +200
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); 
-  wait=100;
+  wait=800;
   mode=2;ecrannet();h8=m8=0;
   }
 
@@ -93,25 +93,33 @@ void reglagealarme(int(a)){
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a));
-delay(1000);mode=0;
-if (a==1) {
-  if (h==0) {
+
+
+  if (h8==0) {
   settime(24);
-  h=nbr;
+  h8=nbr;
   }
-  else{ 
-    if (m==0){
-      settime(60);
-      m=nbr;
-      aff="--";      
-      wait=300;
-      Rtc.SetMemory(0+a,h8);Rtc.SetMemory(1+a,m8);
-      mode=0;
-      nbr=0;
-      ecrannet();}
-      Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
+  else{
+    settime(60);
+    m8=nbr;
+    if (m8!=0) {
+       aff="--";      
+       wait=300;
+       Rtc.SetMemory(0+a,h8);Rtc.SetMemory(1+a,m8);
+       mode=0;
+       nbr=0;
+       ecrannet();
+       Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
+       }
+  }
+
+  
+  wait--;
+if (wait<0) {
+    wait=800;
+    mode=0;aff="--";
+    Retroeclairage();ecrannet();
     }
-  }
 }
 
 void reglageheuredate(){
@@ -138,12 +146,12 @@ else{
       else {
         settime(100);
         an=nbr;
-        aff="--";
+        if (an!=0){aff="--";
         ecrannet();
         wait=300;
         Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));
         mode=0;
-        nbr=0;
+        nbr=0;}
         }     
     }
   }
