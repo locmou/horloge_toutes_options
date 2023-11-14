@@ -34,16 +34,26 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
 String com,aff="--";
+byte al1[] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
+byte al2[] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
+byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
+uint8_t h8,m8;
+
 
 void setup (){
 Rtc.Begin();
-RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-RtcDateTime now = Rtc.GetDateTime();
+if (Serial) {
+    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+    Rtc.SetDateTime(compiled);
+    }
+/*RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+RtcDateTime now = Rtc.GetDateTime();*/
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
 
 //Rtc.SetDateTime(compiled);
+
 // This line sets the RTC with an explicit date & time, for example to set
 // January 21, 2014 at 3am you would call:
 //Rtc.SetDateTime(RtcDateTime(2014, 1, 21, 3, 0, 0));
@@ -63,13 +73,118 @@ void loop (){
 touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
-  //telecir(); 
   wait=100;
   mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
 
+// délenché par +100, +200
+if (touch==3860463360  ||touch==4061003520  ) {
+  telecir(); 
+  wait=100;
+  mode=2;ecrannet();h8=m8=0;
+  }
+
 if (mode==0) {affichheure();}
 if (mode==1) {reglageheuredate();}
+if (mode==2) {reglagealarme(com.toInt());}
+}
+
+void reglagealarme(int(a)){
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Reglage alarme "+String(a));
+delay(1000);mode=0;
+if (a==1) {
+  if (h==0) {
+  settime(24);
+  h=nbr;
+  }
+  else{ 
+    if (m==0){
+      settime(60);
+      m=nbr;
+      aff="--";      
+      wait=300;
+      Rtc.SetMemory(0+a,h8);Rtc.SetMemory(1+a,m8);
+      mode=0;
+      nbr=0;
+      ecrannet();}
+      Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
+    }
+  }
+}
+
+void reglageheuredate(){
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Reglage pendule");
+
+if (h==0) {
+settime(24);
+h=nbr;
+}
+else{ 
+  if (m==0){
+    settime(60);
+    m=nbr;}
+  else {
+    if (jr==0) {
+      settime(32);
+      jr=nbr;}
+    else {
+      if (mo==0){
+        settime(13);
+        mo=nbr;}
+      else {
+        settime(100);
+        an=nbr;
+        aff="--";
+        ecrannet();
+        wait=300;
+        Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));
+        mode=0;
+        nbr=0;
+        }     
+    }
+  }
+}
+
+wait--;
+if (wait<0) {
+    wait=800;
+    mode=0;aff="--";
+    Retroeclairage();ecrannet();
+    }
+
+}
+
+void settime(float(maxi)){
+nbr=0;lcd.setCursor(0,1);
+if (maxi==24) lcd.print("Heure :");
+if (maxi==60) lcd.print("Minutes :");
+if (maxi==32) lcd.print("Jour :");
+if (maxi==13) lcd.print("Mois :");
+if (maxi==100) lcd.print("Annee :");
+
+// S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
+if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
+  telecir();
+  if (aff=="--") {
+    if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
+    aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
+    }
+    else {  
+    nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+    } 
+  }
+  else{
+    aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+  }
+  if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
+  
+wait=800;  
+}
+
 }
 
 void affichheure(){
@@ -100,83 +215,8 @@ if (mes<50 and mes!=0) {
     }
     
 wait--;
-if (wait<0)    analogWrite(BRIGHTNESS_PIN, 0);
+if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
     
-}
-
-void reglageheuredate(){
-Retroeclairage();
-lcd.setCursor(0,0);
-lcd.print("Reglage pendule");
-
-if (h==0) {
-settime(24);
-h=nbr;
-}
-else{ 
-  if (m==0){
-    settime(60);
-    m=nbr;}
-  else {
-    if (jr==0) {
-      settime(32);
-      jr=nbr;}
-    else {
-      if (mo==0){
-        settime(13);
-        mo=nbr;}
-      else {
-        settime(100);
-        an=nbr;
-        if (an!=0) {
-          aff="--";ecrannet();
-          wait=300;
-          Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));
-          mode=0;
-          nbr=0;}
-        }
-    }
-  }
-}
-
-wait--;
-if (wait<0) {
-    wait=800;
-    mode=0;aff="--";
-    Retroeclairage();ecrannet();
-    }
-
-}
-
-void settime(float(maxi)){
-nbr=0;lcd.setCursor(0,1);
-if (maxi==24) lcd.print("Heure :");
-if (maxi==60) lcd.print("Minutes :");
-if (maxi==32) lcd.print("Jour :");
-if (maxi==13) lcd.print("Mois :");
-if (maxi==100) lcd.print("Année :");
-
-
-
-// S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
-if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
-  telecir();
-  if (aff=="--") {
-    if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
-    aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
-    }
-    else {  
-    nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
-    } 
-  }
-  else{
-    aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
-  }
-  if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
-  
-wait=800;  
-}
-
 }
 
 void touchir(){
