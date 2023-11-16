@@ -43,10 +43,10 @@ int wait=300;
 void setup (){
   
 Rtc.Begin();
-
+/*
 if (Serial) {
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    Rtc.SetDateTime(compiled);}
+    Rtc.SetDateTime(compiled);}*/
     
     
 /*RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
