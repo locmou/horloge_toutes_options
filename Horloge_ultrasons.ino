@@ -37,8 +37,8 @@ String com,aff="--";
 byte al1[] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al2[] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
-uint8_t h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
-
+uint8_t a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
+int wait=300;
 
 void setup (){
   /*
@@ -79,27 +79,27 @@ if (touch==3125149440  ||touch==3091726080  ) {
   mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
 
-// délenché par 1, 2
-if (touch==4077715200  ||touch==3877175040  ) {
-  telecir(); 
+// délenché par 100+, 200+
+if (touch==3860463360  ||touch==4061003520  ) {
+  telecir(); if (com=="+100") a=1; else a=2;
   wait=800;
   mode=2;ecrannet();h8=m8=0;
   }
 
 if (mode==0) affichheure();
 if (mode==1) reglageheuredate();
-if (mode==2) infoalarm(com.toInt());
-if (mode==3) reglagealarme(com.toInt());
+if (mode==2) infoalarm(a);
+if (mode==3) reglagealarme(a);
 }
 
 void infoalarm(int(a)) {
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(a)+" :");
-lcd.print("   "+String(Rtc.GetMemory(0+a))+ " h :"+String(Rtc.GetMemory(1+a))+ " mn");delay(1000);
-
+lcd.print("Alarme "+String(a)+"->");
+lcd.print(String(Rtc.GetMemory(0+a))+ ":"+String(Rtc.GetMemory(1+a))+ "mn");
+lcd.setCursor(0,1);
+iwait();
 }
-
 
 
 void reglagealarme(int(a)){
@@ -125,14 +125,8 @@ else{
     Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
   }
 }
-
-  
-  wait--;
-if (wait<0) {
-    wait=800;
-    mode=0;aff="--";
-    Retroeclairage();ecrannet();
-    }
+ 
+iwait();
 }
 
 void reglageheuredate(){
@@ -170,12 +164,7 @@ else{
   }
 }
 
-wait--;
-if (wait<0) {
-    wait=800;
-    mode=0;aff="--";
-    Retroeclairage();ecrannet();
-    }
+iwait();
 
 }
 
@@ -280,6 +269,15 @@ void telecir(){
   if (touch==2907897600) com="8";  
   if (touch==3041591040) com="9";
   touch=0;
+}
+
+void iwait(){
+    wait--;
+if (wait<0) {
+    wait=800;
+    mode=0;aff="--";
+    Retroeclairage();ecrannet();
+    }
 }
 
 void ecrannet(){
