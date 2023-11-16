@@ -41,11 +41,13 @@ uint8_t h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 
 
 void setup (){
+  /*
 Rtc.Begin();
 if (Serial) {
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
     Rtc.SetDateTime(compiled);
-    }
+    }*/
+    
 /*RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();*/
 // never assume the Rtc was last configured by you, so
@@ -69,7 +71,7 @@ Serial.begin(115200);
 }
 
 void loop (){
-// reception infrarouge        
+// reception infrarouge ?        
 touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
@@ -77,17 +79,28 @@ if (touch==3125149440  ||touch==3091726080  ) {
   mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
 
-// délenché par +100, +200
-if (touch==3860463360  ||touch==4061003520  ) {
+// délenché par 1, 2
+if (touch==4077715200  ||touch==3877175040  ) {
   telecir(); 
   wait=800;
   mode=2;ecrannet();h8=m8=0;
   }
 
-if (mode==0) {affichheure();}
-if (mode==1) {reglageheuredate();}
-if (mode==2) {reglagealarme(com.toInt());}
+if (mode==0) affichheure();
+if (mode==1) reglageheuredate();
+if (mode==2) infoalarm(com.toInt());
+if (mode==3) reglagealarme(com.toInt());
 }
+
+void infoalarm(int(a)) {
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Alarme "+String(a)+" :");
+lcd.print("   "+String(Rtc.GetMemory(0+a))+ " h :"+String(Rtc.GetMemory(1+a))+ " mn");delay(1000);
+
+}
+
+
 
 void reglagealarme(int(a)){
 Retroeclairage();
@@ -95,23 +108,23 @@ lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a));
 
 
-  if (h8==0) {
-  settime(24);
-  h8=nbr;
+if (h8==0) {
+settime(24);
+h8=nbr;
+}
+else{
+  settime(60);
+  m8=nbr;
+  if (m8!=0) {
+    aff="--";      
+    wait=300;
+    Rtc.SetMemory(0+a,h8);Rtc.SetMemory(1+a,m8);
+    mode=0;
+    nbr=0;
+    ecrannet();
+    Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
   }
-  else{
-    settime(60);
-    m8=nbr;
-    if (m8!=0) {
-       aff="--";      
-       wait=300;
-       Rtc.SetMemory(0+a,h8);Rtc.SetMemory(1+a,m8);
-       mode=0;
-       nbr=0;
-       ecrannet();
-       Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
-       }
-  }
+}
 
   
   wait--;
