@@ -41,12 +41,13 @@ uint8_t a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
 int wait=300;
 
 void setup (){
-  /*
+  
 Rtc.Begin();
+
 if (Serial) {
     RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    Rtc.SetDateTime(compiled);
-    }*/
+    Rtc.SetDateTime(compiled);}
+    
     
 /*RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();*/
