@@ -142,10 +142,10 @@ if (mode==3) reglagealarme(a);
 void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(x)+"->");
-lcd.print(String(Rtc.GetMemory(2*x))+ ":"+String(Rtc.GetMemory(1+(2*x)))+ "mn");
+lcd.print("Alarme "+String(x)+" -> ");
+lcd.print(String(Rtc.GetMemory(2*x))+ ":"+String(Rtc.GetMemory(1+(2*x))));
 lcd.setCursor(0,1);
-lcd.print("eq pour la modifier.");
+lcd.print("EQ pour modif");
 iwait();
 }
 
