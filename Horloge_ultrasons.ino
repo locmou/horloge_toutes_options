@@ -80,7 +80,7 @@ Serial.begin(115200);
 }
 
 void loop (){
- // Test alarme
+ // Test alarme qui se déclenche durant les 20' qui suivent l'alarme
 x=1
 while (x<2) {
 If (60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
