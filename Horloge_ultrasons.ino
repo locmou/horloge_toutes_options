@@ -20,8 +20,8 @@ const int echoPin = 7;
 UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 
 // Connexion alarme et leds
-const uint8_t al1Pin=2;
-const uint8_t al2Pin=4;
+const uint8_t alPin[] = {2, 4};
+//const uint8_t alPin[2]=4;
 const uint8_t redLedPin=3;
 const uint8_t blueLedPin=5;
 const uint8_t GreenLedPin=9;
@@ -44,7 +44,7 @@ String com,aff="--";
 byte al1[] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al2[] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
-uint8_t a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
+uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
 int wait=300;
 float maxi;
 
@@ -81,15 +81,15 @@ Serial.begin(115200);
 
 void loop (){
  // Test alarme
-a=1
-while (a<2) {
-If (60*h+m>=60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2))) && 60*h+m<60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2)))+20) {
-  digitalWrite (al1Pin,HIGH);
+x=1
+while (x<2) {
+If (60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+  digitalWrite (alPin[x],HIGH);
   } 
 else {
-  digitalWrite (al1Pin,LOW);
+  digitalWrite (alPin[x],LOW);
   }
-a++
+x++
 }
 
 // reception infrarouge ?        
@@ -121,7 +121,7 @@ if (mode==3) reglagealarme(a);
 
 }
 
-void infoalarm(uint8_t(a)) {
+void infoalarm(a) {
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Alarme "+String(a)+"->");
@@ -131,7 +131,7 @@ lcd.print("eq pour la modifier.")
 iwait();
 }
 
-void reglagealarme(uint8_t(a)){
+void reglagealarme(a){
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a));
