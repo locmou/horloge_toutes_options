@@ -82,15 +82,15 @@ Serial.begin(115200);
 void loop (){
  // Test alarme
 a=1
-while (a<2) 
-If (60*h+m>=60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2))) && 60*h+m<60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2)))+20
+while (a<2) {
+If (60*h+m>=60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2))) && 60*h+m<60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2)))+20) {
   digitalWrite (al1Pin,HIGH);
   } 
 else {
   digitalWrite (al1Pin,LOW);
   }
 a++
-loop
+}
 
 // reception infrarouge ?        
 touchir();
