@@ -80,10 +80,22 @@ Serial.begin(115200);
 }
 
 void loop (){
+ // Déclenchement alarme 1
+If (h=Rtc.GetMemory(1) && m=Rtc.GetMemory(2)) {
+  digitalWrite (al1Pin,HIGH);
+  } 
+else {
+  digitalWrite (al1Pin,LOW);
+  }
 
-If (((h=Rtc.GetMemory(1)) && m=Rtc.GetMemory(2)) ||((h=Rtc.GetMemory(3)) && m=Rtc.GetMemory(4))) {
-  // Déclenchement alarme
-}
+ // Déclenchement alarme 2
+If (h=Rtc.GetMemory(3) && m=Rtc.GetMemory(4)) {
+  digitalWrite (al2Pin,HIGH);
+  }
+else{
+  digitalWrite (al2Pin,LOW);
+  }
+
 // reception infrarouge ?        
 touchir();
 // déclenché par CH+ ou CH-
