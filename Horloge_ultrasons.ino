@@ -19,6 +19,13 @@ const int echoPin = 7;
 // initialisation du capteur avec les broches utilisees.
 UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 
+// Connexion alarme et leds
+const uint8_t al1Pin=2;
+const uint8_t al2Pin=4;
+const uint8_t redLedPin=3;
+const uint8_t blueLedPin=5;
+const uint8_t GreenLedPin=9;
+
 // Gros chiffres
 #include <BigFont02_I2C.h>
 
@@ -39,6 +46,7 @@ byte al2[] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B
 byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
 uint8_t a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
 int wait=300;
+float maxi;
 
 void setup (){
   
@@ -72,6 +80,10 @@ Serial.begin(115200);
 }
 
 void loop (){
+
+If (((h=Rtc.GetMemory(1)) && m=Rtc.GetMemory(2)) ||((h=Rtc.GetMemory(3)) && m=Rtc.GetMemory(4))) {
+  // Déclenchement alarme
+}
 // reception infrarouge ?        
 touchir();
 // déclenché par CH+ ou CH-
@@ -84,30 +96,37 @@ if (touch==3125149440  ||touch==3091726080  ) {
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (com=="+100") a=1; else a=2;
   wait=800;
-  mode=2;ecrannet();h8=m8=0;
+  mode=2;ecrannet();
+  }
+
+//déclenché par eq
+if (touch==4127850240) {
+  telecir();
+  wait=800;
+  mode=3;ecrannet();h8=m8=0;
   }
 
 if (mode==0) affichheure();
 if (mode==1) reglageheuredate();
 if (mode==2) infoalarm(a);
 if (mode==3) reglagealarme(a);
+
 }
 
-void infoalarm(int(a)) {
+void infoalarm(uint8_t(a)) {
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Alarme "+String(a)+"->");
 lcd.print(String(Rtc.GetMemory(0+a))+ ":"+String(Rtc.GetMemory(1+a))+ "mn");
 lcd.setCursor(0,1);
+lcd.print("eq pour la modifier.")
 iwait();
 }
 
-
-void reglagealarme(int(a)){
+void reglagealarme(uint8_t(a)){
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a));
-
 
 if (h8==0) {
 settime(24);
@@ -164,9 +183,7 @@ else{
     }
   }
 }
-
 iwait();
-
 }
 
 void settime(float(maxi)){
@@ -181,7 +198,8 @@ if (maxi==100) lcd.print("Annee :");
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
   if (aff=="--") {
-    if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
+    if (com.toInt()<=int((maxi-1)/10)) {
+    //if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
     aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
     }
     else {  
