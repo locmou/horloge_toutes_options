@@ -80,21 +80,17 @@ Serial.begin(115200);
 }
 
 void loop (){
- // Déclenchement alarme 1
-If (h=Rtc.GetMemory(1) && m=Rtc.GetMemory(2)) {
+ // Test alarme
+a=1
+while (a<2) 
+If (60*h+m>=60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2))) && 60*h+m<60*(Rtc.GetMemory(a*2))+(Rtc.GetMemory(1+(a*2)))+20
   digitalWrite (al1Pin,HIGH);
   } 
 else {
   digitalWrite (al1Pin,LOW);
   }
-
- // Déclenchement alarme 2
-If (h=Rtc.GetMemory(3) && m=Rtc.GetMemory(4)) {
-  digitalWrite (al2Pin,HIGH);
-  }
-else{
-  digitalWrite (al2Pin,LOW);
-  }
+a++
+loop
 
 // reception infrarouge ?        
 touchir();
@@ -129,7 +125,7 @@ void infoalarm(uint8_t(a)) {
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Alarme "+String(a)+"->");
-lcd.print(String(Rtc.GetMemory(0+a))+ ":"+String(Rtc.GetMemory(1+a))+ "mn");
+lcd.print(String(Rtc.GetMemory(2*a))+ ":"+String(Rtc.GetMemory(1+(2*a)))+ "mn");
 lcd.setCursor(0,1);
 lcd.print("eq pour la modifier.")
 iwait();
@@ -150,11 +146,11 @@ else{
   if (m8!=0) {
     aff="--";      
     wait=300;
-    Rtc.SetMemory(0+a,h8);Rtc.SetMemory(1+a,m8);
+    Rtc.SetMemory(a,h8);Rtc.SetMemory(1+(2*a),m8);
     mode=0;
     nbr=0;
     ecrannet();
-    Serial.print ("heure: "+String(Rtc.GetMemory(0+a))+ " minutes :"+String(Rtc.GetMemory(1+a)));delay(1000);
+    Serial.print ("heure: "+String(Rtc.GetMemory(2*a))+ " minutes :"+String(Rtc.GetMemory(1+(2*a))));delay(1000);
   }
 }
  
