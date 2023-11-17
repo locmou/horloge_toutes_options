@@ -20,7 +20,7 @@ const int echoPin = 7;
 UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 
 // Connexion alarme et leds
-const uint8_t alPin[] = {2, 4};
+const uint8_t alPin[] = {2,4};
 //const uint8_t alPin[2]=4;
 const uint8_t redLedPin=3;
 const uint8_t blueLedPin=5;
@@ -47,6 +47,19 @@ byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  
 uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
 int wait=300;
 float maxi;
+// Déclarations de fonctions
+void infoalarm(uint8_t x);
+void reglagealarme(uint8_t x);
+void affichheure();
+void touchir();
+void Retroeclairage();
+void telecir();
+void iwait();
+void ecrannet();
+void settime(float maxi);
+
+
+
 
 void setup (){
   
@@ -75,21 +88,25 @@ lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
 Retroeclairage();
+pinMode(2, OUTPUT);
+pinMode(4, OUTPUT);
 
 Serial.begin(115200);
 }
 
 void loop (){
  // Test alarme qui se déclenche durant les 20' qui suivent l'alarme
-x=1
-while (x<2) {
-If (60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
-  digitalWrite (alPin[x],HIGH);
+x=1;
+while (x<3) {
+//Serial.println("tot min cacl:"+String(60*h+m)+" min :"+String (60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))))+" max :"+String (60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20));
+if (60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+  //Serial.println ("yes");
+  digitalWrite (x*2,LOW);
   } 
 else {
-  digitalWrite (alPin[x],LOW);
+  digitalWrite (x*2,HIGH);
   }
-x++
+x++;
 }
 
 // reception infrarouge ?        
@@ -121,20 +138,21 @@ if (mode==3) reglagealarme(a);
 
 }
 
-void infoalarm(a) {
+
+void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(a)+"->");
-lcd.print(String(Rtc.GetMemory(2*a))+ ":"+String(Rtc.GetMemory(1+(2*a)))+ "mn");
+lcd.print("Alarme "+String(x)+"->");
+lcd.print(String(Rtc.GetMemory(2*x))+ ":"+String(Rtc.GetMemory(1+(2*x)))+ "mn");
 lcd.setCursor(0,1);
-lcd.print("eq pour la modifier.")
+lcd.print("eq pour la modifier.");
 iwait();
 }
 
-void reglagealarme(a){
+void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Reglage alarme "+String(a));
+lcd.print("Reglage alarme "+String(x));
 
 if (h8==0) {
 settime(24);
@@ -146,11 +164,11 @@ else{
   if (m8!=0) {
     aff="--";      
     wait=300;
-    Rtc.SetMemory(a,h8);Rtc.SetMemory(1+(2*a),m8);
+    Rtc.SetMemory(2*x,h8);Rtc.SetMemory(1+(2*x),m8);
     mode=0;
     nbr=0;
     ecrannet();
-    Serial.print ("heure: "+String(Rtc.GetMemory(2*a))+ " minutes :"+String(Rtc.GetMemory(1+(2*a))));delay(1000);
+    Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
  
@@ -207,19 +225,19 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   telecir();
   if (aff=="--") {
     if (com.toInt()<=int((maxi-1)/10)) {
-    //if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
-    aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
-    }
+      //if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
+      aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
+     }
     else {  
-    nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
-    } 
-  }
+      nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+      } 
+    }
   else{
     aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+    }
+  if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
+  wait=800;  
   }
-if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
-wait=800;  
-}
 
 }
 
