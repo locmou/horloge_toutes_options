@@ -221,8 +221,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   else{
     aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
   }
-  if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
-  
+if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
 wait=800;  
 }
 
@@ -277,33 +276,33 @@ analogWrite(BRIGHTNESS_PIN, bright);
 }
 
 void telecir(){
-  com="";
-  if (touch==3125149440) com="ch-";
-  if (touch==3108437760) com="ch"; 
-  if (touch==3091726080) com="ch+"; 
-  if (touch==3141861120) com="tr-";  
-  if (touch==3208707840) com="tr+";
-  if (touch==3158572800) com="pl"; 
-  if (touch==4161273600) com="v-"; 
-  if (touch==3927310080) com="v+";
-  if (touch==4127850240) com="eq";
-  if (touch==3910598400) com="0"; 
-  if (touch==3860463360) com="+100"; 
-  if (touch==4061003520) com="+200";  
-  if (touch==4077715200) com="1";
-  if (touch==3877175040) com="2"; 
-  if (touch==2707357440) com="3"; 
-  if (touch==4144561920) com="4";
-  if (touch==3810328320) com="5";
-  if (touch==2774204160) com="6"; 
-  if (touch==3175284480) com="7"; 
-  if (touch==2907897600) com="8";  
-  if (touch==3041591040) com="9";
-  touch=0;
+com="";
+if (touch==3125149440) com="ch-";
+if (touch==3108437760) com="ch"; 
+if (touch==3091726080) com="ch+"; 
+if (touch==3141861120) com="tr-";  
+if (touch==3208707840) com="tr+";
+if (touch==3158572800) com="pl"; 
+if (touch==4161273600) com="v-"; 
+if (touch==3927310080) com="v+";
+if (touch==4127850240) com="eq";
+if (touch==3910598400) com="0"; 
+if (touch==3860463360) com="+100"; 
+if (touch==4061003520) com="+200";  
+if (touch==4077715200) com="1";
+if (touch==3877175040) com="2"; 
+if (touch==2707357440) com="3"; 
+if (touch==4144561920) com="4";
+if (touch==3810328320) com="5";
+if (touch==2774204160) com="6"; 
+if (touch==3175284480) com="7"; 
+if (touch==2907897600) com="8";  
+if (touch==3041591040) com="9";
+touch=0;
 }
 
 void iwait(){
-    wait--;
+wait--;
 if (wait<0) {
     wait=800;
     mode=0;aff="--";
@@ -315,65 +314,3 @@ void ecrannet(){
 lcd.init();
 big.begin();
 }
-
-/* Code mémoire ********************
- *  ********************************
- *  ********************************
-const char data[] = "memoblablablabla";
-
-void setup () 
-{
- /*  // comment out on a second run to see that the info is stored long term 
-    // Store something in memory on the RTC
-    Rtc.SetMemory(0, 13);
-    uint8_t written = Rtc.SetMemory(13, (const uint8_t*)data, sizeof(data) - 1); // remove the null terminator strings add
-    Rtc.SetMemory(1, written);
-/* //end of comment out section 
-}
-
-void loop () {
-
-
-    // get the offset we stored our data from address zero
-    uint8_t address = Rtc.GetMemory(0);
-    if (address != 13)
-    {
-        Serial.println("address didn't match");
-    }
-    else
-    {
-        // get the size of the data from address 1
-        uint8_t count = Rtc.GetMemory(1);
-        uint8_t buff[20];
-
-        // get our data from the address with the given size
-        uint8_t gotten = Rtc.GetMemory(address, buff, count);
-
-        if (gotten != count ||
-            count != sizeof(data) - 1) // remove the extra null terminator strings add
-        {
-            Serial.print("something didn't match, count = ");
-            Serial.print(count, DEC);
-            Serial.print(", gotten = ");
-            Serial.print(gotten, DEC);
-            Serial.println();
-        }
-        lcd.setCursor(0,1);
-        //lcd.print("data read (");
-        //lcd.print(gotten);
-        //lcd.print(") = \"");
-        for (uint8_t ch = 0; ch < gotten; ch++)
-        {
-            lcd.print((char)buff[ch]);
-        }
-        //lcd.println("\"");
-    }
-
-    
- //   delay(500);
-}
-
-
-
-}
- */
