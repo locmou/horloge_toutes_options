@@ -1,4 +1,3 @@
-
 // CONNECTIONS: LCD Et RTC
 // DS1307 SDA --> SDA
 // DS1307 SCL --> SCL
@@ -47,6 +46,8 @@ byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  
 uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
 int wait=300;
 float maxi;
+bool al[2]={false,false};
+
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
 void reglagealarme(uint8_t x);
@@ -78,23 +79,44 @@ lcd.backlight();
 Retroeclairage();
 pinMode(2, OUTPUT);
 pinMode(4, OUTPUT);
+pinMode(10,INPUT);
+pinMode(12,INPUT);
 
 Serial.begin(115200);
 }
 
 void loop (){
- // Test alarme qui se déclenche durant les 20' qui suivent l'alarme
+// Pression sur le bouton 10 al1 ou 12 al2
+if (digitalRead(10) == HIGH || digitalRead(12) == HIGH) {touch=0;}
+
+if (digitalRead(10) == LOW) {
+  touch++;
+  // Appui long?
+  if (touch>200) {
+    touch=0;
+    // Allumage ou coupure volontaire
+    } else {
+    // Appui court = changement du statut de l'alarme
+    al[0]=!al[0];
+    Serial.print(al[0]);
+    }
+  }
+//if (digitalRead(12) == LOW) {al2=!al2;Serial.print(al12);}
+
+ // Alarme qui se déclenche durant les 20' qui suivent l'heure
 x=1;
 while (x<3) {
-if (60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
-  digitalWrite (x*2,LOW);
+if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+  digitalWrite (x*2,LOW);    
   } 
 else {
   digitalWrite (x*2,HIGH);
   }
 x++;
 }
+//}
 
+  
 // reception infrarouge ?        
 touchir();
 // déclenché par CH+ ou CH-
