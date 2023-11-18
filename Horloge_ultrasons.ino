@@ -270,6 +270,18 @@ void affichheure(){
     lcd.setCursor(14,1);
     if (mo<10) lcd.print(" "); 
     lcd.print(mo);
+
+// Affichage alarme 1/2 on/off
+lcd.setcursor (15,0);
+if (al[0] == true && al[1] == true) {
+  lcd.write((uint8_t)3);
+} else if (al[0] == true) {
+  lcd.write((uint8_t)1);
+} else if (al[1] == true) {
+  lcd.write((uint8_t)2);
+} else {
+  lcd.print(" ");
+}  
     
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
