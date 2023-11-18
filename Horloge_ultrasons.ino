@@ -8,6 +8,10 @@
 #include <RtcDS1307.h>
 RtcDS1307<TwoWire> Rtc(Wire);
 
+// Gestion de la led
+#include <RGB_LED.h>
+RGB_LED LED1(3,9,11);
+
 // Gestion IR
 #include <IRremote.h>
 
@@ -21,10 +25,6 @@ UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 
 // Connexion alarme et leds
 const uint8_t alPin[] = {2,4};
-//const uint8_t alPin[2]=4;
-const uint8_t redLedPin=3;
-const uint8_t blueLedPin=5;
-const uint8_t GreenLedPin=9;
 
 // Gros chiffres
 #include <BigFont02_I2C.h>
@@ -59,39 +59,19 @@ void ecrannet();
 void settime(float maxi);
 
 
-
-
 void setup (){
   
 Rtc.Begin();
-/*
-if (Serial) {
-    RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-    Rtc.SetDateTime(compiled);}*/
-    
-    
-/*RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
-RtcDateTime now = Rtc.GetDateTime();*/
+
+/*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
+RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+RtcDateTime now = Rtc.GetDateTime();
+Rtc.SetDateTime(compiled);*/
+  
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
-
-//Rtc.SetDateTime(compiled);
-
-// This line sets the RTC with an explicit date & time, for example to set
-// January 21, 2014 at 3am you would call:
-//Rtc.SetDateTime(RtcDateTime(2014, 1, 21, 3, 0, 0));
-
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
-
-// Mise à l'heure
-/*
-if (now < compiled) 
-{
-    Serial.println("RTC is older than compile time!  (Updating DateTime)");
-    Rtc.SetDateTime(compiled);
-}*/
-
 lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
@@ -106,9 +86,7 @@ void loop (){
  // Test alarme qui se déclenche durant les 20' qui suivent l'alarme
 x=1;
 while (x<3) {
-//Serial.println("tot min cacl:"+String(60*h+m)+" min :"+String (60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))))+" max :"+String (60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20));
 if (60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
-  //Serial.println ("yes");
   digitalWrite (x*2,LOW);
   } 
 else {
@@ -124,15 +102,13 @@ if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
   mode=1;ecrannet();an=mo=jr=h=m=s=0;
   }
-
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (com=="+100") a=1; else a=2;
   wait=800;
   mode=2;ecrannet();
   }
-
-//déclenché par eq
+//déclenché par EQ
 if (touch==4127850240) {
   telecir();
   wait=800;
@@ -143,9 +119,7 @@ if (mode==0) affichheure();
 if (mode==1) reglageheuredate();
 if (mode==2) infoalarm(a);
 if (mode==3) reglagealarme(a);
-
 }
-
 
 void infoalarm(uint8_t(x)) {
 Retroeclairage();
@@ -179,7 +153,6 @@ else{
     Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
- 
 iwait();
 }
 
@@ -246,7 +219,6 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
   wait=800;  
   }
-
 }
 
 void affichheure(){
@@ -275,10 +247,10 @@ if (mes<50 and mes!=0) {
     Retroeclairage();
     wait=800;
     }
-    
+  
 wait--;
+//Coupe la le rétroéclairage en cas d'inactivité prolongée
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
-    
 }
 
 void touchir(){
@@ -293,7 +265,6 @@ IrReceiver.resume();// Receive the next value
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
-//Serial.print(analogRead(LDR));Serial.print(" ");Serial.println(bright);
 analogWrite(BRIGHTNESS_PIN, bright);
 }
 
