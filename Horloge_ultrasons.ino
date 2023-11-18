@@ -25,12 +25,12 @@ UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
 // Connexion alarme et leds
 const uint8_t alPin[] = {2,4};
 
-// Gros chiffres
-#include <BigFont02_I2C.h>
-
 // Affichage LCD
 #include "LiquidCrystal_I2C.h"
 LiquidCrystal_I2C lcd(0x27,16,2);
+
+// Gros chiffres
+#include <BigFont02_I2C.h>
 BigFont02_I2C     big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
@@ -40,10 +40,10 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 //int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
 String com,aff="--";
-byte al1[] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
-byte al2[] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
-byte al12[] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
-uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0;
+byte al1[8] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
+byte al2[8] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
+byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
+uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
 int wait=300;
 float maxi;
 bool al[2]={false,false};
@@ -81,29 +81,36 @@ pinMode(2, OUTPUT);
 pinMode(4, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
-
+lcd.createChar(1, al1);
+lcd.createChar(2, al2);
+lcd.createChar(3, al12);
 Serial.begin(115200);
 }
 
 void loop (){
+  
 // Pression sur le bouton 10 al1 ou 12 al2
-if (digitalRead(10) == HIGH || digitalRead(12) == HIGH) {touch=0;}
-
-if (digitalRead(10) == LOW) {
-  touch++;
-  // Appui long?
-  if (touch>200) {
-    touch=0;
-    // Allumage ou coupure volontaire
-    } else {
-    // Appui court = changement du statut de l'alarme
-    al[0]=!al[0];
-    Serial.print(al[0]);
+for (x=0;x<2;x++){
+  if (digitalRead(bout[x]) == HIGH) {touch=0;}
+  if (digitalRead(bout[x]) == LOW) {
+    touch++;
+    // Appui long?
+    if (touch>200) {
+      touch=0;
+      // Allumage ou coupure volontaire
+      } else {
+      // Appui court = changement du statut de l'alarme
+      al[x]=!al[x];
+      Serial.print(al[x]);
+      }
     }
-  }
-//if (digitalRead(12) == LOW) {al2=!al2;Serial.print(al12);}
+}
+  
+// lcd.write((uint8_t)1);
+// 
+// 
+// Alarme qui se déclenche durant les 20' qui suivent l'heure
 
- // Alarme qui se déclenche durant les 20' qui suivent l'heure
 x=1;
 while (x<3) {
 if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
