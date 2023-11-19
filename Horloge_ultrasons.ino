@@ -39,10 +39,10 @@ BigFont02_I2C     big(&lcd); // construct large font object, passing to it the n
 
 //int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
-String com,aff="--";
+String com,aff="--";/*
 byte al1[8] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al2[8] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
-byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;
+byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;*/
 uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
 int wait=300;
 float maxi;
@@ -81,9 +81,7 @@ pinMode(2, OUTPUT);
 pinMode(4, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
-lcd.createChar(1, al1);
-lcd.createChar(2, al2);
-lcd.createChar(3, al12);
+
 Serial.begin(115200);
 }
 
@@ -256,6 +254,8 @@ void affichheure(){
     h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
     mes=(int)distanceSensor.measureDistanceCm()+1;
 
+
+big.begin();
 // Affichage heure minutes
     big.writeint(0,0,h,2,true); 
     big.writeint(0,6,m,2,true); 
@@ -271,17 +271,21 @@ void affichheure(){
     if (mo<10) lcd.print(" "); 
     lcd.print(mo);
 
+/*
+lcd.createChar(1, al1);
+lcd.createChar(2, al2);
+lcd.createChar(3, al12);*/
 // Affichage alarme 1/2 on/off
-lcd.setcursor (15,0);
-if (al[0] == true && al[1] == true) {
-  lcd.write((uint8_t)3);
+lcd.setCursor (15,0);
+//if (al[0] == true && al[1] == true) {
+  lcd.write(182);/*
 } else if (al[0] == true) {
-  lcd.write((uint8_t)1);
+  lcd.write(180);
 } else if (al[1] == true) {
-  lcd.write((uint8_t)2);
+  lcd.write(186);
 } else {
   lcd.print(" ");
-}  
+}  */
     
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
