@@ -271,21 +271,18 @@ big.begin();
     if (mo<10) lcd.print(" "); 
     lcd.print(mo);
 
-/*
-lcd.createChar(1, al1);
-lcd.createChar(2, al2);
-lcd.createChar(3, al12);*/
+
 // Affichage alarme 1/2 on/off
-lcd.setCursor (15,0);
-//if (al[0] == true && al[1] == true) {
-  lcd.write(182);/*
+lcd.setCursor (14,0);
+if (al[0] == true && al[1] == true) {
+  lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
-  lcd.write(180);
+  lcd.write(165);lcd.print(" ");
 } else if (al[1] == true) {
-  lcd.write(186);
+   lcd.print(" ");lcd.write(58);
 } else {
-  lcd.print(" ");
-}  */
+  lcd.print("  ");
+}  
     
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
