@@ -95,7 +95,7 @@ for (x=0;x<2;x++){
     if (pop==true) {
       pop=false;
       but[x]=0;
-      if (but[x]>200) {
+      if (but[x]>5) {
         //Appui long= réglage alarm
         al[x]=!al[x];
         antial[x]=false;
@@ -155,7 +155,7 @@ if (mode==3) reglagealarme(a);
 void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(x)+" -> ");
+lcd.print("Alarme "+String(x)+"-> ");
 lcd.print(String(Rtc.GetMemory(2*x))+ ":"+String(Rtc.GetMemory(1+(2*x))));
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
@@ -286,10 +286,10 @@ lcd.setCursor (14,0);
 if (al[0] == true && al[1] == true) {
   lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
-  //lcd.print(" ");
+  lcd.print(" ");
   lcd.write(165);
 } else if (al[1] == true) {
-   //lcd.print(" ");
+   lcd.print(" ");
    lcd.write(58);
 } else {
   lcd.print("  ");
