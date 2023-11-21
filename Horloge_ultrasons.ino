@@ -274,7 +274,7 @@ lcd.setCursor (14,0);
 if (al[0] == true && al[1] == true) {
   lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
-  lcd.write(165);lcd.print(" ");
+  lcd.print(" ");lcd.write(165);
 } else if (al[1] == true) {
    lcd.print(" ");lcd.write(58);
 } else {
