@@ -110,11 +110,12 @@ for (x=0;x<2;x++){
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
 for (x=1;x<3;x++){
-if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+  if ( 60*h+m==60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) antial[x-1]=false;
   if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
   } 
 else {
-  if (antial[x-1]==false) digitalWrite (x*2,HIGH);else digitalWrite (x*2,LOW);
+  if (antial[x-1]==false) digitalWrite (x*2,HIGH); else digitalWrite (x*2,LOW);
   }
 }
  
