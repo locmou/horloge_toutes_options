@@ -145,6 +145,7 @@ if (mode==2) infoalarm(a);
 if (mode==3) reglagealarme(a);
 }
 
+// Affiche les heures des alarmes
 void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -155,6 +156,7 @@ lcd.print("EQ pour modif");
 iwait();
 }
 
+//Réglage des alarmes 1 et 2
 void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -180,6 +182,8 @@ else{
 iwait();
 }
 
+
+//Réglage de l'heure et de la date
 void reglageheuredate(){
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -217,6 +221,7 @@ else{
 iwait();
 }
 
+// Permet la saisie de la date et des heures et alarmes
 void settime(float(maxi)){
 nbr=0;lcd.setCursor(0,1);
 if (maxi==24) lcd.print("Heure :");
@@ -245,6 +250,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   }
 }
 
+// En mode 0, affiche l'heure la date et les alarmes en marche
 void affichheure(){
 // Requete heure 
     RtcDateTime now = Rtc.GetDateTime();    
@@ -292,6 +298,7 @@ wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
 }
 
+// Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
 void touchir(){
 touch=0;
 if (IrReceiver.decode())  {
@@ -301,12 +308,14 @@ IrReceiver.resume();// Receive the next value
 //delay (800); 
 }
 
+// Ajuste le rétroéclairage en fonction de la mesure de luminosité ambiante
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
 }
 
+// Assigne à la variable com la chaine correspondant au code infrarouge détécté.
 void telecir(){
 com="";
 if (touch==3125149440) com="ch-";
@@ -333,6 +342,7 @@ if (touch==3041591040) com="9";
 touch=0;
 }
 
+//Renvoie vers l'affichage de l'heure après un temps d'inactivité dans les réglages d'heure ou d'alarme
 void iwait(){
 wait--;
 if (wait<0) {
@@ -342,6 +352,7 @@ if (wait<0) {
     }
 }
 
+//Nettoyage de l'écran LCD
 void ecrannet(){
 lcd.init();
 big.begin();
