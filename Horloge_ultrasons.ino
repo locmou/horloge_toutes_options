@@ -48,6 +48,7 @@ uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
 int wait=300;
 float maxi;
 bool al[2]={false,false};
+bool antial[2]={false,false};
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -92,7 +93,7 @@ void loop (){
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == HIGH) {touch=0;}
-  if (digitalRead(bout[x]) == LOW) {
+  else {
     touch++;
     // Appui long?
     if (touch>200) {
@@ -102,21 +103,19 @@ for (x=0;x<2;x++){
       Serial.print(al[x]);
       } else {
       // Appui court = on/off 
-
+      antial[x]=!antial[x];
       }
     }
 }
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
-x=1;
-while (x<3) {
+for (x=1;x<3;x++){
 if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
-  digitalWrite (x*2,LOW);    
+  if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
   } 
 else {
-  digitalWrite (x*2,HIGH);
+  if (antial[x-1]==false) digitalWrite (x*2,HIGH);else digitalWrite (x*2,LOW);
   }
-x++;
 }
  
 // reception infrarouge ?        
