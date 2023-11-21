@@ -64,20 +64,21 @@ void settime(float maxi);
 void setup (){
   
 Rtc.Begin();
-
 /*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
 Rtc.SetDateTime(compiled);*/
-  
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
+// Infrarouges  
 IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
+//LCD
 lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
 Retroeclairage();
+// Pin's
 pinMode(2, OUTPUT);
 pinMode(4, OUTPUT);
 pinMode(10,INPUT);
@@ -95,21 +96,18 @@ for (x=0;x<2;x++){
     touch++;
     // Appui long?
     if (touch>200) {
+      //Appui long= réglage alarme
       touch=0;
-      // Allumage ou coupure volontaire
-      } else {
-      // Appui court = changement du statut de l'alarme
       al[x]=!al[x];
       Serial.print(al[x]);
+      } else {
+      // Appui court = on/off 
+
       }
     }
 }
-  
-// lcd.write((uint8_t)1);
-// 
-// 
+ 
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
-
 x=1;
 while (x<3) {
 if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
@@ -120,9 +118,7 @@ else {
   }
 x++;
 }
-//}
-
-  
+ 
 // reception infrarouge ?        
 touchir();
 // déclenché par CH+ ou CH-
