@@ -45,10 +45,9 @@ byte al1[8] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  
 byte al2[8] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;*/
 uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
-int wait=300;
+int wait=300,but[2];
 float maxi;
-bool al[2]={false,false};
-bool antial[2]={false,false};
+bool al[2]={false,false},antial[2]={false,false},pop=false;
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -92,20 +91,27 @@ void loop (){
   
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
-  if (digitalRead(bout[x]) == HIGH) {touch=0;}
-  else {
-    touch++;
-    // Appui long?
-    if (touch>200) {
-      //Appui long= réglage alarme
-      touch=0;
-      al[x]=!al[x];
-      Serial.print(al[x]);
-      } else {
-      // Appui court = on/off 
-      antial[x]=!antial[x];
+  if (digitalRead(bout[x]) == LOW) {
+    if (pop==true) {
+      pop=false;
+      but[x]=0;
+      if (but[x]>200) {
+        //Appui long= réglage alarm
+        al[x]=!al[x];
+        antial[x]=false;
+        Serial.print("alarme "+String(x)+" :");Serial.println(al[x]);
+        } 
+      else {
+        // Appui court = on/off       
+        but[x]=0;
+        antial[x]=!antial[x];
+        }   
       }
-    }
+    else {
+      pop=true;
+      }
+  but[x]++;Serial.print("Alarme : ");Serial.print(x);Serial.print(" Bouton :");Serial.print(bout[x]);Serial.print("comptage bouton :");Serial.println(but[x]);
+  }
 }
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
@@ -280,9 +286,11 @@ lcd.setCursor (14,0);
 if (al[0] == true && al[1] == true) {
   lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
-  lcd.print(" ");lcd.write(165);
+  //lcd.print(" ");
+  lcd.write(165);
 } else if (al[1] == true) {
-   lcd.print(" ");lcd.write(58);
+   //lcd.print(" ");
+   lcd.write(58);
 } else {
   lcd.print("  ");
 }  
@@ -300,7 +308,6 @@ if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
 void touchir(){
-touch=0;
 if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
   }
