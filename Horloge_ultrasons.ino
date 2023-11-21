@@ -107,11 +107,11 @@ for (x=0;x<2;x++){
         antial[x]=!antial[x];
         }   
       }
-    else {
-      pop=true;
-      }
-  but[x]++;Serial.print("Alarme : ");Serial.print(x);Serial.print(" Bouton :");Serial.print(bout[x]);Serial.print("comptage bouton :");Serial.println(but[x]);
-  }
+    }
+  else {
+    pop=true;
+    but[x]++;Serial.print("Alarme : ");Serial.print(x);Serial.print(" Bouton :");Serial.print(bout[x]);Serial.print("comptage bouton :");Serial.println(but[x]);
+    }
 }
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
