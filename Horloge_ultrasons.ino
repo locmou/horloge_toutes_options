@@ -45,7 +45,7 @@ byte al1[8] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  
 byte al2[8] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;*/
 uint8_t r,g,b,x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
-int t,wait=300,but[2];
+int t=0,wait=300,but[2];
 float maxi;
 bool al[2]={false,false},antial[2]={false,false},pop=false;
 
@@ -294,12 +294,25 @@ if (al[0] == true && al[1] == true) {
 } else {
   lcd.print("  ");
 }  
-    
+
+//LED
+t=t+1;
+if (t>400) {t=0;}
+if (t<50)  {  r=255;  g=255-(t*5.1);  b=(t*5.1);}
+if (t>=50 and t<100) {  r=255-(t-50)*5.1;  g=(t-50)*5.1;  b=255;}
+if (t>=100 and t<150) {  r=0;  g=255-(t-100)*5.1;  b=255;}
+if (t>=150 and t<200) {  r=0;  g=(t-150)*5.1;  b=255-(t-150)*5.1;}
+if (t>=200 and t<250) {  r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
+if (t>=250 and t<300) {  r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
+if (t>=300 and t<350) {  r=0;  g=255;  b=(t-300)*5.1;}
+if (t>=350 ) {  r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
+LED.set(r*bright/255,g*bright/255,b*bright/255); 
+
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
     Retroeclairage();
     wait=800;
-    }
+}
   
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
 wait--;
@@ -321,18 +334,6 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
-t=t+1;
-if (t>400) {t=0;}
-//LED1
-if (t<50)  {  r1=255;  g1=255-(t*5.1);  b1=(t*5.1);}
-if (t>=50 and t<100) {  r1=255-(t-50)*5.1;  g1=(t-50)*5.1;  b1=255;}
-if (t>=100 and t<150) {  r1=0;  g1=255-(t-100)*5.1;  b1=255;}
-if (t>=150 and t<200) {  r1=0;  g1=(t-150)*5.1;;  b1=255-(t-150)*5.1;}
-if (t>=200 and t<250) {  r1=(t-200)*5.1;  g1=255-(t-200)*5.1;  b1=0;}
-if (t>=250 and t<300) {  r1=255-(t-250)*5.1;  g1=(t-250)*5.1;  b1=0;}
-if (t>=300 and t<350) {  r1=0;  g1=255;  b1=(t-300)*5.1;}
-if (t>=350 ) {  r1=(t-350)*5.1;  g1=255;  b1=255-(t-350)*5.1;}
-LED.set(r,g,b);
 }
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
