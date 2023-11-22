@@ -9,7 +9,7 @@ RtcDS1307<TwoWire> Rtc(Wire);
 
 // Gestion de la led
 #include <RGB_LED.h>
-RGB_LED LED1(3,9,11);
+RGB_LED LED(3,9,11);
 
 // Gestion IR
 #include <IRremote.h>
@@ -44,8 +44,8 @@ String com,aff="--";
 byte al1[8] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al2[8] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
 byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;*/
-uint8_t x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
-int wait=300,but[2];
+uint8_t r,g,b,x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
+int t,wait=300,but[2];
 float maxi;
 bool al[2]={false,false},antial[2]={false,false},pop=false;
 
@@ -304,7 +304,7 @@ if (mes<50 and mes!=0) {
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
 wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
-  //LED1.set(r1,g1,b1);
+LED.set(0,0,0);
 }
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
@@ -321,6 +321,18 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
+t=t+1;
+if (t>400) {t=0;}
+//LED1
+if (t<50)  {  r1=255;  g1=255-(t*5.1);  b1=(t*5.1);}
+if (t>=50 and t<100) {  r1=255-(t-50)*5.1;  g1=(t-50)*5.1;  b1=255;}
+if (t>=100 and t<150) {  r1=0;  g1=255-(t-100)*5.1;  b1=255;}
+if (t>=150 and t<200) {  r1=0;  g1=(t-150)*5.1;;  b1=255-(t-150)*5.1;}
+if (t>=200 and t<250) {  r1=(t-200)*5.1;  g1=255-(t-200)*5.1;  b1=0;}
+if (t>=250 and t<300) {  r1=255-(t-250)*5.1;  g1=(t-250)*5.1;  b1=0;}
+if (t>=300 and t<350) {  r1=0;  g1=255;  b1=(t-300)*5.1;}
+if (t>=350 ) {  r1=(t-350)*5.1;  g1=255;  b1=255-(t-350)*5.1;}
+LED.set(r,g,b);
 }
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
