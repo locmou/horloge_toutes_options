@@ -92,19 +92,19 @@ void loop (){
 for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == LOW) {
     if (pop==true) {
-      pop=false;
-      but[x]=0;
+      pop=false;     
       if (but[x]>5) {
+        but[x]=0;
         //Appui long= réglage alarm
         al[x]=!al[x];
         antial[x]=false;
         Serial.print("alarme "+String(x)+" :");Serial.println(al[x]);
         } 
       else {
-        // Appui court = on/off       
-        but[x]=0;
+        // Appui court = on/off               
         antial[x]=!antial[x];
-        }   
+        }
+          
       }
     }
   else {
@@ -211,7 +211,7 @@ else{
         settime(13);
         mo=nbr;}
       else {
-        aff="----"
+        aff="----";
         settime(10000);
         an=nbr;
         if (an!=0){aff="--";
@@ -256,9 +256,10 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       
     } else {
     aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);if (aff.toInt()>1000) nbr=aff.toInt();
-     
-  }
+    } 
+  
   wait=800;
+  }
 }
 
 // En mode 0, affiche l'heure la date et les alarmes en marche
