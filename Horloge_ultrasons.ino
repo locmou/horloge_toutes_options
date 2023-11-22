@@ -211,7 +211,8 @@ else{
         settime(13);
         mo=nbr;}
       else {
-        settime(100);
+        aff="----"
+        settime(10000);
         an=nbr;
         if (an!=0){aff="--";
         ecrannet();
@@ -233,26 +234,31 @@ if (maxi==24) lcd.print("Heure :");
 if (maxi==60) lcd.print("Minutes :");
 if (maxi==32) lcd.print("Jour :");
 if (maxi==13) lcd.print("Mois :");
-if (maxi==100) lcd.print("Annee :");
+if (maxi==10000) lcd.print("Annee :");
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
-  if (aff=="--") {
-    if (com.toInt()<=int((maxi-1)/10)) {
-      //if (com.toInt()!=0 && com.toInt()<=int((maxi-1)/10)) {
-      aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
-     }
-    else {  
-      nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
-      } 
-    }
-  else{
-    aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
-    }
-  if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
-  wait=800;  
+  if (maxi!=10000){
+    if (aff=="--") {
+      if (com.toInt()<=int((maxi-1)/10)) {
+        
+        aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
+       }
+      else {  
+        nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+        } 
+      }
+    else{
+      aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+      }
+    if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
+      
+    } else {
+    aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);if (aff.toInt()>1000) nbr=aff.toInt();
+     
   }
+  wait=800;
 }
 
 // En mode 0, affiche l'heure la date et les alarmes en marche
@@ -297,15 +303,15 @@ if (al[0] == true && al[1] == true) {
 
 //LED
 t=t+1;
-if (t>400) {t=0;}
-if (t<50)  {  r=255;  g=255-(t*5.1);  b=(t*5.1);}
-if (t>=50 and t<100) {  r=255-(t-50)*5.1;  g=(t-50)*5.1;  b=255;}
-if (t>=100 and t<150) {  r=0;  g=255-(t-100)*5.1;  b=255;}
-if (t>=150 and t<200) {  r=0;  g=(t-150)*5.1;  b=255-(t-150)*5.1;}
-if (t>=200 and t<250) {  r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
-if (t>=250 and t<300) {  r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
-if (t>=300 and t<350) {  r=0;  g=255;  b=(t-300)*5.1;}
-if (t>=350 ) {  r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
+if (t>400) t=0;
+if (t<50)  { r=255;  g=255-(t*5.1);  b=(t*5.1);}
+if (t>=50 and t<100) { r=255-(t-50)*5.1;  g=(t-50)*5.1;  b=255;}
+if (t>=100 and t<150) { r=0;  g=255-(t-100)*5.1;  b=255;}
+if (t>=150 and t<200) { r=0;  g=(t-150)*5.1;  b=255-(t-150)*5.1;}
+if (t>=200 and t<250) { r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
+if (t>=250 and t<300) { r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
+if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
+if (t>=350 ) { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
 LED.set(r*bright/255,g*bright/255,b*bright/255); 
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
