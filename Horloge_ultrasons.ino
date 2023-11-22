@@ -304,6 +304,7 @@ if (mes<50 and mes!=0) {
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
 wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
+  //LED1.set(r1,g1,b1);
 }
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
