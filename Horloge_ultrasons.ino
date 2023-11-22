@@ -62,7 +62,6 @@ void settime(float maxi);
 
 
 void setup (){
-  
 Rtc.Begin();
 /*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
@@ -83,9 +82,9 @@ pinMode(2, OUTPUT);
 pinMode(4, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
-
 Serial.begin(115200);
 }
+
 
 void loop (){
   
@@ -259,26 +258,27 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
 // En mode 0, affiche l'heure la date et les alarmes en marche
 void affichheure(){
 // Requete heure 
-    RtcDateTime now = Rtc.GetDateTime();    
-    h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
-    mes=(int)distanceSensor.measureDistanceCm()+1;
-
-
+RtcDateTime now = Rtc.GetDateTime();    
+h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
+mes=(int)distanceSensor.measureDistanceCm()+1;
+  
+// Affichage heure minutes  
 big.begin();
-// Affichage heure minutes
-    big.writeint(0,0,h,2,true); 
-    big.writeint(0,6,m,2,true); 
+big.writeint(0,0,h,2,true); 
+big.writeint(0,6,m,2,true);
+  
 //Affichage secondes
-    lcd.setCursor(12,0);
-    if (s<10) lcd.print(" "); 
-    lcd.print(s);
+lcd.setCursor(12,0);
+if (s<10) lcd.print(" "); 
+lcd.print(s);
+  
 //Affiche jour mois
-    lcd.setCursor(12,1);
-    if (jr<10) lcd.print(" "); 
-    lcd.print(jr);
-    lcd.setCursor(14,1);
-    if (mo<10) lcd.print(" "); 
-    lcd.print(mo);
+lcd.setCursor(12,1);
+if (jr<10) lcd.print(" "); 
+lcd.print(jr);
+lcd.setCursor(14,1);
+if (mo<10) lcd.print(" "); 
+lcd.print(mo);
 
 
 // Affichage alarme 1/2 on/off
@@ -301,8 +301,8 @@ if (mes<50 and mes!=0) {
     wait=800;
     }
   
-wait--;
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
+wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
 }
 
