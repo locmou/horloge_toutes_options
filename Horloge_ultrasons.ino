@@ -93,18 +93,17 @@ for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == LOW) {
     if (pop[x]==true) {
       pop[x]=false;     
-      if (but[x]>5) {
-        but[x]=0;
+      if (but[x]>2) {
         //Appui long= réglage alarm
-        al[x]=!al[x];
+        al[x]= !al[x];
         antial[x]=false;
         Serial.print("alarme "+String(x)+" :");Serial.println(al[x]);
         } 
       else {
-        // Appui court = on/off               
+        // Appui court = on/off
         antial[x]=!antial[x];
         }
-          
+       but[x]=0;   
       }
     }
   else {
@@ -115,7 +114,7 @@ for (x=0;x<2;x++){
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
 for (x=1;x<3;x++){
-if (al[x-1]=true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+if (al[x-1]==true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
   if ( 60*h+m==60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) antial[x-1]=false;
   if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
   } 
@@ -289,7 +288,8 @@ lcd.print(mo);
 
 
 // Affichage alarme 1/2 on/off
-lcd.setCursor (14,0);
+  lcd.setCursor (14,0);
+  
 if (al[0] == true && al[1] == true) {
   lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
@@ -298,10 +298,10 @@ if (al[0] == true && al[1] == true) {
 } else if (al[1] == true) {
    lcd.print(" ");
    lcd.write(58);
-} else {
-  lcd.print("  ");
-}  
+} else lcd.print("  ");
 
+ 
+/*
 //LED
 t=t+1;
 if (t>400) t=0;
@@ -314,7 +314,7 @@ if (t>=250 and t<300) { r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
 if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
 if (t>=350 ) { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
 LED.set(r*bright/255,g*bright/255,b*bright/255); 
-
+*/
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<50 and mes!=0) {
     Retroeclairage();
