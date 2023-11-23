@@ -34,8 +34,8 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 BigFont02_I2C     big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
-#define BRIGHTNESS_PIN  6   // Must be a PWM pin
-#define LDR A7  // composante photorésistance sur la pin A7
+const uint8_t BRIGHTNESS_PIN=6;   // Must be a PWM pin
+const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
 //int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
@@ -78,6 +78,7 @@ big.begin();
 lcd.backlight();
 Retroeclairage();
 // Pin's
+pinMode(BRIGHTNESS_PIN, OUTPUT);
 pinMode(2, OUTPUT);
 pinMode(4, OUTPUT);
 pinMode(10,INPUT);
@@ -97,7 +98,6 @@ for (x=0;x<2;x++){
         //Appui long= réglage alarm
         al[x]= !al[x];
         antial[x]=false;
-        Serial.print("alarme "+String(x)+" :");Serial.println(al[x]);
         } 
       else {
         // Appui court = on/off
@@ -108,7 +108,7 @@ for (x=0;x<2;x++){
     }
   else {
     pop[x]=true;
-    but[x]++;Serial.print("Alarme : ");Serial.print(x);Serial.print(" Bouton :");Serial.print(bout[x]);Serial.print("comptage bouton :");Serial.println(but[x]);
+    but[x]++;
     }
 }
  
@@ -210,7 +210,7 @@ else{
         settime(13);
         mo=nbr;}
       else {
-        aff="----";
+        
         settime(10000);
         an=nbr;
         if (an!=0){aff="--";
@@ -245,18 +245,16 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
         aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
        }
       else {  
-        nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+        nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
         } 
       }
     else{
-      aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print("                            ");
+      aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
       }
     if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
-      
     } else {
     aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);if (aff.toInt()>1000) nbr=aff.toInt();
     } 
-  
   wait=800;
   }
 }
@@ -293,14 +291,13 @@ lcd.print(mo);
 if (al[0] == true && al[1] == true) {
   lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
-  lcd.print(" ");
+  lcd.print(F(" "));
   lcd.write(165);
 } else if (al[1] == true) {
-   lcd.print(" ");
+   lcd.print(F(" "));
    lcd.write(58);
 } else lcd.print("  ");
 
- 
 /*
 //LED
 t=t+1;
@@ -316,7 +313,7 @@ if (t>=350 ) { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
 LED.set(r*bright/255,g*bright/255,b*bright/255); 
 */
 //Affichage lorsque les ultrasons détectent une présence <50cm
-if (mes<50 and mes!=0) {
+if (mes<80 and mes!=0) {
     Retroeclairage();
     wait=800;
 }
@@ -333,7 +330,6 @@ if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
   }
 IrReceiver.resume();// Receive the next value
-//delay (800); 
 }
 
 // Ajuste le rétroéclairage en fonction de la mesure de luminosité ambiante
@@ -345,10 +341,10 @@ analogWrite(BRIGHTNESS_PIN, bright);
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
 void telecir(){
-com="";
-if (touch==3125149440) com="ch-";
+com=F("");
+if (touch==3125149440) com=F("ch-");
 if (touch==3108437760) com="ch"; 
-if (touch==3091726080) com="ch+"; 
+if (touch==3091726080) com=F("ch+"); 
 if (touch==3141861120) com="tr-";  
 if (touch==3208707840) com="tr+";
 if (touch==3158572800) com="pl"; 
