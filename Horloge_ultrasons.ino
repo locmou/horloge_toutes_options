@@ -47,7 +47,7 @@ byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001, 
 uint8_t r,g,b,x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
 int t=0,wait=300,but[2];
 float maxi;
-bool al[2]={false,false},antial[2]={false,false},pop=false;
+bool al[2]={false,false},antial[2]={false,false},pop[2]={false,false};
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -91,8 +91,8 @@ void loop (){
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == LOW) {
-    if (pop==true) {
-      pop=false;     
+    if (pop[x]==true) {
+      pop[x]=false;     
       if (but[x]>5) {
         but[x]=0;
         //Appui long= réglage alarm
@@ -108,7 +108,7 @@ for (x=0;x<2;x++){
       }
     }
   else {
-    pop=true;
+    pop[x]=true;
     but[x]++;Serial.print("Alarme : ");Serial.print(x);Serial.print(" Bouton :");Serial.print(bout[x]);Serial.print("comptage bouton :");Serial.println(but[x]);
     }
 }
