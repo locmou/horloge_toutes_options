@@ -194,35 +194,23 @@ lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
 
 if (h==0) {
-settime(24);
-h=nbr;
-}
-else{ 
-  if (m==0){
-    settime(60);
-    m=nbr;}
-  else {
-    if (jr==0) {
-      settime(32);
-      jr=nbr;}
+  settime(24);
+  h=nbr;
+  }
+  else{ 
+    if (m==0){    settime(60);    m=nbr;}
     else {
-      if (mo==0){
-        settime(13);
-        mo=nbr;}
+      if (jr==0) {
+        settime(32);
+        jr=nbr;}
       else {
-        
-        settime(10000);
-        an=nbr;
-        if (an!=0){aff="--";
-        ecrannet();
-        wait=300;
-        Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));
-        mode=0;
-        nbr=0;}
+        if (mo==0){        settime(13);        mo=nbr;}
+        else {        aff=F("----");        settime(10000);        an=nbr;
+          if (an!=0){aff="--";        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
         }     
+      }
     }
   }
-}
 iwait();
 }
 
