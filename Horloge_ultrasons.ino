@@ -40,13 +40,10 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 //int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
 String com,aff="--";
-/*
-byte al1[8] = {  B00001,  B00001,  B00001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
-byte al2[8] = {  B01001,  B01001,  B01001,  B00000,  B00000,  B00000,  B00000,  B00000 } ;
-byte al12[8] = {  B00001,  B00001,  B00001,  B00000,  B01001,  B01001,  B01001,  B00000 } ;*/
 uint8_t r,g,b,x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
 int t=0,wait=300,but[2];
-float maxi;
+int maxi;
+//float maxi;
 bool al[2]={false,false},antial[2]={false,false},pop[2]={false,false};
 
 // Déclarations de fonctions
@@ -164,28 +161,16 @@ iwait();
 void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Reglage alarme "+String(x));
+lcd.print(F("Reglage alarme "+String(x)));
 
-if (h8==0) {
-settime(24);
-h8=nbr;
-}
-else{
-  settime(60);
-  m8=nbr;
-  if (m8!=0) {
-    aff="--";      
-    wait=300;
-    Rtc.SetMemory(2*x,h8);Rtc.SetMemory(1+(2*x),m8);
-    mode=0;
-    nbr=0;
-    ecrannet();
-    Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
+if (h8==0) {settime(24);h8=nbr;}
+else{  settime(60);  m8=nbr;
+     if (m8!=0) {    aff="--";         wait=300;    Rtc.SetMemory(2*x,h8);Rtc.SetMemory(1+(2*x),m8);    mode=0;    nbr=0;    ecrannet();
+    //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
 iwait();
 }
-
 
 //Réglage de l'heure et de la date
 void reglageheuredate(){
@@ -193,24 +178,13 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
 
-if (h==0) {
-  settime(24);
-  h=nbr;
-  }
-  else{ 
-    if (m==0){    settime(60);    m=nbr;}
-    else {
-      if (jr==0) {
-        settime(32);
-        jr=nbr;}
-      else {
-        if (mo==0){        settime(13);        mo=nbr;}
-        else {        aff=F("----");        settime(10000);        an=nbr;
-          if (an!=0){aff="--";        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
-        }     
-      }
-    }
-  }
+if (h==0) {  settime(24);  h=nbr;  }
+else  if (m==0){    settime(60);    m=nbr;}
+else  if (jr==0) {        settime(32);        jr=nbr;}
+else  if (mo==0){        settime(13);        mo=nbr;}
+else { aff=F("----");        settime(10000);        an=nbr;
+  if (an!=0) {aff="--";        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
+  }      
 iwait();
 }
 
@@ -241,6 +215,11 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       }
     if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
     } else {
+    //
+    //
+    // A revoir....
+    //
+    //
     aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);if (aff.toInt()>1000) nbr=aff.toInt();
     } 
   wait=800;
