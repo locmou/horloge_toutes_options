@@ -229,11 +229,11 @@ iwait();
 // Permet la saisie de la date et des heures et alarmes
 void settime(float(maxi)){
 nbr=0;lcd.setCursor(0,1);
-if (maxi==24) lcd.print("Heure :");
-if (maxi==60) lcd.print("Minutes :");
-if (maxi==32) lcd.print("Jour :");
-if (maxi==13) lcd.print("Mois :");
-if (maxi==10000) lcd.print("Annee :");
+if (maxi==24) lcd.print(F("Heure :"));
+if (maxi==60) lcd.print(F("Minutes :"));
+if (maxi==32) lcd.print(F("Jour :"));
+if (maxi==13) lcd.print(F("Mois :"));
+if (maxi==10000) lcd.print(F("Annee :"));
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
@@ -296,7 +296,7 @@ if (al[0] == true && al[1] == true) {
 } else if (al[1] == true) {
    lcd.print(F(" "));
    lcd.write(58);
-} else lcd.print("  ");
+} else lcd.print(F("  "));
 
 /*
 //LED
@@ -343,26 +343,26 @@ analogWrite(BRIGHTNESS_PIN, bright);
 void telecir(){
 com=F("");
 if (touch==3125149440) com=F("ch-");
-if (touch==3108437760) com="ch"; 
+if (touch==3108437760) com=F("ch"); 
 if (touch==3091726080) com=F("ch+"); 
-if (touch==3141861120) com="tr-";  
-if (touch==3208707840) com="tr+";
-if (touch==3158572800) com="pl"; 
-if (touch==4161273600) com="v-"; 
-if (touch==3927310080) com="v+";
-if (touch==4127850240) com="eq";
-if (touch==3910598400) com="0"; 
-if (touch==3860463360) com="+100"; 
-if (touch==4061003520) com="+200";  
-if (touch==4077715200) com="1";
-if (touch==3877175040) com="2"; 
-if (touch==2707357440) com="3"; 
-if (touch==4144561920) com="4";
-if (touch==3810328320) com="5";
-if (touch==2774204160) com="6"; 
-if (touch==3175284480) com="7"; 
-if (touch==2907897600) com="8";  
-if (touch==3041591040) com="9";
+if (touch==3141861120) com=F("tr-");  
+if (touch==3208707840) com=F("tr+");
+if (touch==3158572800) com=F("pl"); 
+if (touch==4161273600) com=F("v-"); 
+if (touch==3927310080) com=F("v+");
+if (touch==4127850240) com=F("eq");
+if (touch==3910598400) com=F("0"); 
+if (touch==3860463360) com=F("+100"); 
+if (touch==4061003520) com=F("+200");  
+if (touch==4077715200) com=F("1");
+if (touch==3877175040) com=F("2"); 
+if (touch==2707357440) com=F("3"); 
+if (touch==4144561920) com=F("4");
+if (touch==3810328320) com=F("5");
+if (touch==2774204160) com=F("6"); 
+if (touch==3175284480) com=F("7"); 
+if (touch==2907897600) com=F("8");  
+if (touch==3041591040) com=F("9");
 touch=0;
 }
 
@@ -371,7 +371,7 @@ void iwait(){
 wait--;
 if (wait<0) {
     wait=800;
-    mode=0;aff="--";
+    mode=0;aff=F("--");
     Retroeclairage();ecrannet();
     }
 }
