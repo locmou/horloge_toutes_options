@@ -9,7 +9,7 @@ RtcDS1307<TwoWire> Rtc(Wire);
 
 // Gestion de la led
 #include <RGB_LED.h>
-RGB_LED LED(3,9,11);
+RGB_LED LED1(3,9,11);
 
 // Gestion IR
 #include <IRremote.h>
@@ -59,6 +59,7 @@ void settime(float maxi);
 
 
 void setup (){
+  digitalWrite(11,HIGH);
 Rtc.Begin();
 /*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
@@ -85,7 +86,8 @@ Serial.begin(115200);
 
 
 void loop (){
-  
+ // LED1.set(180,255,255);
+ 
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == LOW) {
@@ -288,7 +290,7 @@ if (mes<80 and mes!=0) {
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
 wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
-LED.set(0,0,0);
+//LED1.set(0,0,0);
 }
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
