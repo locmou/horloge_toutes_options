@@ -161,7 +161,7 @@ iwait();
 void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print(F("Reglage alarme "+String(x)));
+lcd.print("Reglage alarme "+String(x));
 
 if (h8==0) {settime(24);h8=nbr;}
 else{  settime(60);  m8=nbr;
