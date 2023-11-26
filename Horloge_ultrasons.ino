@@ -59,7 +59,7 @@ void settime(float maxi);
 
 
 void setup (){
-  digitalWrite(11,HIGH);
+
 Rtc.Begin();
 /*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
