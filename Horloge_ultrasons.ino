@@ -13,6 +13,7 @@ RGB_LED LED1(3,9,11);
 
 // Gestion IR
 #include <IRremote.h>
+const uint8_t IRpin = 5;
 
 // Detecteur ultrasons
 #include <HCSR04.h>
@@ -69,7 +70,7 @@ Rtc.SetDateTime(compiled);*/
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
 // Infrarouges  
-IrReceiver.begin(5, ENABLE_LED_FEEDBACK);
+IrReceiver.begin(IRpin, ENABLE_LED_FEEDBACK);
 //LCD
 lcd.init(); // initialisation de l’afficheur
 big.begin();
@@ -83,13 +84,13 @@ pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
 for (x=0;x<2;x++){
-  alh[x]=(Rtc.GetMemory((x+1)*2));alm[x]=(Rtc.GetMemory(1+((x+1)*2));
+  alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   }
 }
 
 
 void loop (){
- // LED1.set(180,255,255);
+
  
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
@@ -233,7 +234,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else if (aff.charAt(1)=="-"){
       aff.remove(1,1);aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);
       }
-    else 
+    else {
       aff.remove(0,1);aff=aff+com;nbr=aff.toInt();lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
       }
       
@@ -293,7 +294,7 @@ if (t>=200 and t<250) { r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
 if (t>=250 and t<300) { r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
 if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
 if (t>=350 ) { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
-LED.set(r*bright/255,g*bright/255,b*bright/255); 
+LED1.set(255-(r*bright/255),255-(g*bright/255),255-(b*bright/255)); 
 */
   
 //Affichage lorsque les ultrasons détectent une présence <50cm
@@ -305,7 +306,7 @@ if (mes<80 and mes!=0) {
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
 wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
-//LED1.set(0,0,0);
+LED1.set(255,255,255);
 }
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
