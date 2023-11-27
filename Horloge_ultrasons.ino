@@ -40,7 +40,7 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 //int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
 String com,aff="--";
-uint8_t r,g,b,x,a,h8,m8,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12};
+uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12},alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
@@ -81,6 +81,9 @@ pinMode(4, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
+for (x=0;x<2;x++){
+  alh[x]=(Rtc.GetMemory((x+1)*2));alm[x]=(Rtc.GetMemory(1+((x+1)*2));
+  }
 }
 
 
@@ -111,8 +114,10 @@ for (x=0;x<2;x++){
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
 for (x=1;x<3;x++){
-if (al[x-1]==true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
-  if ( 60*h+m==60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) antial[x-1]=false;
+  if (al[x-1]==true && 60*h+m>=60*(alh[x-1])+(alm[x-1]) && 60*h+m<=60*(alh[x-1])+(alm[x-1])+20) {
+
+//if (al[x-1]==true && 60*h+m>=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2))) && 60*h+m<=60*(Rtc.GetMemory(x*2))+(Rtc.GetMemory(1+(x*2)))+20) {
+  if ( 60*h+m==60*(alh[x-1])+(alm[x-1])+20) antial[x-1]=false;
   if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
   } 
 else {
@@ -135,9 +140,11 @@ if (touch==3860463360  ||touch==4061003520  ) {
   }
 //déclenché par EQ
 if (touch==4127850240) {
-  telecir();
-  wait=800;
-  mode=3;ecrannet();h8=m8=0;
+  if (mode==2){
+      telecir();
+      wait=800;
+      mode=3;ecrannet();alh[a-1]=alm[a-1]=0;
+    }
   }
 
 if (mode==0) affichheure();
@@ -151,7 +158,7 @@ void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Alarme "+String(x)+"-> ");
-lcd.print(String(Rtc.GetMemory(2*x))+ ":"+String(Rtc.GetMemory(1+(2*x))));
+lcd.print(String(alh[x-1])+ ":"+String(alm[x-1]));
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
 iwait();
@@ -163,10 +170,10 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
-if (h8==0) {settime(24);h8=nbr;}
-else{  settime(60);  m8=nbr;
-     if (m8!=0) {    aff="--";         wait=300;    Rtc.SetMemory(2*x,h8);Rtc.SetMemory(1+(2*x),m8);    mode=0;    nbr=0;    ecrannet();
-    //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
+if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
+else{  settime(60);  alm[x-1]=nbr;
+  if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=0;    nbr=0;    ecrannet();
+  //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
 iwait();
@@ -183,7 +190,7 @@ else  if (m==0){    settime(60);    m=nbr;}
 else  if (jr==0) {        settime(32);        jr=nbr;}
 else  if (mo==0){        settime(13);        mo=nbr;}
 else { aff=F("----");        settime(10000);        an=nbr;
-  if (an!=0) {aff="--";        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(2000+an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
+  if (an!=0) {aff="--";        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
   }      
 iwait();
 }
@@ -202,8 +209,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   telecir();
   if (maxi!=10000){
     if (aff=="--") {
-      if (com.toInt()<=int((maxi-1)/10)) {
-        
+      if (com.toInt()<=int((maxi-1)/10)) {     
         aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
        }
       else {  
@@ -279,6 +285,7 @@ if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
 if (t>=350 ) { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
 LED.set(r*bright/255,g*bright/255,b*bright/255); 
 */
+  
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<80 and mes!=0) {
     Retroeclairage();
