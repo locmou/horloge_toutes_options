@@ -211,23 +211,31 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     if (aff=="--") {
       if (com.toInt()<=int((maxi-1)/10)) {     
         aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
-       }
+        }
       else {  
         nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
         } 
       }
     else{
-      aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
+      aff=String(aff.charAt(0))+com;nbr=aff.toInt();lcd.setCursor(9,1);lcd.print(nbr);delay(300);lcd.setCursor(0,1);lcd.print(F("                            "));
       }
     if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
-    } else {
-    //
-    //
-    // A revoir....
-    //
-    //
-    aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);if (aff.toInt()>1000) nbr=aff.toInt();
     } 
+  else {
+    if (aff=="----"){
+      aff="---"+com;lcd.setCursor(9,1);lcd.print(aff);
+      }
+    else if (aff.charAt(2)=="-"){
+      aff.remove(2, 1);aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);
+      }
+    else if (aff.charAt(1)=="-"){
+      aff.remove(1,1);aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);
+      }
+    else 
+      aff.remove(0,1);aff=aff+com;nbr=aff.toInt();lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
+      }
+      
+    }
   wait=800;
   }
 }
