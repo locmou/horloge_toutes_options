@@ -175,7 +175,7 @@ lcd.print("Reglage alarme "+String(x));
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
   if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=0;    nbr=0;    ecrannet();
-  //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
+  Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
 iwait();
@@ -192,7 +192,7 @@ else  if (m==0){    settime(60);    m=nbr;}
 else  if (jr==0) {        settime(32);        jr=nbr;}
 else  if (mo==0){        settime(13);        mo=nbr;}
 else { aff=F("----");        settime(10000);        an=nbr;
-  if (an!=0) {aff="--";        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
+  if (an!=0) {aff=F("--");        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
   }      
 iwait();
 }
