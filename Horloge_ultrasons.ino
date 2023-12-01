@@ -154,9 +154,9 @@ if (touch==4127850240) {
     }
   }
 
-if (Mode==MODE_TIME) affichheure();
-else if (Mode==MODE_SET_TIME ) reglageheuredate();
-else if (Mode==MODE_ALARM_INFO) infoalarm(a);
+if (mode==MODE_TIME) affichheure();
+else if (mode==MODE_SET_TIME ) reglageheuredate();
+else if (mode==MODE_ALARM_INFO) infoalarm(a);
 else reglagealarme(a);
 }
 
@@ -175,11 +175,11 @@ iwait();
 void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print(F("Reglage alarme ")+String(x));
+lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_TIME;    nbr=0;    ecrannet();}
+  if (alm[x-1]!=0) {    strcpy(aff,"--");         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_TIME;    nbr=0;    ecrannet();}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -202,7 +202,7 @@ iwait();
 }
 
 // Permet la saisie de la date et des heures et alarmes
-void settime(float(maxi)){
+void settime(int(maxi)){
 nbr=0;lcd.setCursor(0,1);
 if (maxi==24) lcd.print(F("Heure :"));
 else if (maxi==60) lcd.print(F("Minutes :"));
