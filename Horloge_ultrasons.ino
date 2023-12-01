@@ -44,7 +44,7 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 unsigned long touch;
 //String com,aff="--";
 char aff[5],com[5];
-uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,bout[2]={10,12},alh[2],alm[2];
+uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,bout[2]={10,12},alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
@@ -141,17 +141,17 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  Mode=MODE_SET_TIME ;ecrannet();an=mo=jr=h=m=s=0;
+  mode=MODE_SET_TIME ;ecrannet();an=mo=jr=h=m=s=0;
   }
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (com=="+100") a=1; else a=2;
   wait=800;
-  Mode=MODE_ALARM_INFO;ecrannet();
+  mode=MODE_ALARM_INFO;ecrannet();
   }
 //déclenché par EQ
 if (touch==4127850240) {
-  if (Mode==MODE_ALARM_INFO){
+  if (mode==MODE_ALARM_INFO){
       telecir();
       wait=800;
       mode=MODE_SET_ALARM;ecrannet();alh[a-1]=alm[a-1]=0;
