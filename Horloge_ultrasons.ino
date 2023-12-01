@@ -44,17 +44,19 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 unsigned long touch;
 //String com,aff="--";
 char aff[5],com[5];
-uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12},alh[2],alm[2];
+uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,bout[2]={10,12},alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
 bool al[2]={false,false},antial[2]={false,false},pop[2]={false,false};
 
 // Déclaration des constantes pour les modes
-const int MODE_TIME = 0;
-const int MODE_SET_TIME = 1;
-const int MODE_ALARM_INFO = 2;
-const int MODE_SET_ALARM = 3;
+enum Mode {
+  MODE_TIME,
+  MODE_SET_TIME,
+  MODE_ALARM_INFO,
+  MODE_SET_ALARM
+};
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -90,6 +92,7 @@ pinMode(BRIGHTNESS_PIN, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
+Mode = MODE_TIME;
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   al[x]=Rtc.GetMemory(5+x);
@@ -99,8 +102,6 @@ for (x=0;x<2;x++){
 
 
 void loop (){
-
- 
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == LOW) {
@@ -140,26 +141,26 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=MODE_SET_TIME ;ecrannet();an=mo=jr=h=m=s=0;
+  Mode=MODE_SET_TIME ;ecrannet();an=mo=jr=h=m=s=0;
   }
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (com=="+100") a=1; else a=2;
   wait=800;
-  mode=MODE_ALARM_INFO;ecrannet();
+  Mode=MODE_ALARM_INFO;ecrannet();
   }
 //déclenché par EQ
 if (touch==4127850240) {
-  if (mode==2){
+  if (Mode==MODE_ALARM_INFO){
       telecir();
       wait=800;
       mode=MODE_SET_ALARM;ecrannet();alh[a-1]=alm[a-1]=0;
     }
   }
 
-if (mode==MODE_TIME) affichheure();
-else if (mode==MODE_SET_TIME ) reglageheuredate();
-else if (mode==MODE_ALARM_INFO) infoalarm(a);
+if (Mode==MODE_TIME) affichheure();
+else if (Mode==MODE_SET_TIME ) reglageheuredate();
+else if (Mode==MODE_ALARM_INFO) infoalarm(a);
 else reglagealarme(a);
 }
 
@@ -178,7 +179,7 @@ iwait();
 void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Reglage alarme "+String(x));
+lcd.print(F("Reglage alarme ")+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
@@ -193,7 +194,7 @@ iwait();
 void reglageheuredate(){
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Reglage pendule");
+lcd.print(F("Reglage pendule"));
 
 if (h==0) {  settime(24);  h=nbr;  }
 else  if (m==0){   settime(60);    m=nbr;}
