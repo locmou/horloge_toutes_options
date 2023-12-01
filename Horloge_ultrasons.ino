@@ -5,7 +5,7 @@
 // DS1307 GND --> GND
 #include <Wire.h> 
 #include <RtcDS1307.h>
-//RtcDS1307<TwoWire> Rtc(Wire);
+RtcDS1307<TwoWire> Rtc(Wire);
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
 
@@ -92,7 +92,7 @@ pinMode(BRIGHTNESS_PIN, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
-Mode = MODE_TIME;
+Mode mode = MODE_TIME;
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   al[x]=Rtc.GetMemory(5+x);
