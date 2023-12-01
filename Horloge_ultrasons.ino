@@ -5,7 +5,9 @@
 // DS1307 GND --> GND
 #include <Wire.h> 
 #include <RtcDS1307.h>
-RtcDS1307<TwoWire> Rtc(Wire);
+//RtcDS1307<TwoWire> Rtc(Wire);
+const int DS1307_SDA_PIN = A4;
+const int DS1307_SCL_PIN = A5;
 
 // Gestion de la led
 #include <RGB_LED.h>
@@ -13,18 +15,18 @@ RGB_LED LED1(3,9,11);
 
 // Gestion IR
 #include <IRremote.h>
-const uint8_t IRpin = 5;
+const int IR_PIN = 5;
 
 // Detecteur ultrasons
 #include <HCSR04.h>
 // definition des broches du capteur ultrasons
-const int trigPin = 8;
-const int echoPin = 7;
+const int TRIGPIN = 8;
+const int ECHOPIN = 7;
 // initialisation du capteur avec les broches utilisees.
-UltraSonicDistanceSensor distanceSensor(trigPin, echoPin);
+UltraSonicDistanceSensor distanceSensor(TRIGPIN, ECHOPIN);
 
 // Connexion alarme et leds
-const uint8_t alPin[] = {2,4};
+const uint8_t ALPIN[] = {2,4};
 
 // Affichage LCD
 #include "LiquidCrystal_I2C.h"
@@ -47,6 +49,12 @@ int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
 bool al[2]={false,false},antial[2]={false,false},pop[2]={false,false};
+
+// Déclaration des constantes pour les modes
+const int MODE_TIME = 0;
+const int MODE_SET_TIME = 1;
+const int MODE_ALARM_INFO = 2;
+const int MODE_SET_ALARM = 3;
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -71,7 +79,7 @@ Rtc.SetDateTime(compiled);*/
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
 // Infrarouges  
-IrReceiver.begin(IRpin, ENABLE_LED_FEEDBACK);
+IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
 //LCD
 lcd.init(); // initialisation de l’afficheur
 big.begin();
@@ -79,14 +87,13 @@ lcd.backlight();
 Retroeclairage();
 // Pin's
 pinMode(BRIGHTNESS_PIN, OUTPUT);
-pinMode(2, OUTPUT);
-pinMode(4, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   al[x]=Rtc.GetMemory(5+x);
+  pinMode(ALPIN[x], OUTPUT);
   }
 }
 
@@ -133,27 +140,27 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=1;ecrannet();an=mo=jr=h=m=s=0;
+  mode=MODE_SET_TIME ;ecrannet();an=mo=jr=h=m=s=0;
   }
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (com=="+100") a=1; else a=2;
   wait=800;
-  mode=2;ecrannet();
+  mode=MODE_ALARM_INFO;ecrannet();
   }
 //déclenché par EQ
 if (touch==4127850240) {
   if (mode==2){
       telecir();
       wait=800;
-      mode=3;ecrannet();alh[a-1]=alm[a-1]=0;
+      mode=MODE_SET_ALARM;ecrannet();alh[a-1]=alm[a-1]=0;
     }
   }
 
-if (mode==0) affichheure();
-if (mode==1) reglageheuredate();
-if (mode==2) infoalarm(a);
-if (mode==3) reglagealarme(a);
+if (mode==MODE_TIME) affichheure();
+else if (mode==MODE_SET_TIME ) reglageheuredate();
+else if (mode==MODE_ALARM_INFO) infoalarm(a);
+else reglagealarme(a);
 }
 
 // Affiche les heures des alarmes
@@ -175,7 +182,7 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=0;    nbr=0;    ecrannet();
+  if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_TIME;    nbr=0;    ecrannet();
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
@@ -193,7 +200,7 @@ else  if (m==0){   settime(60);    m=nbr;}
 else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
 else { strcpy(aff,"----");    settime(10000);        an=nbr;
-  if (an!=0) {strcpy(aff,"--");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
+  if (an!=0) {strcpy(aff,"--");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_TIME;        nbr=0;}
   }      
 iwait();
 }
@@ -356,7 +363,7 @@ void iwait(){
 wait--;
 if (wait<0) {
     wait=800;
-    mode=0;strcpy(aff,"--");
+    mode=MODE_TIME;strcpy(aff,"--");
     Retroeclairage();ecrannet();
     }
 }
