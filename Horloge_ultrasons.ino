@@ -1,8 +1,3 @@
-// CONNECTIONS: LCD Et RTC
-// DS1307 SDA --> SDA
-// DS1307 SCL --> SCL
-// DS1307 VCC --> 5v
-// DS1307 GND --> GND
 #include <Wire.h> 
 #include <RtcDS1307.h>
 RtcDS1307<TwoWire> Rtc(Wire);
@@ -34,15 +29,13 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 
 // Gros chiffres
 #include <BigFont02_I2C.h>
-BigFont02_I2C     big(&lcd); // construct large font object, passing to it the name of our lcd object
+BigFont02_I2C  big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
 const uint8_t BRIGHTNESS_PIN=6;   // Must be a PWM pin
 const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
-//int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
-//String com,aff="--";
 char aff[5],com[5];
 uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,bout[2]={10,12},alh[2],alm[2];
 int t=0,wait=300,but[2];
@@ -67,16 +60,16 @@ void Retroeclairage();
 void telecir();
 void iwait();
 void ecrannet();
-void settime(float maxi);
+void settime(int maxi);
 
 
 void setup (){
-
 Rtc.Begin();
 /*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
 Rtc.SetDateTime(compiled);*/
+  
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
@@ -99,7 +92,6 @@ for (x=0;x<2;x++){
   pinMode(ALPIN[x], OUTPUT);
   }
 }
-
 
 void loop (){
 // Pression sur le bouton 10 al1 ou 12 al2
@@ -183,10 +175,9 @@ lcd.print(F("Reglage alarme ")+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_TIME;    nbr=0;    ecrannet();
+  if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_TIME;    nbr=0;    ecrannet();}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
-}
 iwait();
 }
 
@@ -210,10 +201,10 @@ iwait();
 void settime(float(maxi)){
 nbr=0;lcd.setCursor(0,1);
 if (maxi==24) lcd.print(F("Heure :"));
-if (maxi==60) lcd.print(F("Minutes :"));
-if (maxi==32) lcd.print(F("Jour :"));
-if (maxi==13) lcd.print(F("Mois :"));
-if (maxi==10000) lcd.print(F("Annee :"));
+else if (maxi==60) lcd.print(F("Minutes :"));
+else if (maxi==32) lcd.print(F("Jour :"));
+else if (maxi==13) lcd.print(F("Mois :"));
+else lcd.print(F("Annee :"));
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
@@ -244,18 +235,18 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       }
     else {
       aff[0]=com[0];nbr=atoi(aff);lcd.print(nbr);delay(300);strcpy(aff,"--");lcd.setCursor(0,1);lcd.print(F("                            "));
-      }
-      
+      }      
     }
   wait=800;
   }
 }
 
-// En mode 0, affiche l'heure la date et les alarmes en marche
+
 void affichheure(){
 // Requete heure 
 RtcDateTime now = Rtc.GetDateTime();    
 h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
+// Détection ultrasons?
 mes=(int)distanceSensor.measureDistanceCm()+1;
   
 // Affichage heure minutes  
@@ -276,10 +267,8 @@ lcd.setCursor(14,1);
 if (mo<10) lcd.print(" "); 
 lcd.print(mo);
 
-
 // Affichage alarme 1/2 on/off
-  lcd.setCursor (14,0);
-  
+lcd.setCursor (14,0); 
 if (al[0] == true && al[1] == true) {
   lcd.write(165);lcd.write(58);
 } else if (al[0] == true) {
@@ -290,31 +279,29 @@ if (al[0] == true && al[1] == true) {
    lcd.write(58);
 } else lcd.print(F("  "));
 
-/*
 //LED
 t=t+1;
 if (t>400) t=0;
 if (t<50)  { r=255;  g=255-(t*5.1);  b=(t*5.1);}
-if (t>=50 and t<100) { r=255-(t-50)*5.1;  g=(t-50)*5.1;  b=255;}
-if (t>=100 and t<150) { r=0;  g=255-(t-100)*5.1;  b=255;}
-if (t>=150 and t<200) { r=0;  g=(t-150)*5.1;  b=255-(t-150)*5.1;}
-if (t>=200 and t<250) { r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
-if (t>=250 and t<300) { r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
-if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
-if (t>=350 ) { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
+else if (t>=50 and t<100) { r=255-(t-50)*5.1;  g=(t-50)*5.1;  b=255;}
+else if (t>=100 and t<150) { r=0;  g=255-(t-100)*5.1;  b=255;}
+else if (t>=150 and t<200) { r=0;  g=(t-150)*5.1;  b=255-(t-150)*5.1;}
+else if (t>=200 and t<250) { r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
+else if (t>=250 and t<300) { r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
+else if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
+else { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
 LED1.set(255-(r*bright/255),255-(g*bright/255),255-(b*bright/255)); 
-*/
-  
+
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<80 and mes!=0) {
-    Retroeclairage();
-    wait=800;
-}
+  Retroeclairage();
+  wait=800;
+  }
   
 //Coupe la le rétroéclairage en cas d'inactivité prolongée
 wait--;
 if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
-LED1.set(255,255,255);
+//LED1.set(255,255,255);
 }
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
