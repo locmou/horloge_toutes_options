@@ -40,7 +40,8 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
 //int nbr,h,m,s,jr,mo,an,mes,bright,wait=300,mode=0;
 unsigned long touch;
-String com,aff="--";
+//String com,aff="--";
+char aff[5],com[5];
 uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,mode=0,bout[2]={10,12},alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
