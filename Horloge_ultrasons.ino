@@ -160,7 +160,7 @@ void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Alarme "+String(x)+"-> ");
-lcd.print(String(alh[x-1])+ ":"+String(alm[x-1]));
+lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
 iwait();
@@ -175,7 +175,7 @@ lcd.print("Reglage alarme "+String(x));
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
   if (alm[x-1]!=0) {    aff="--";         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=0;    nbr=0;    ecrannet();
-  Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
+  //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 }
 iwait();
@@ -188,11 +188,11 @@ lcd.setCursor(0,0);
 lcd.print("Reglage pendule");
 
 if (h==0) {  settime(24);  h=nbr;  }
-else  if (m==0){    settime(60);    m=nbr;}
-else  if (jr==0) {        settime(32);        jr=nbr;}
-else  if (mo==0){        settime(13);        mo=nbr;}
-else { aff=F("----");        settime(10000);        an=nbr;
-  if (an!=0) {aff=F("--");        ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
+else  if (m==0){   settime(60);    m=nbr;}
+else  if (jr==0) {   settime(32);        jr=nbr;}
+else  if (mo==0){   settime(13);        mo=nbr;}
+else { strcpy(aff,"----");    settime(10000);        an=nbr;
+  if (an!=0) {strcpy(aff,"--");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=0;        nbr=0;}
   }      
 iwait();
 }
@@ -210,31 +210,31 @@ if (maxi==10000) lcd.print(F("Annee :"));
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
   if (maxi!=10000){
-    if (aff=="--") {
-      if (com.toInt()<=int((maxi-1)/10)) {     
-        aff=com+"-";lcd.setCursor(9,1);lcd.print(aff);
+    if (strcmp("--",aff)==0) {
+      if (atoi(com)<=int((maxi-1)/10)) {     
+        aff[0]=com[0];aff[1]='-';aff[2]=0;lcd.setCursor(9,1);lcd.print(aff);
         }
       else {  
-        nbr=com.toInt();lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
+        nbr=atoi(com);lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);strcpy(aff,"--");lcd.setCursor(0,1);lcd.print(F("                            "));
         } 
       }
     else{
-      aff=String(aff.charAt(0))+com;nbr=aff.toInt();aff="--";lcd.setCursor(9,1);lcd.print(nbr);delay(300);lcd.setCursor(0,1);lcd.print(F("                            "));
+      aff[1]=com[0];nbr=atoi(aff);strcpy(aff,"--");lcd.setCursor(9,1);lcd.print(nbr);delay(300);lcd.setCursor(0,1);lcd.print(F("                            "));
       }
-    if (nbr>=int(maxi)) {aff="--";com="";nbr=0;}
+    if (nbr>=int(maxi)) {strcpy(aff,"--");strcpy(com,"");nbr=0;}
     } 
   else {
-    if (aff=="----"){
-      aff="---"+com;lcd.setCursor(9,1);lcd.print(aff);
+    if (aff[3]=='-'){
+      aff[3]=com[0];lcd.setCursor(9,1);lcd.print(aff);
       }
-    else if (aff.charAt(2)=="-"){
-      aff.remove(2, 1);aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);
+    else if (aff[2]=='-'){
+      aff[2]=com[0];lcd.setCursor(9,1);lcd.print(aff);
       }
-    else if (aff.charAt(1)=="-"){
-      aff.remove(1,1);aff=aff+com;lcd.setCursor(9,1);lcd.print(aff);
+    else if (aff[1]=='-'){
+      aff[1]=com[0];lcd.setCursor(9,1);lcd.print(aff);
       }
     else {
-      aff.remove(0,1);aff=aff+com;nbr=aff.toInt();lcd.print(nbr);delay(300);aff="--";lcd.setCursor(0,1);lcd.print(F("                            "));
+      aff[0]=com[0];nbr=atoi(aff);lcd.print(nbr);delay(300);strcpy(aff,"--");lcd.setCursor(0,1);lcd.print(F("                            "));
       }
       
     }
