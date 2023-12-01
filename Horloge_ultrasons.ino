@@ -73,19 +73,23 @@ Rtc.SetDateTime(compiled);*/
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
+  
 // Infrarouges  
 IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
+  
 //LCD
 lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
 Retroeclairage();
+  
 // Pin's
 pinMode(BRIGHTNESS_PIN, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
 Mode mode = MODE_TIME;
+  
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   al[x]=Rtc.GetMemory(5+x);
