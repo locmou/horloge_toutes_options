@@ -228,17 +228,22 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     if (nbr>=int(maxi)) {strcpy(aff,"--");strcpy(com,"");nbr=0;}
     } 
   else {
-    if (aff[3]=='-'){
-      aff[3]=com[0];lcd.setCursor(9,1);lcd.print(aff);
-      }
-    else if (aff[2]=='-'){
-      aff[2]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+    if (aff[0]=='-'){
+      aff[0]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+      Serial.println ("premier");
       }
     else if (aff[1]=='-'){
       aff[1]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+      Serial.println ("deuxième");
+      }
+    else if (aff[2]=='-'){
+      aff[2]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+      Serial.println ("troiz");
       }
     else {
-      aff[0]=com[0];nbr=atoi(aff);lcd.print(nbr);delay(300);strcpy(aff,"--");lcd.setCursor(0,1);lcd.print(F("                            "));
+      aff[3]=com[0];nbr=atoi(aff);lcd.print(nbr);delay(300);
+      strcpy(aff,"--");
+      lcd.setCursor(0,1);lcd.print(F("                            "));
       }      
     }
   wait=800;
@@ -283,18 +288,6 @@ if (al[0] == true && al[1] == true) {
    lcd.write(58);
 } else lcd.print(F("  "));
 
-//LED
-t=t+1;
-if (t>400) t=0;
-if (t<50)  { r=255;  g=255-(t*5.1);  b=(t*5.1);}
-else if (t>=50 and t<100) { r=255-(t-50)*5.1;  g=(t-50)*5.1;  b=255;}
-else if (t>=100 and t<150) { r=0;  g=255-(t-100)*5.1;  b=255;}
-else if (t>=150 and t<200) { r=0;  g=(t-150)*5.1;  b=255-(t-150)*5.1;}
-else if (t>=200 and t<250) { r=(t-200)*5.1;  g=255-(t-200)*5.1;  b=0;}
-else if (t>=250 and t<300) { r=255-(t-250)*5.1;  g=(t-250)*5.1;  b=0;}
-else if (t>=300 and t<350) { r=0;  g=255;  b=(t-300)*5.1;}
-else { r=(t-350)*5.1;  g=255;  b=255-(t-350)*5.1;}
-LED1.set(255-(r*bright/255),255-(g*bright/255),255-(b*bright/255)); 
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<80 and mes!=0) {
@@ -302,10 +295,13 @@ if (mes<80 and mes!=0) {
   wait=800;
   }
   
-//Coupe la le rétroéclairage en cas d'inactivité prolongée
+//Coupe le rétroéclairage en cas d'inactivité prolongée
 wait--;
-if (wait<0)  analogWrite(BRIGHTNESS_PIN, 0);
-//LED1.set(255,255,255);
+if (wait<0)  {
+  analogWrite(BRIGHTNESS_PIN, 0);
+  LED1.set(255,255,255);
+  wait=0;
+  } 
 }
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
@@ -321,6 +317,22 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
+
+//LED
+
+t++;
+if (t>400) t=0;
+if (t<50)  { r=bright;  g=bright-(t*bright/50);  b=(t*bright/50);}
+else if (t>=50 and t<100) { r=bright-(t-50)*bright/50;  g=(t-50)*bright/50;  b=bright;}
+else if (t>=100 and t<150) { r=0;  g=bright-(t-100)*bright/50;  b=bright;}
+else if (t>=150 and t<200) { r=0;  g=(t-150)*bright/50;  b=bright-(t-150)*bright/50;}
+else if (t>=200 and t<250) { r=(t-200)*bright/50;  g=bright-(t-200)*bright/50;  b=0;}
+else if (t>=250 and t<300) { r=bright-(t-250)*bright/50;  g=(t-250)*bright/50;  b=0;}
+else if (t>=300 and t<350) { r=0;  g=bright;  b=(t-300)*bright/50;}
+else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
+//Serial.println ("rouge : "+ String(r)+", vert : "+String(g)+", bleu : "+String(b));
+LED1.set(255-r,255-g,255-b); 
+
 }
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
