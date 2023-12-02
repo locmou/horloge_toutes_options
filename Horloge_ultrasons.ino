@@ -141,7 +141,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
   }
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
-  telecir(); if (com=="+100") a=1; else a=2;
+  telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
   wait=800;
   mode=MODE_ALARM_INFO;ecrannet();
   }
@@ -195,9 +195,9 @@ if (h==0) {  settime(24);  h=nbr;  }
 else  if (m==0){   settime(60);    m=nbr;}
 else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
-else { strcpy(aff,"----");    settime(10000);        an=nbr;
-  if (an!=0) {strcpy(aff,"--");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_TIME;        nbr=0;}
-  }      
+else if  (an==0) {     settime(10000);        an=nbr;}
+if (an!=0) {strcpy(aff,"--");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_TIME;        }
+        
 iwait();
 }
 
@@ -211,7 +211,8 @@ else if (maxi==13) lcd.print(F("Mois :"));
 else lcd.print(F("Annee :"));
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
-if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
+if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
+||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
   if (maxi!=10000){
     if (strcmp("--",aff)==0) {
@@ -227,25 +228,26 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       }
     if (nbr>=int(maxi)) {strcpy(aff,"--");strcpy(com,"");nbr=0;}
     } 
-  else {
+    /*
+  else { lcd.setCursor(9,1);lcd.print(aff);
     if (aff[0]=='-'){
-      aff[0]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+      aff[0]=com[0];
       Serial.println ("premier");
       }
     else if (aff[1]=='-'){
-      aff[1]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+      aff[1]=com[0];
       Serial.println ("deuxième");
       }
     else if (aff[2]=='-'){
-      aff[2]=com[0];lcd.setCursor(9,1);lcd.print(aff);
+      aff[2]=com[0];
       Serial.println ("troiz");
       }
     else {
-      aff[3]=com[0];nbr=atoi(aff);lcd.print(nbr);delay(300);
+      aff[3]=com[0];nbr=atoi(aff);lcd.setCursor(9,1);lcd.print(nbr);delay(300);
       strcpy(aff,"--");
       lcd.setCursor(0,1);lcd.print(F("                            "));
-      }      
-    }
+      }   
+    }*/
   wait=800;
   }
 }
@@ -319,7 +321,7 @@ bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
 
 //LED
-
+/*
 t++;
 if (t>400) t=0;
 if (t<50)  { r=bright;  g=bright-(t*bright/50);  b=(t*bright/50);}
@@ -332,7 +334,7 @@ else if (t>=300 and t<350) { r=0;  g=bright;  b=(t-300)*bright/50;}
 else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 //Serial.println ("rouge : "+ String(r)+", vert : "+String(g)+", bleu : "+String(b));
 LED1.set(255-r,255-g,255-b); 
-
+*/
 }
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
