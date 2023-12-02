@@ -137,7 +137,7 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=MODE_SET_TIME ;ecrannet();an=mo=jr=h=m=s=0;
+  mode=MODE_SET_TIME ;ecrannet();aff[0]=0;an=mo=jr=h=m=0;
   }
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
@@ -188,15 +188,19 @@ iwait();
 //Réglage de l'heure et de la date
 void reglageheuredate(){
 Retroeclairage();
-lcd.setCursor(0,0);
-lcd.print(F("Reglage pendule"));
+lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
+//réglage de l'heure
 if (h==0) {  settime(24);  h=nbr;  }
+//réglage des minutes
 else  if (m==0){   settime(60);    m=nbr;}
+//réglage du jour
 else  if (jr==0) {   settime(32);        jr=nbr;}
+//réglage du mois
 else  if (mo==0){   settime(13);        mo=nbr;}
-else if  (an==0) {     settime(10000);        an=nbr;}
-if (an!=0) {strcpy(aff,"--");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_TIME;        }
+//réglage de l'année
+else if  (an==0) {     settime(9999);        an=nbr;}
+if (an!=0) {strcpy(aff,"");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_TIME;        }
         
 iwait();
 }
@@ -214,42 +218,46 @@ else lcd.print(F("Annee :"));
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
-  if (maxi!=10000){
-    if (strcmp("--",aff)==0) {
-      if (atoi(com)<=int((maxi-1)/10)) {     
-        aff[0]=com[0];aff[1]='-';aff[2]=0;lcd.setCursor(9,1);lcd.print(aff);
-        }
-      else {  
-        nbr=atoi(com);lcd.setCursor(9,1);lcd.print("0"+String(nbr));delay(300);strcpy(aff,"--");lcd.setCursor(0,1);lcd.print(F("                            "));
-        } 
+  if (aff[0]==0) {
+/*
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * *****************A REFAIRE************
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+  if (atoi(com)<=int((maxi-1)/10)) {     
+      aff[0]=com[0];aff[1]='-';lcd.setCursor(9,1);lcd.print(aff);delay(300);Serial.println("com :"+String(com)+" aff :"+String(aff));
       }
-    else{
-      aff[1]=com[0];nbr=atoi(aff);strcpy(aff,"--");lcd.setCursor(9,1);lcd.print(nbr);delay(300);lcd.setCursor(0,1);lcd.print(F("                            "));
-      }
-    if (nbr>=int(maxi)) {strcpy(aff,"--");strcpy(com,"");nbr=0;}
-    } 
-    /*
-  else { lcd.setCursor(9,1);lcd.print(aff);
-    if (aff[0]=='-'){
-      aff[0]=com[0];
-      Serial.println ("premier");
-      }
-    else if (aff[1]=='-'){
-      aff[1]=com[0];
-      Serial.println ("deuxième");
-      }
-    else if (aff[2]=='-'){
-      aff[2]=com[0];
-      Serial.println ("troiz");
-      }
-    else {
-      aff[3]=com[0];nbr=atoi(aff);lcd.setCursor(9,1);lcd.print(nbr);delay(300);
-      strcpy(aff,"--");
-      lcd.setCursor(0,1);lcd.print(F("                            "));
-      }   
-    }*/
+    else {  
+      lcd.setCursor(9,1);aff[0]='0';aff[1]=com[0];lcd.setCursor(9,1);lcd.print(aff);delay(300);aff[0]=0;lcd.setCursor(0,1);lcd.print(F("                            "));
+      } 
+    }
+  else{
+    aff[0]='0';aff[1]=com[0];nbr=atoi(aff);lcd.setCursor(9,1);lcd.print(aff);delay(300);aff[0]=0;lcd.setCursor(0,1);lcd.print(F("                            "));
+    }
+  if (nbr>=int(maxi)) {aff[0]=0;strcpy(com,"");nbr=0;}
+
+*/
+
+
+  
   wait=800;
-  }
+  }  
 }
 
 
