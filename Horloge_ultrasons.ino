@@ -45,10 +45,10 @@ bool al[2]={false,false},antial[2]={false,false},pop[2]={false,false};
 
 // Déclaration des constantes pour les modes
 enum Mode {
-  MODE_TIME,
-  MODE_SET_TIME,
+  MODE_Heure,
+  MODE_Reglage_h,
   MODE_ALARM_INFO,
-  MODE_SET_ALARM
+  MODE_Reglage_al
 };
 
 // Déclarations de fonctions
@@ -88,7 +88,7 @@ pinMode(BRIGHTNESS_PIN, OUTPUT);
 pinMode(10,INPUT);
 pinMode(12,INPUT);
 Serial.begin(115200);
-Mode mode = MODE_TIME;
+Mode mode = MODE_Heure;
   
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
@@ -137,7 +137,7 @@ touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=MODE_SET_TIME ;ecrannet();aff[0]=0;an=mo=jr=h=m=0;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=0;
   }
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
@@ -150,12 +150,12 @@ if (touch==4127850240) {
   if (mode==MODE_ALARM_INFO){
       telecir();
       wait=800;
-      mode=MODE_SET_ALARM;ecrannet();alh[a-1]=alm[a-1]=0;
+      mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=0;
     }
   }
 
-if (mode==MODE_TIME) affichheure();
-else if (mode==MODE_SET_TIME ) reglageheuredate();
+if (mode==MODE_Heure) affichheure();
+else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
 else reglagealarme(a);
 }
@@ -179,7 +179,7 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=0) {    strcpy(aff,"--");         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_TIME;    nbr=0;    ecrannet();}
+  if (alm[x-1]!=0) {    strcpy(aff,"--");         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_Heure;    nbr=0;    ecrannet();}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -200,7 +200,7 @@ else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
 //réglage de l'année
 else if  (an==0) {     settime(9999);        an=nbr;}
-if (an!=0) {strcpy(aff,"");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_TIME;        }
+if (an!=0) {strcpy(aff,"");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }
         
 iwait();
 }
@@ -253,8 +253,6 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   if (nbr>=int(maxi)) {aff[0]=0;strcpy(com,"");nbr=0;}
 
 */
-
-
   
   wait=800;
   }  
@@ -377,7 +375,7 @@ void iwait(){
 wait--;
 if (wait<0) {
     wait=800;
-    mode=MODE_TIME;strcpy(aff,"--");
+    mode=MODE_Heure;strcpy(aff,"--");
     Retroeclairage();ecrannet();
     }
 }
