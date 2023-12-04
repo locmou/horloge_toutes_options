@@ -180,7 +180,7 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=0) {    strcpy(aff,"--");         wait=300; ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_Heure;    nbr=0;    ecrannet();}
+  if (alm[x-1]!=0) {   wait=300 ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_Heure;    nbr=0;    ecrannet();}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -202,7 +202,7 @@ else  if (mo==0){   settime(13);        mo=nbr;}
 //réglage de l'année
 else if  (an==0) {     settime(9999);        an=nbr;}
 if (an!=0) {strcpy(aff,"");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }
-        
+     
 iwait();
 }
 
@@ -221,7 +221,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   telecir();
   if (maxi!=9999){
     if (aff[0]==0) {
-      if ( atoi(com)<int((maxi-1)/10) {
+      if ( atoi(com)<int((maxi-1)/10)) {
        aff[0]=com[0];aff[1]='\-';
        aff[0]=0;}
       else {
