@@ -221,16 +221,16 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   telecir();
   if (maxi!=9999){
     if (aff[0]==0) {
-      if ( atoi(com)<int((maxi-1)/10)) {
+      if ( atoi(com)<int((maxi-1)/10)) {Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';
-       aff[0]=0;}
+       }
       else {
        aff[0]='0'; aff[1]=com[0]; 
-       nbr=atoi(aff);aff[0]=0;}
+       nbr=atoi(aff);}
       }
-    else if (af[1]='-'){
+    else if (aff[1]=='\-'){
       aff[1]=com[0];
-      nbr=atoi(aff);aff[0]=0;}
+      nbr=atoi(aff);}
   } 
   else {
     if (aff[0]==0){
@@ -240,7 +240,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else if (aff[2]=='\-'){
       aff[2]=com[0];}
     else if (aff[3]=='\-'){
-      aff[3]=com[0];nbr=atoi(aff)}   
+      aff[3]=com[0];nbr=atoi(aff);}   
   }
 lcd.setCursor(9,1);lcd.print(aff);delay(400);
 wait=800;
