@@ -151,6 +151,7 @@ if (touch==4127850240) {
       telecir();
       wait=800;
       mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=0;
+      aff[0]=0;
     }
   }
 
@@ -218,44 +219,32 @@ else lcd.print(F("Annee :"));
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
-  if (aff[0]==0) {
-/*
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * *****************A REFAIRE************
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
-  if (atoi(com)<=int((maxi-1)/10)) {     
-      aff[0]=com[0];aff[1]='-';lcd.setCursor(9,1);lcd.print(aff);delay(300);Serial.println("com :"+String(com)+" aff :"+String(aff));
+  if (maxi!=9999){
+    if (aff[0]==0) {
+      if ( atoi(com)<int((maxi-1)/10) {
+       aff[0]=com[0];aff[1]='\-';
+       aff[0]=0;}
+      else {
+       aff[0]='0'; aff[1]=com[0]; 
+       nbr=atoi(aff);aff[0]=0;}
       }
-    else {  
-      lcd.setCursor(9,1);aff[0]='0';aff[1]=com[0];lcd.setCursor(9,1);lcd.print(aff);delay(300);aff[0]=0;lcd.setCursor(0,1);lcd.print(F("                            "));
-      } 
-    }
-  else{
-    aff[0]='0';aff[1]=com[0];nbr=atoi(aff);lcd.setCursor(9,1);lcd.print(aff);delay(300);aff[0]=0;lcd.setCursor(0,1);lcd.print(F("                            "));
-    }
-  if (nbr>=int(maxi)) {aff[0]=0;strcpy(com,"");nbr=0;}
-
-*/
-  
-  wait=800;
-  }  
+    else if (af[1]='-'){
+      aff[1]=com[0];
+      nbr=atoi(aff);aff[0]=0;}
+  } 
+  else {
+    if (aff[0]==0){
+      aff[0]=com[0];aff[1]='\-';aff[2]='\-';aff[3]='\-';}
+    else if (aff[1]=='\-') {
+      aff[1]=com[0];}
+    else if (aff[2]=='\-'){
+      aff[2]=com[0];}
+    else if (aff[3]=='\-'){
+      aff[3]=com[0];nbr=atoi(aff)}   
+  }
+lcd.setCursor(9,1);lcd.print(aff);delay(400);
+wait=800;
+}  
 }
 
 
