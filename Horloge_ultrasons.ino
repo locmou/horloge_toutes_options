@@ -227,11 +227,11 @@ iwait();
 // Permet la saisie de la date et des heures et alarmes
 void settime(int(maxi)){
 nbr=0;lcd.setCursor(0,1);
-if (maxi==24) lcd.print(F("Heure :"));
+if      (maxi==24) lcd.print(F("Heure   :"));
 else if (maxi==60) lcd.print(F("Minutes :"));
-else if (maxi==32) lcd.print(F("Jour :"));
-else if (maxi==13) lcd.print(F("Mois :"));
-else lcd.print(F("Annee :"));
+else if (maxi==32) lcd.print(F("Jour    :"));
+else if (maxi==13) lcd.print(F("Mois    :"));
+else               lcd.print(F("Annee   :"));
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
@@ -239,26 +239,28 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   telecir();
   if (maxi!=9999){
     if (aff[0]==0) {
-      if ( atoi(com)<int((maxi-1)/10)) {Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
+      if ( atoi(com)<=int((maxi-1)/10)) {Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';afficheinput();
        }
       else {
        aff[0]='0'; aff[1]=com[0]; afficheinput();
-       nbr=atoi(aff);aff[0]=0;}
+       nbr=atoi(aff);aff[0]=0;lcd.setCursor(9,1);lcd.print("    ");}
     }
     else {
       aff[1]=com[0];afficheinput();
-      nbr=atoi(aff);aff[0]=0;}
+      nbr=atoi(aff);aff[0]=0;lcd.setCursor(9,1);lcd.print("    ");}
+    
   } 
   else {
     if (aff[0]==0){
-      aff[0]=com[0];aff[1]='\-';aff[2]='\-';aff[3]='\-';}
+      aff[0]=com[0];aff[1]='\-';aff[2]='\-';aff[3]='\-';afficheinput();}
     else if (aff[1]=='\-') {
-      aff[1]=com[0];}
+      aff[1]=com[0];afficheinput();}
     else if (aff[2]=='\-'){
-      aff[2]=com[0];}
+      aff[2]=com[0];afficheinput();}
     else if (aff[3]=='\-'){
-      aff[3]=com[0];nbr=atoi(aff);afficheinput();}   
+      aff[3]=com[0];nbr=atoi(aff);afficheinput();aff[0]=aff[1]=aff[2]=aff[3]=0;} 
+    
   }
 
 wait=800;
@@ -266,7 +268,9 @@ wait=800;
 }
 
 void afficheinput(){
-  lcd.setCursor(9,1);lcd.print(aff);delay(400)
+  
+  lcd.setCursor(9,1);lcd.print(aff);delay(400);
+  
 }
 
 void affichheure(){
