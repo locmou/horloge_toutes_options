@@ -120,7 +120,7 @@ for (x=0;x<2;x++){
     pop[x]=true;
     but[x]++;
     }
-}
+  }
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
 for (x=1;x<3;x++){
@@ -131,7 +131,7 @@ for (x=1;x<3;x++){
   else {
     if (antial[x-1]==false) digitalWrite (x*2,HIGH); else digitalWrite (x*2,LOW);
     }
-}
+  }
  
 // reception infrarouge ?        
 touchir();
@@ -149,15 +149,15 @@ if (touch==3860463360  ||touch==4061003520  ) {
 //déclenché par EQ
 if (touch==4127850240) {
   if (mode==MODE_ALARM_INFO){
-      telecir();
-      wait=800;
-      mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=0;
-      aff[0]=0;
+    telecir();
+    wait=800;
+    mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=0;
+    aff[0]=0;
     }
   }
 
 if (mode==MODE_Heure) affichheure();
-else if (mode==MODE_Reglage_h ) {aff[0]=0;reglageheuredate();}
+else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
 else {aff[0]=0;reglagealarme(a);}
 }
