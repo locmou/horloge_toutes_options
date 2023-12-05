@@ -61,6 +61,7 @@ void telecir();
 void iwait();
 void ecrannet();
 void settime(int maxi);
+void afficheinput();
 
 
 void setup (){
