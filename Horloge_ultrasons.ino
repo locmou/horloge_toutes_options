@@ -249,7 +249,9 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else {
       aff[1]=com[0];afficheinput();
       nbr=atoi(aff);aff[0]=0;lcd.setCursor(9,1);lcd.print("    ");}
-    
+    /*
+     * Prévoir ici le test du nbr trop  grand
+     */
   } 
   else {
     if (aff[0]==0){
