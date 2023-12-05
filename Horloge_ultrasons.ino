@@ -8,20 +8,11 @@ Interruptions logicielles : En plus des interruptions matérielles, vous pouvez 
 logicielles. Celles-ci sont générées par des événements logiciels spécifiques, comme une minuterie logicielle atteignant 
 une certaine valeur.
 
-
-
-
-
-
-
-
+Prévoir la gestion de la led lorsque l'alarme sonne
+Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
 
 
 */
-
-
-
-
 
 
 #include <Wire.h> 
