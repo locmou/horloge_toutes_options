@@ -156,9 +156,9 @@ if (touch==4127850240) {
   }
 
 if (mode==MODE_Heure) affichheure();
-else if (mode==MODE_Reglage_h ) reglageheuredate();
+else if (mode==MODE_Reglage_h ) {aff[0]=0;reglageheuredate();}
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
-else reglagealarme(a);
+else {aff[0]=0;reglagealarme(a);}
 }
 
 // Affiche les heures des alarmes
@@ -222,15 +222,15 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   if (maxi!=9999){
     if (aff[0]==0) {
       if ( atoi(com)<int((maxi-1)/10)) {Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
-       aff[0]=com[0];aff[1]='\-';
+       aff[0]=com[0];aff[1]='\-';afficheinput();
        }
       else {
-       aff[0]='0'; aff[1]=com[0]; 
-       nbr=atoi(aff);}
-      }
-    else if (aff[1]=='\-'){
-      aff[1]=com[0];
-      nbr=atoi(aff);}
+       aff[0]='0'; aff[1]=com[0]; afficheinput();
+       nbr=atoi(aff);aff[0]=0;}
+    }
+    else {
+      aff[1]=com[0];afficheinput();
+      nbr=atoi(aff);aff[0]=0;}
   } 
   else {
     if (aff[0]==0){
@@ -240,13 +240,16 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else if (aff[2]=='\-'){
       aff[2]=com[0];}
     else if (aff[3]=='\-'){
-      aff[3]=com[0];nbr=atoi(aff);}   
+      aff[3]=com[0];nbr=atoi(aff);afficheinput();}   
   }
-lcd.setCursor(9,1);lcd.print(aff);delay(400);
+
 wait=800;
 }  
 }
 
+void afficheinput(){
+  lcd.setCursor(9,1);lcd.print(aff);delay(400)
+}
 
 void affichheure(){
 // Requete heure 
