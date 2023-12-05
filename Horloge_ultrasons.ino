@@ -1,3 +1,29 @@
+/*
+
+nterruptions matérielles : Les microcontrôleurs Arduino ont des broches spécifiques qui peuvent
+ être configurées pour déclencher une interruption matérielle lorsqu'un certain événement se produit. 
+ Par exemple, une interruption peut être déclenchée lorsqu'une broche change d'état (LOW à HIGH ou HIGH à LOW).
+
+Interruptions logicielles : En plus des interruptions matérielles, vous pouvez également utiliser des interruptions
+logicielles. Celles-ci sont générées par des événements logiciels spécifiques, comme une minuterie logicielle atteignant 
+une certaine valeur.
+
+
+
+
+
+
+
+
+
+
+*/
+
+
+
+
+
+
 #include <Wire.h> 
 #include <RtcDS1307.h>
 RtcDS1307<TwoWire> Rtc(Wire);
