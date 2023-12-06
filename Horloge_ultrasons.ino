@@ -58,14 +58,15 @@ uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,bout[2]={10,12},alh[2],alm[
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
-bool al[2]={false,false},antial[2]={false,false},pop[2]={false,false};
+bool al[2]={false,false},antial[2]={false,false},we[2],pop[2]={false,false};
 
 // Déclaration des constantes pour les modes
 enum Mode {
   MODE_Heure,
   MODE_Reglage_h,
   MODE_ALARM_INFO,
-  MODE_Reglage_al
+  MODE_Reglage_al,
+  MODE_memlewe
 }
 
 // Déclarations de fonctions
@@ -111,6 +112,7 @@ Mode mode = MODE_Heure;
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   al[x]=Rtc.GetMemory(5+x);
+  we[x-1]=Rtc.GetMemory(7+x);
   pinMode(ALPIN[x], OUTPUT);
   }
 }
@@ -176,7 +178,8 @@ if (touch==4127850240) {
 if (mode==MODE_Heure) affichheure();
 else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
-else {aff[0]=0;reglagealarme(a);}
+else if (mode==MODE_Reglage_al) {aff[0]=0;reglagealarme(a);}
+else memlewe(a);
 }
 
 // Affiche les heures des alarmes
@@ -198,11 +201,40 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=0) {   wait=300 ;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]);    mode=MODE_Heure;    nbr=0;    ecrannet();}
+  if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
 }
+//Input demande si l'alarme 
+void memlewe(uint8_t(x)){
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Alarme "+String(x)+"le we?");
+lcd.setCursor(0,1);
+lcd.print("oui=tr+, non=tr-");
+
+//tr-
+if (touch==3141861120) {
+  we[x-1]=true;
+  Rtc.SetMemory(7+x,we[x-1]);
+  mode=MODE_Heure;  
+  }
+
+//tr+  
+if (touch==3208707840) {  
+  we[x-1]=false;
+  Rtc.SetMemory(7+x,we[x-1]);
+  mode=MODE_Heure;  
+  }
+
+
+/*
+now.DayOfWeek()
+*/
+}
+
+
 
 //Réglage de l'heure et de la date
 void reglageheuredate(){
@@ -239,19 +271,19 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   telecir();
   if (maxi!=9999){
     if (aff[0]==0) {
-      if ( atoi(com)<=int((maxi-1)/10)) {Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
+      if ( atoi(com)<=int((maxi-1)/10)) {
+       //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';afficheinput();
        }
       else {
        aff[0]='0'; aff[1]=com[0]; afficheinput();
-       affectnbr();effaceinput();}
+       affectnbr();effaceinput();
+       }
     }
     else {
       aff[1]=com[0];afficheinput();
-      affectnbr();effaceinput();}
-    /*
-     * Prévoir ici le test du nbr trop  grand
-     */
+      affectnbr();effaceinput();
+    }
   } 
   else {
     if (aff[0]==0){
@@ -277,8 +309,11 @@ void afficheinput(){
 }
 
 void effaceinput(){
-  lcd.setCursor(9,1);lcd.print("    ");
+  lcd.setCursor(9,1);
+  if (maxi!=9999) lcd.print("    ");
+    else lcd.print("----");
 }
+
 void affichheure(){
 // Requete heure 
 RtcDateTime now = Rtc.GetDateTime();    
