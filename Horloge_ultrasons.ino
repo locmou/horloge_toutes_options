@@ -67,7 +67,7 @@ enum Mode {
   MODE_ALARM_INFO,
   MODE_Reglage_al,
   MODE_memlewe
-}
+};
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -80,6 +80,10 @@ void iwait();
 void ecrannet();
 void settime(int maxi);
 void afficheinput();
+void memlewe(uint8_t x);
+void affectnbr(int maxi);
+void afficheinput();
+void effaceinput();
 
 
 void setup (){
@@ -242,7 +246,7 @@ Retroeclairage();
 lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
 //réglage de l'heure
-if (h==0) {  settime(24);  h=nbr;  }
+if (h==0) {  settime(24);  h=nbr; Serial.println ("h : "+String(h)); }
 //réglage des minutes
 else  if (m==0){   settime(60);    m=nbr;}
 //réglage du jour
@@ -258,7 +262,8 @@ iwait();
 
 // Permet la saisie de la date et des heures et alarmes
 void settime(int(maxi)){
-nbr=0;lcd.setCursor(0,1);
+  nbr=0;
+lcd.setCursor(0,1);
 if      (maxi==24) lcd.print(F("Heure   :"));
 else if (maxi==60) lcd.print(F("Minutes :"));
 else if (maxi==32) lcd.print(F("Jour    :"));
@@ -272,17 +277,17 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   if (maxi!=9999){
     if (aff[0]==0) {
       if ( atoi(com)<=int((maxi-1)/10)) {
-       //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
+       Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';afficheinput();
        }
       else {
        aff[0]='0'; aff[1]=com[0]; afficheinput();
-       affectnbr();effaceinput();
+       affectnbr(maxi);effaceinput();
        }
     }
     else {
       aff[1]=com[0];afficheinput();
-      affectnbr();effaceinput();
+      affectnbr(maxi);effaceinput();
     }
   } 
   else {
@@ -293,19 +298,20 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else if (aff[2]=='\-'){
       aff[2]=com[0];afficheinput();}
     else if (aff[3]=='\-'){
-      aff[3]=com[0];affectnbr();afficheinput();aff[1]=aff[2]=aff[3]=0;}   
+      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]=0;}   
   }
 wait=800;
 }  
 }
 
-void affectnbr(){
-  nbr=atoi(aff);aff[0]=0;
-if (nbr>=maxi) nbr=0;
-}
-
 void afficheinput(){
   lcd.setCursor(9,1);lcd.print(aff);delay(400);
+}
+
+void affectnbr(int maxi){
+  nbr=atoi(aff);aff[0]=0;Serial.println ("nbr: "+String(nbr));
+if (nbr>=maxi) nbr=0;
+Serial.println ("maxi: "+String(maxi));
 }
 
 void effaceinput(){
