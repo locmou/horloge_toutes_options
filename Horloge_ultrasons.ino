@@ -66,7 +66,7 @@ enum Mode {
   MODE_Reglage_h,
   MODE_ALARM_INFO,
   MODE_Reglage_al
-};
+}
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -219,7 +219,7 @@ else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
 //réglage de l'année
 else if  (an==0) {     settime(9999);        an=nbr;}
-if (an!=0) {strcpy(aff,"");   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }
+if (an!=0) {   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }
      
 iwait();
 }
@@ -244,11 +244,11 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
        }
       else {
        aff[0]='0'; aff[1]=com[0]; afficheinput();
-       nbr=atoi(aff);aff[0]=0;lcd.setCursor(9,1);lcd.print("    ");}
+       affectnbr();effaceinput();}
     }
     else {
       aff[1]=com[0];afficheinput();
-      nbr=atoi(aff);aff[0]=0;lcd.setCursor(9,1);lcd.print("    ");}
+      affectnbr();effaceinput();}
     /*
      * Prévoir ici le test du nbr trop  grand
      */
@@ -261,20 +261,24 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else if (aff[2]=='\-'){
       aff[2]=com[0];afficheinput();}
     else if (aff[3]=='\-'){
-      aff[3]=com[0];nbr=atoi(aff);afficheinput();aff[0]=aff[1]=aff[2]=aff[3]=0;} 
-    
+      aff[3]=com[0];affectnbr();afficheinput();aff[1]=aff[2]=aff[3]=0;}   
   }
-
 wait=800;
 }  
 }
 
-void afficheinput(){
-  
-  lcd.setCursor(9,1);lcd.print(aff);delay(400);
-  
+void affectnbr(){
+  nbr=atoi(aff);aff[0]=0;
+if (nbr>=maxi) nbr=0;
 }
 
+void afficheinput(){
+  lcd.setCursor(9,1);lcd.print(aff);delay(400);
+}
+
+void effaceinput(){
+  lcd.setCursor(9,1);lcd.print("    ");
+}
 void affichheure(){
 // Requete heure 
 RtcDateTime now = Rtc.GetDateTime();    
