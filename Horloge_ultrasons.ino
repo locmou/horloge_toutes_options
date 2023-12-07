@@ -175,14 +175,13 @@ if (touch==4127850240) {
     telecir();
     wait=800;
     mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=0;
-    aff[0]=0;
     }
   }
 
 if (mode==MODE_Heure) affichheure();
 else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
-else if (mode==MODE_Reglage_al) {aff[0]=0;reglagealarme(a);}
+else if (mode==MODE_Reglage_al) {reglagealarme(a);}
 else memlewe(a);
 }
 
@@ -204,7 +203,7 @@ lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
-else{  settime(60);  alm[x-1]=nbr;
+else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
   if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
