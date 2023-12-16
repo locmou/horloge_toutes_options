@@ -11,7 +11,6 @@ une certaine valeur.
 Prévoir la gestion de la led lorsque l'alarme sonne
 Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
 
-
 */
 
 
@@ -126,17 +125,17 @@ void loop (){
 for (x=0;x<2;x++){
   if (digitalRead(bout[x]) == LOW) {
     if (pop[x]==true) {
-      pop[x]=false;     
+      pop[x]=false;
       if (but[x]>2) {
         //Appui long= réglage alarm
         al[x]= !al[x];Rtc.SetMemory(5+x,al[x]);
         antial[x]=false;
-        } 
+        }
       else {
         // Appui court = on/off
         antial[x]=!antial[x];
         }
-       but[x]=0;   
+       but[x]=0;
       }
     }
   else {
@@ -148,7 +147,7 @@ for (x=0;x<2;x++){
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
 for (x=1;x<3;x++){
   if (al[x-1]==true && 60*h+m>=60*(alh[x-1])+(alm[x-1]) && 60*h+m<=60*(alh[x-1])+(alm[x-1])+20) {
-    if ( 60*h+m==60*(alh[x-1])+(alm[x-1])+20) antial[x-1]=false;
+    if (60*h+m==60*(alh[x-1])+(alm[x-1])+20) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
     } 
   else {
@@ -156,7 +155,7 @@ for (x=1;x<3;x++){
     }
   }
  
-// reception infrarouge ?        
+// reception infrarouge ?
 touchir();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
@@ -189,14 +188,15 @@ else memlewe(a);
 void infoalarm(uint8_t(x)) {
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(x)+"-> ");
+lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
+if (we[x-1]==1) lcd.print("we+"); else lcd.print("we-");
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
 iwait();
 }
 
-//Réglage des alarmes 1 et 2
+//Réglage des alarmes 1 et 2x
 void reglagealarme(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -209,6 +209,7 @@ else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
   }
 iwait();
 }
+
 //Input demande si l'alarme 
 void memlewe(uint8_t(x)){
 Retroeclairage();
@@ -231,13 +232,11 @@ if (touch==3208707840) {
   mode=MODE_Heure;  
   }
 
-
+iwait();
 /*
 now.DayOfWeek()
 */
 }
-
-
 
 //Réglage de l'heure et de la date
 void reglageheuredate(){
