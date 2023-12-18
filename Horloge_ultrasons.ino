@@ -176,12 +176,14 @@ if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
   mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=0;
   }
+  
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
   wait=800;
   mode=MODE_ALARM_INFO;ecrannet();
   }
+
 //déclenché par EQ
 if (touch==4127850240) {
   if (mode==MODE_ALARM_INFO){
@@ -375,7 +377,6 @@ if (al[0] == true && al[1] == true) {
    lcd.write(58);
 } else lcd.print(F("  "));
 
-
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<80 and mes!=0) {
   Retroeclairage();
@@ -422,7 +423,6 @@ else if (t>=300 and t<350) { r=0;  g=bright;  b=(t-300)*bright/50;}
 else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 //Serial.println ("rouge : "+ String(r)+", vert : "+String(g)+", bleu : "+String(b));
 }
-
 
 // Motif led alarm testé par la touche v+
 void Ledalarm();{
