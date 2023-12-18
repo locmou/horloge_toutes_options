@@ -170,7 +170,6 @@ touchir();
 //
 if (touch==3927310080) Ledalarm();
 
-
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
@@ -409,7 +408,7 @@ bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
 }
 
-void Turncolor();{
+void Turncolor(){
 //LED
 t++;
 if (t>400) t=0;
@@ -426,17 +425,15 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 // Motif led alarm testé par la touche v+
 void Ledalarm();{
-for (x=1;x<50, x++){
-  
+for (x=1;x<50, x++){ 
   LED1.set(0,255,255);
   digitalWrite(BLUELEDRGB,0);
   digitalWrite(GREENLEDRGB,255);
   Delay(50);
-
-    LED1.set(255,255,255);
+  LED1.set(255,255,255);
   digitalWrite(BLUELEDRGB,255);
   digitalWrite(GREENLEDRGB,0);
-  Delay();
+  Delay(50);
 }
 }
 
