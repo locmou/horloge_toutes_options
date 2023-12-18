@@ -20,13 +20,15 @@ RtcDS1307<TwoWire> Rtc(Wire);
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
 
-// Gestion de la led
+// Gestion des leds sur pin pwm
 #include <RGB_LED.h>
-RGB_LED LED1(3,9,11);
+RGB_LED LED1(9,10,11);
+const int BLUELEDRGB=5;
+const int GREENLEDRGB=6;
 
 // Gestion IR
 #include <IRremote.h>
-const int IR_PIN = 5;
+const int IR_PIN = 13;
 
 // Detecteur ultrasons
 #include <HCSR04.h>
@@ -39,6 +41,9 @@ UltraSonicDistanceSensor distanceSensor(TRIGPIN, ECHOPIN);
 // Connexion alarme et leds
 const uint8_t ALPIN[] = {2,4};
 
+// Boutons 
+const uint8_t BUTT[]={10,12};
+
 // Affichage LCD
 #include "LiquidCrystal_I2C.h"
 LiquidCrystal_I2C lcd(0x27,16,2);
@@ -48,12 +53,12 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 BigFont02_I2C  big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
-const uint8_t BRIGHTNESS_PIN=6;   // Must be a PWM pin
+const uint8_t BRIGHTNESS_PIN=3;   // Must be a PWM pin
 const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
 unsigned long touch;
 char aff[5],com[5];
-uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,bout[2]={10,12},alh[2],alm[2];
+uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
@@ -83,6 +88,8 @@ void memlewe(uint8_t x);
 void affectnbr(int maxi);
 void afficheinput();
 void effaceinput();
+void Turncolor();
+void Ledalarm();
 
 
 void setup (){
@@ -107,8 +114,8 @@ Retroeclairage();
   
 // Pin's
 pinMode(BRIGHTNESS_PIN, OUTPUT);
-pinMode(10,INPUT);
-pinMode(12,INPUT);
+pinMode(GREENLEDRGB, OUTPUT);
+pinMode(BLUELEDRGB, OUTPUT);
 Serial.begin(115200);
 Mode mode = MODE_Heure;
   
@@ -117,13 +124,14 @@ for (x=0;x<2;x++){
   al[x]=Rtc.GetMemory(5+x);
   we[x-1]=Rtc.GetMemory(7+x);
   pinMode(ALPIN[x], OUTPUT);
+  pinMode(BUTT[x],INPUT);
   }
 }
 
 void loop (){
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
-  if (digitalRead(bout[x]) == LOW) {
+  if (digitalRead(BUTT[x]) == LOW) {
     if (pop[x]==true) {
       pop[x]=false;
       if (but[x]>2) {
@@ -146,8 +154,8 @@ for (x=0;x<2;x++){
  
 // Alarme qui se déclenche durant les 20' qui suivent l'heure
 for (x=1;x<3;x++){
-  if (al[x-1]==true && 60*h+m>=60*(alh[x-1])+(alm[x-1]) && 60*h+m<=60*(alh[x-1])+(alm[x-1])+20) {
-    if (60*h+m==60*(alh[x-1])+(alm[x-1])+20) antial[x-1]=false;
+  if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15) {
+    if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
     } 
   else {
@@ -157,6 +165,13 @@ for (x=1;x<3;x++){
  
 // reception infrarouge ?
 touchir();
+
+//
+// Provisoire pour déclencher l'alarme
+//
+if (touch==3927310080) Ledalarm();
+
+
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
@@ -177,6 +192,12 @@ if (touch==4127850240) {
     }
   }
 
+// Ajustement leds
+LED1.set(255-r,255-g,255-b);
+digitalWrite(BLUELEDRGB,255);
+digitalWrite(GREENLEDRGB,255);
+
+//Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
 else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
@@ -186,6 +207,7 @@ else memlewe(a);
 
 // Affiche les heures des alarmes
 void infoalarm(uint8_t(x)) {
+Turncolor();
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala. "+String(x)+"->");
@@ -210,7 +232,7 @@ else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
 iwait();
 }
 
-//Input demande si l'alarme 
+//Input demande si l'alarme fonctionne le we
 void memlewe(uint8_t(x)){
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -221,14 +243,14 @@ lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120) {
   we[x-1]=true;
-  Rtc.SetMemory(7+x,we[x-1]);
+  Rtc.SetMemory(7+x,true);
   mode=MODE_Heure;  
   }
 
 //tr+  
 if (touch==3208707840) {  
   we[x-1]=false;
-  Rtc.SetMemory(7+x,we[x-1]);
+  Rtc.SetMemory(7+x,false);
   mode=MODE_Heure;  
   }
 
@@ -300,6 +322,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   }
 wait=800;
 }  
+iwait();
 }
 
 void afficheinput(){
@@ -367,6 +390,8 @@ wait--;
 if (wait<0)  {
   analogWrite(BRIGHTNESS_PIN, 0);
   LED1.set(255,255,255);
+  digitalWrite(BLUELEDRGB,255);
+  digitalWrite(GREENLEDRGB,255);
   wait=0;
   } 
 }
@@ -384,9 +409,10 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
+}
 
+void Turncolor();{
 //LED
-/*
 t++;
 if (t>400) t=0;
 if (t<50)  { r=bright;  g=bright-(t*bright/50);  b=(t*bright/50);}
@@ -398,8 +424,23 @@ else if (t>=250 and t<300) { r=bright-(t-250)*bright/50;  g=(t-250)*bright/50;  
 else if (t>=300 and t<350) { r=0;  g=bright;  b=(t-300)*bright/50;}
 else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 //Serial.println ("rouge : "+ String(r)+", vert : "+String(g)+", bleu : "+String(b));
-LED1.set(255-r,255-g,255-b); 
-*/
+}
+
+
+// Motif led alarm testé par la touche v+
+void Ledalarm();{
+for (x=1;x<50, x++){
+  
+  LED1.set(0,255,255);
+  digitalWrite(BLUELEDRGB,0);
+  digitalWrite(GREENLEDRGB,255);
+  Delay(50);
+
+    LED1.set(255,255,255);
+  digitalWrite(BLUELEDRGB,255);
+  digitalWrite(GREENLEDRGB,0);
+  Delay();
+}
 }
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
