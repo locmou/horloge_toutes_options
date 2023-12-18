@@ -17,6 +17,7 @@ Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
 RtcDS1307<TwoWire> Rtc(Wire);
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
+RtcDateTime now;
 
 // Gestion des leds sur pin pwm
 #include <RGB_LED.h>
@@ -127,6 +128,10 @@ for (x=0;x<2;x++){
 }
 
 void loop (){
+  
+  // Requete heure 
+RtcDateTime now = Rtc.GetDateTime();
+
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
   if (digitalRead(BUTT[x]) == LOW) {
@@ -227,7 +232,7 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false}
+  if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false;}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -340,9 +345,10 @@ void effaceinput(){
 }
 
 void affichheure(){
-// Requete heure 
-RtcDateTime now = Rtc.GetDateTime();    
+  
+   
 h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
+
 // Détection ultrasons?
 mes=(int)distanceSensor.measureDistanceCm()+1;
   
@@ -424,16 +430,16 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 }
 
 // Motif led alarm testé par la touche v+
-void Ledalarm();{
-for (x=1;x<50, x++){ 
+void Ledalarm(){
+for (x=1;x<50, x++;){ 
   LED1.set(0,255,255);
   digitalWrite(BLUELEDRGB,0);
   digitalWrite(GREENLEDRGB,255);
-  Delay(50);
+  delay(50);
   LED1.set(255,255,255);
   digitalWrite(BLUELEDRGB,255);
   digitalWrite(GREENLEDRGB,0);
-  Delay(50);
+  delay(50);
 }
 }
 
