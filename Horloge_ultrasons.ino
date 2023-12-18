@@ -153,7 +153,7 @@ for (x=0;x<2;x++){
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
 for (x=1;x<3;x++){
   if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
-  && (we[x-1]==true || (we[x-1]==false && now.DayOfWeek()<6 &&now.DayOfWeek()>0))) {
+  && (we[x-1]==true || (we[x-1]==false && now.DayOfWeek()<6 && now.DayOfWeek()>0))) {
     if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
     } 
@@ -176,7 +176,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
   mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=0;
   }
-  
+
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
