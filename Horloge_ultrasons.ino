@@ -1,5 +1,4 @@
 /*
-
 nterruptions matérielles : Les microcontrôleurs Arduino ont des broches spécifiques qui peuvent
  être configurées pour déclencher une interruption matérielle lorsqu'un certain événement se produit. 
  Par exemple, une interruption peut être déclenchée lorsqu'une broche change d'état (LOW à HIGH ou HIGH à LOW).
@@ -10,7 +9,6 @@ une certaine valeur.
 
 Prévoir la gestion de la led lorsque l'alarme sonne
 Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
-
 */
 
 
@@ -152,9 +150,10 @@ for (x=0;x<2;x++){
     }
   }
  
-// Alarme qui se déclenche durant les 20' qui suivent l'heure
+// Alarme qui se déclenche durant les 15' qui suivent l'heure
 for (x=1;x<3;x++){
-  if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15) {
+  if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
+  && (we[x-1]==true || (we[x-1]==false && now.DayOfWeek()<6 &&now.DayOfWeek()>0))) {
     if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
     } 
@@ -162,7 +161,7 @@ for (x=1;x<3;x++){
     if (antial[x-1]==false) digitalWrite (x*2,HIGH); else digitalWrite (x*2,LOW);
     }
   }
- 
+
 // reception infrarouge ?
 touchir();
 
@@ -201,7 +200,7 @@ digitalWrite(GREENLEDRGB,255);
 if (mode==MODE_Heure) affichheure();
 else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
-else if (mode==MODE_Reglage_al) {reglagealarme(a);}
+else if (mode==MODE_Reglage_al) reglagealarme(a);
 else memlewe(a);
 }
 
@@ -220,13 +219,14 @@ iwait();
 
 //Réglage des alarmes 1 et 2x
 void reglagealarme(uint8_t(x)){
+Turncolor();
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();}
+  if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -235,6 +235,7 @@ iwait();
 //Input demande si l'alarme fonctionne le we
 void memlewe(uint8_t(x)){
 Retroeclairage();
+Turncolor();
 lcd.setCursor(0,0);
 lcd.print("Alarme "+String(x)+"le we?");
 lcd.setCursor(0,1);
@@ -253,15 +254,12 @@ if (touch==3208707840) {
   Rtc.SetMemory(7+x,false);
   mode=MODE_Heure;  
   }
-
 iwait();
-/*
-now.DayOfWeek()
-*/
 }
 
 //Réglage de l'heure et de la date
 void reglageheuredate(){
+Turncolor();
 Retroeclairage();
 lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
@@ -275,8 +273,7 @@ else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
 //réglage de l'année
 else if  (an==0) {     settime(9999);        an=nbr;}
-if (an!=0) {   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }
-     
+if (an!=0) {   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }    
 iwait();
 }
 
