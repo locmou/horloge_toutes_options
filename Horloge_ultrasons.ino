@@ -431,7 +431,7 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 // Motif led alarm testé par la touche v+
 void Ledalarm(){
-for (x=1;x<50; x++;){ 
+for (x=1;x<50; x++){ 
   LED1.set(0,255,255);
   digitalWrite(BLUELEDRGB,0);
   digitalWrite(GREENLEDRGB,255);
