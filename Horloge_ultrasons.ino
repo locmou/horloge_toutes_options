@@ -19,11 +19,12 @@ const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
 //RtcDateTime now;
 
-// Gestion des leds sur pin pwm
+// Gestion des leds sur pin pwm 
 #include <RGB_LED.h>
 RGB_LED LED1(9,10,11);
 const int BLUELEDRGB=5;
 const int GREENLEDRGB=6;
+// Gestion des leds sur pin digitaux
 const int ANALOGREDLEDRGB=15; //A1
 const int ANALOGBLUELEDRGB=16; //A2
 const int ANALOGGREENLEDRGB=17; //A3
