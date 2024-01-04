@@ -17,13 +17,17 @@ Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
 RtcDS1307<TwoWire> Rtc(Wire);
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
-RtcDateTime now;
+//RtcDateTime now;
 
 // Gestion des leds sur pin pwm
 #include <RGB_LED.h>
 RGB_LED LED1(9,10,11);
 const int BLUELEDRGB=5;
 const int GREENLEDRGB=6;
+const int ANALOGREDLEDRGB=15; //A1
+const int ANALOGBLUELEDRGB=16; //A2
+const int ANALOGGREENLEDRGB=17; //A3
+const int DIGITREDLEDRGB=0; //RXD
 
 // Gestion IR
 #include <IRremote.h>
@@ -199,8 +203,8 @@ if (touch==4127850240) {
 
 // Ajustement leds
 LED1.set(255-r,255-g,255-b);
-digitalWrite(BLUELEDRGB,255);
-digitalWrite(GREENLEDRGB,255);
+analogWrite(BLUELEDRGB,255);
+analogWrite(GREENLEDRGB,255);
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -346,6 +350,8 @@ void effaceinput(){
 
 void affichheure(){
   
+  // Requete heure 
+RtcDateTime now = Rtc.GetDateTime();
    
 h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
 
