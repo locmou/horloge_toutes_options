@@ -128,7 +128,7 @@ for (x=0;x<2;x++){
   al[x]=Rtc.GetMemory(5+x);
   we[x-1]=Rtc.GetMemory(7+x);
   pinMode(ALPIN[x], OUTPUT);
-  pinMode(BUTT[x],INPUT);
+  pinMode(BUTT[x], INPUT);
   }
 }
 
@@ -441,10 +441,10 @@ void Ledalarm(){
 for (x=1;x<50; x++){ 
   LED1.set(0,255,255);
   digitalWrite(BLUELEDRGB,0);
-  digitalWrite(GREENLEDRGB,255);
+  digitalWrite(GREENLEDRGB,1);
   delay(50);
   LED1.set(255,255,255);
-  digitalWrite(BLUELEDRGB,255);
+  digitalWrite(BLUELEDRGB,1);
   digitalWrite(GREENLEDRGB,0);
   delay(50);
 }
