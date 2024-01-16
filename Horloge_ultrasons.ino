@@ -127,14 +127,14 @@ Mode mode = MODE_Heure;
 for (x=0;x<2;x++){
   alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
   al[x]=Rtc.GetMemory(5+x);
-  we[x-1]=Rtc.GetMemory(7+x);
+  we[x]=Rtc.GetMemory(7+x);
   pinMode(ALPIN[x], OUTPUT);
   pinMode(BUTT[x], INPUT);
   }
 }
 
+
 void loop (){
-  
   // Requete heure 
 RtcDateTime now = Rtc.GetDateTime();
 
@@ -501,11 +501,10 @@ big.begin();
 
 void Checkserie(){
   Serial.write(12);
-  
-  Serial.println("Mode : "+ Mode + ", h : "+h+", m :"+m+", jr :"+jr+", mo :"+mo+", an :"+an);
-  Serial.println("r : "+ r + ", g : "+g+", b :"+b+", mes :"+mes+", bright :"+bright);
-  Serial.println("alh[0] : "+ alh[0] + ", alm[0] : "+alm[0]+", alh[1] :"+alh[1]+", alm[1] :"+alm[1] +", wait :"+wait+", maxi :"+maxi);
-
+  Serial.println("Mode : "+ String(Mode) + ", h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
+  Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+  Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
+Delay(50);
 /*
   unsigned long touch;
 char aff[5],com[5];
