@@ -94,6 +94,7 @@ void afficheinput();
 void effaceinput();
 void Turncolor();
 void Ledalarm();
+void Checkserie();
 
 
 void setup (){
@@ -213,6 +214,11 @@ else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
 else if (mode==MODE_Reglage_al) reglagealarme(a);
 else memlewe(a);
+
+
+//Affichage serie des variables
+Checkserie();
+
 }
 
 // Affiche les heures des alarmes
@@ -491,4 +497,30 @@ if (wait<0) {
 void ecrannet(){
 lcd.init();
 big.begin();
+}
+
+void Checkserie(){
+  Serial.write(12);
+  
+  Serial.println("Mode : "+ Mode + ", h : "+h+", m :"+m+", jr :"+jr+", mo :"+mo+", an :"+an);
+  Serial.println("r : "+ r + ", g : "+g+", b :"+b+", mes :"+mes+", bright :"+bright);
+  Serial.println("alh[0] : "+ alh[0] + ", alm[0] : "+alm[0]+", alh[1] :"+alh[1]+", alm[1] :"+alm[1] +", wait :"+wait+", maxi :"+maxi);
+
+/*
+  unsigned long touch;
+char aff[5],com[5];
+uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,alh[2],alm[2];
+int t=0,wait=300,but[2];
+int maxi;
+//float maxi;
+bool al[2]={false,false},antial[2]={false,false},we[2],pop[2]={false,false};
+
+// Déclaration des constantes pour les modes
+enum Mode {
+  MODE_Heure,
+  MODE_Reglage_h,
+  MODE_ALARM_INFO,
+  MODE_Reglage_al,
+  MODE_memlewe*/
+
 }
