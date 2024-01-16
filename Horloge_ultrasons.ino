@@ -501,10 +501,10 @@ big.begin();
 
 void Checkserie(){
   Serial.write(12);
-  Serial.println("Mode : "+ String(Mode) + ", h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
+  Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
   Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
   Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
-Delay(50);
+delay(50);
 /*
   unsigned long touch;
 char aff[5],com[5];
