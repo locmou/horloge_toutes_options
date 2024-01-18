@@ -28,11 +28,11 @@ const int GREENLEDRGB=6;
 const int ANALOGREDLEDRGB=15; //A1
 const int ANALOGBLUELEDRGB=16; //A2
 const int ANALOGGREENLEDRGB=17; //A3
-const int DIGITREDLEDRGB=0; //RXD
+const int DIGITREDLEDRGB=13; 
 
 // Gestion IR
 #include <IRremote.h>
-const int IR_PIN = 13;
+const int IR_PIN = 0;//RXD
 
 // Detecteur ultrasons
 #include <HCSR04.h>
