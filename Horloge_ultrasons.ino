@@ -27,12 +27,12 @@ const int GREENLEDRGB=6;
 // Gestion des leds sur pin digitaux
 const int ANALOGREDLEDRGB=15; //A1
 const int ANALOGBLUELEDRGB=16; //A2
-const int ANALOGGREENLEDRGB=17; //A3
+const int ANALOGGREENLEDRGB=0;//RXD
 const int DIGITREDLEDRGB=13; 
 
 // Gestion IR
 #include <IRremote.h>
-const int IR_PIN = 0;//RXD
+const int IR_PIN = 17; //A3
 
 // Detecteur ultrasons
 #include <HCSR04.h>
@@ -107,9 +107,21 @@ Rtc.SetDateTime(compiled);*/
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
+
+
+
+
+
   
 // Infrarouges  
-IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
+//IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
+
+
+
+
+
+
+
   
 //LCD
 lcd.init(); // initialisation de l’afficheur
@@ -406,8 +418,8 @@ wait--;
 if (wait<0)  {
   analogWrite(BRIGHTNESS_PIN, 0);
   LED1.set(255,255,255);
-  digitalWrite(BLUELEDRGB,255);
-  digitalWrite(GREENLEDRGB,255);
+  analogWrite(BLUELEDRGB,255);
+  analogWrite(GREENLEDRGB,255);
   wait=0;
   } 
 }
@@ -425,6 +437,7 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
+ Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
 }
 
 void Turncolor(){
@@ -500,11 +513,11 @@ big.begin();
 }
 
 void Checkserie(){
-  Serial.write(12);
-  Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
-  Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
-  Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
-delay(50);
+  
+  //Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
+ // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+  //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
+//delay(500);
 /*
   unsigned long touch;
 char aff[5],com[5];
