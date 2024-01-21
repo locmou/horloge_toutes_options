@@ -21,9 +21,9 @@ const int DS1307_SCL_PIN = A5;
 
 // Gestion des leds sur pin pwm 
 #include <RGB_LED.h>
-RGB_LED LED1(9,10,11);
-const int BLUELEDRGB=5;
-const int GREENLEDRGB=6;
+RGB_LED LED1(6,9,10);
+const int BLUELEDRGB=3;
+const int GREENLEDRGB=11;
 // Gestion des leds sur pin digitaux
 const int ANALOGREDLEDRGB=15; //A1
 const int ANALOGBLUELEDRGB=16; //A2
@@ -57,7 +57,7 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 BigFont02_I2C  big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
-const uint8_t BRIGHTNESS_PIN=3;   // Must be a PWM pin
+const uint8_t BRIGHTNESS_PIN=5;   // Must be a PWM pin
 const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
 unsigned long touch;
