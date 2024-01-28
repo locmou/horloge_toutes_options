@@ -21,18 +21,19 @@ const int DS1307_SCL_PIN = A5;
 
 // Gestion des leds sur pin pwm 
 #include <RGB_LED.h>
-RGB_LED LED1(6,9,10);
-const int BLUELEDRGB=3;
-const int GREENLEDRGB=11;
+RGB_LED LED1(9,10,2);
+
 // Gestion des leds sur pin digitaux
+const int ANALOGGREENLEDRGB=0;//RXD
+const int GREENLEDRGB=11;
+const int DIGITREDLEDRGB=13; 
 const int ANALOGREDLEDRGB=15; //A1
 const int ANALOGBLUELEDRGB=16; //A2
-const int ANALOGGREENLEDRGB=0;//RXD
-const int DIGITREDLEDRGB=13; 
+const int BLUELEDRGB=17; //A3
 
 // Gestion IR
 #include <IRremote.h>
-const int IR_PIN = 17; //A3
+const int IR_PIN = 5;
 
 // Detecteur ultrasons
 #include <HCSR04.h>
@@ -43,7 +44,7 @@ const int ECHOPIN = 7;
 UltraSonicDistanceSensor distanceSensor(TRIGPIN, ECHOPIN);
 
 // Connexion alarme et leds
-const uint8_t ALPIN[] = {2,4};
+const uint8_t ALPIN[] = {3,4};
 
 // Boutons 
 const uint8_t BUTT[]={12,14};
@@ -57,7 +58,7 @@ LiquidCrystal_I2C lcd(0x27,16,2);
 BigFont02_I2C  big(&lcd); // construct large font object, passing to it the name of our lcd object
 
 //Définition des contrastes
-const uint8_t BRIGHTNESS_PIN=5;   // Must be a PWM pin
+const uint8_t BRIGHTNESS_PIN=6;   // Must be a PWM pin
 const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
 unsigned long touch;
@@ -99,10 +100,10 @@ void Checkserie();
 
 void setup (){
 Rtc.Begin();
-/*// Pour remettre à l'heure lorsque le port série est relié à l'ordi
+// Pour remettre à l'heure lorsque le port série est relié à l'ordi
 RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
 RtcDateTime now = Rtc.GetDateTime();
-Rtc.SetDateTime(compiled);*/
+Rtc.SetDateTime(compiled);
   
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
@@ -114,7 +115,7 @@ Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
 
   
 // Infrarouges  
-//IrReceiver.begin(IR_PIN, ENABLE_LED_FEEDBACK);
+IrReceiver.begin(IR_PIN, DISABLE_LED_FEEDBACK);
 
 
 
@@ -130,7 +131,16 @@ lcd.backlight();
 Retroeclairage();
   
 // Pin's
+
+pinMode(9,OUTPUT);pinMode(10,OUTPUT);pinMode(6,OUTPUT);
+
+
+
+
+
+
 pinMode(BRIGHTNESS_PIN, OUTPUT);
+
 pinMode(GREENLEDRGB, OUTPUT);
 pinMode(BLUELEDRGB, OUTPUT);
 Serial.begin(115200);
@@ -178,10 +188,10 @@ for (x=1;x<3;x++){
   if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
   && (we[x-1]==true || (we[x-1]==false && now.DayOfWeek()<6 && now.DayOfWeek()>0))) {
     if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
-    if (antial[x-1]==false) digitalWrite (x*2,LOW);  else  digitalWrite (x*2,HIGH);
+    if (antial[x-1]==false) digitalWrite (ALPIN[x-1],LOW);  else  digitalWrite (ALPIN[x-1],HIGH);
     } 
   else {
-    if (antial[x-1]==false) digitalWrite (x*2,HIGH); else digitalWrite (x*2,LOW);
+    if (antial[x-1]==false) digitalWrite (ALPIN[x-1],HIGH); else digitalWrite (ALPIN[x-1],LOW);
     }
   }
 
@@ -229,7 +239,7 @@ else memlewe(a);
 
 
 //Affichage serie des variables
-Checkserie();
+//Checkserie();
 
 }
 
@@ -293,7 +303,8 @@ Retroeclairage();
 lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
 //réglage de l'heure
-if (h==0) {  settime(24);  h=nbr; Serial.println ("h : "+String(h)); }
+if (h==0) {  settime(24);  h=nbr; //Serial.println ("h : "+String(h)); 
+}
 //réglage des minutes
 else  if (m==0){   settime(60);    m=nbr;}
 //réglage du jour
@@ -323,7 +334,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   if (maxi!=9999){
     if (aff[0]==0) {
       if ( atoi(com)<=int((maxi-1)/10)) {
-       Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
+       //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';afficheinput();
        }
       else {
@@ -356,9 +367,9 @@ void afficheinput(){
 }
 
 void affectnbr(int maxi){
-  nbr=atoi(aff);aff[0]=0;Serial.println ("nbr: "+String(nbr));
+  nbr=atoi(aff);aff[0]=0;//Serial.println ("nbr: "+String(nbr));
 if (nbr>=maxi) nbr=0;
-Serial.println ("maxi: "+String(maxi));
+//Serial.println ("maxi: "+String(maxi));
 }
 
 void effaceinput(){
@@ -428,6 +439,7 @@ if (wait<0)  {
 void touchir(){
 if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
+  //Serial.println("Data decode :"+String(touch));
   }
 IrReceiver.resume();// Receive the next value
 }
@@ -437,7 +449,7 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
- Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+ //Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
 }
 
 void Turncolor(){
