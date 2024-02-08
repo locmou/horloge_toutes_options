@@ -11,10 +11,20 @@ Prévoir la gestion de la led lorsque l'alarme sonne
 Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
 */
 
-
+/*
 #include <Wire.h> 
-#include <RtcDS1307.h>
-RtcDS1307<TwoWire> Rtc(Wire);
+#include <RtcDS1307.h>*/
+#include <RTClib.h>
+
+
+
+//   RtcDS1307<TwoWire> Rtc(Wire);
+RTC_DS1307 rtc;
+
+
+
+
+
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
 //RtcDateTime now;
@@ -99,16 +109,34 @@ void Checkserie();
 
 
 void setup (){
-Rtc.Begin();
+    
+  
+  
+//Rtc.Begin();
+rtc.begin();
+
+  if (! rtc.isrunning()) {
+    Serial.println("RTC is NOT running, let's set the time!");
+    // When time needs to be set on a new device, or after a power loss, the
+    // following line sets the RTC to the date & time this sketch was compiled
+    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+    // This line sets the RTC with an explicit date & time, for example to set
+    // January 21, 2014 at 3am you would call:
+    // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
+  }
+
+
+/*
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
-RtcDateTime compiled = RtcDateTime(__DATE__, __TIME__);
+rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));*/
+/*
 RtcDateTime now = Rtc.GetDateTime();
-Rtc.SetDateTime(compiled);
+Rtc.SetDateTime(compiled);*/
   
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
-Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
-
+//Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
+rtc.writeSqwPinMode(DS1307_OFF);
 
 
 
@@ -147,9 +175,9 @@ Serial.begin(115200);
 Mode mode = MODE_Heure;
   
 for (x=0;x<2;x++){
-  alh[x]=Rtc.GetMemory((x+1)*2);alm[x]=Rtc.GetMemory(1+((x+1)*2));
-  al[x]=Rtc.GetMemory(5+x);
-  we[x]=Rtc.GetMemory(7+x);
+  alh[x]=rtc.readnvram((x+1)*2);alm[x]=rtc.readnvram(1+((x+1)*2));
+  al[x]=rtc.readnvram(5+x);
+  we[x]=rtc.readnvram(7+x);
   pinMode(ALPIN[x], OUTPUT);
   pinMode(BUTT[x], INPUT);
   }
@@ -158,7 +186,9 @@ for (x=0;x<2;x++){
 
 void loop (){
   // Requete heure 
-RtcDateTime now = Rtc.GetDateTime();
+//RtcDateTime now = Rtc.GetDateTime();
+
+DateTime now = rtc.now();
 
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
@@ -167,7 +197,7 @@ for (x=0;x<2;x++){
       pop[x]=false;
       if (but[x]>2) {
         //Appui long= réglage alarm
-        al[x]= !al[x];Rtc.SetMemory(5+x,al[x]);
+        al[x]= !al[x];rtc.writenvram(5+x, al[x]);
         antial[x]=false;
         }
       else {
@@ -182,11 +212,14 @@ for (x=0;x<2;x++){
     but[x]++;
     }
   }
+
+
+
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
 for (x=1;x<3;x++){
   if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
-  && (we[x-1]==true || (we[x-1]==false && now.DayOfWeek()<6 && now.DayOfWeek()>0))) {
+  && (we[x-1]==true || (we[x-1]==false && now.dayOfTheWeek()<6 && now.dayOfTheWeek()>0))) {
     if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (ALPIN[x-1],LOW);  else  digitalWrite (ALPIN[x-1],HIGH);
     } 
@@ -265,11 +298,14 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=0) {   wait=100;Rtc.SetMemory(2*x,alh[x-1]);Rtc.SetMemory(1+(2*x),alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false;}
+  if (alm[x-1]!=0) {   wait=100;rtc.writenvram(2*x, alh[x-1]);rtc.writenvram(1+(2*x), alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false;}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
 }
+
+
+
 
 //Input demande si l'alarme fonctionne le we
 void memlewe(uint8_t(x)){
@@ -283,15 +319,15 @@ lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120) {
   we[x-1]=true;
-  Rtc.SetMemory(7+x,true);
+  rtc.writenvram(7+x, true);
   mode=MODE_Heure;  
   }
 
 //tr+  
 if (touch==3208707840) {  
   we[x-1]=false;
-  Rtc.SetMemory(7+x,false);
-  mode=MODE_Heure;  
+rtc.writenvram(7+x, false);  
+mode=MODE_Heure;  
   }
 iwait();
 }
@@ -313,7 +349,7 @@ else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
 //réglage de l'année
 else if  (an==0) {     settime(9999);        an=nbr;}
-if (an!=0) {   ecrannet();        wait=300;        Rtc.SetDateTime(RtcDateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }    
+if (an!=0) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }    
 iwait();
 }
 
@@ -381,9 +417,11 @@ void effaceinput(){
 void affichheure(){
   
   // Requete heure 
-RtcDateTime now = Rtc.GetDateTime();
+//RtcDateTime now = Rtc.GetDateTime();
+
+DateTime now = rtc.now();
    
-h=now.Hour(), DEC;m=now.Minute(), DEC;s=now.Second(), DEC;jr=now.Day(), DEC;mo=now.Month(), DEC;an=now.Year(), DEC;
+h=now.hour(), DEC;m=now.minute(), DEC;s=now.second(), DEC;jr=now.day(), DEC;mo=now.month(), DEC;an=now.year(), DEC;
 
 // Détection ultrasons?
 mes=(int)distanceSensor.measureDistanceCm()+1;
