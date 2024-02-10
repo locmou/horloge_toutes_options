@@ -11,19 +11,8 @@ Prévoir la gestion de la led lorsque l'alarme sonne
 Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
 */
 
-/*
-#include <Wire.h> 
-#include <RtcDS1307.h>*/
 #include <RTClib.h>
-
-
-
-//   RtcDS1307<TwoWire> Rtc(Wire);
 RTC_DS1307 rtc;
-
-
-
-
 
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
@@ -34,12 +23,12 @@ const int DS1307_SCL_PIN = A5;
 RGB_LED LED1(9,10,6);
 
 // Gestion des leds sur pin digitaux
-const int ANALOGGREENLEDRGB=0;//RXD
-const int GREENLEDRGB=11;
-const int DIGITREDLEDRGB=13; 
-const int ANALOGREDLEDRGB=15; //A1
-const int ANALOGBLUELEDRGB=16; //A2
-const int BLUELEDRGB=17; //A3
+const int DIGITLED1R=0;//RXD
+const int DIGITLED1G=11;
+const int DIGITLED1B=13; 
+const int DIGITLED2R=15; //A1
+const int DIGITLED2G=16; //A2
+const int DIGITLED2B=17; //A3
 
 // Gestion IR
 #include <IRremote.h>
@@ -109,21 +98,17 @@ void Checkserie();
 
 
 void setup (){
-    
-  
-  
-//Rtc.Begin();
-rtc.begin();
 
-  if (! rtc.isrunning()) {
-    Serial.println("RTC is NOT running, let's set the time!");
+rtc.begin();
+if (! rtc.isrunning()) {
+    //Serial.println("RTC is NOT running, let's set the time!");
     // When time needs to be set on a new device, or after a power loss, the
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
     // This line sets the RTC with an explicit date & time, for example to set
     // January 21, 2014 at 3am you would call:
     // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
-  }
+    }
 
 
 /*
@@ -135,21 +120,11 @@ Rtc.SetDateTime(compiled);*/
   
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
-//Rtc.SetSquareWavePin(DS1307SquareWaveOut_Low);
 rtc.writeSqwPinMode(DS1307_OFF);
-
-
-
 
   
 // Infrarouges  
 IrReceiver.begin(IR_PIN, DISABLE_LED_FEEDBACK);
-
-
-
-
-
-
 
   
 //LCD
@@ -159,18 +134,14 @@ lcd.backlight();
 Retroeclairage();
   
 // Pin's
-
 pinMode(9,OUTPUT);pinMode(10,OUTPUT);pinMode(6,OUTPUT);
-
-
-
-
-
-
 pinMode(BRIGHTNESS_PIN, OUTPUT);
-
-pinMode(GREENLEDRGB, OUTPUT);
-pinMode(BLUELEDRGB, OUTPUT);
+pinMode(DIGITLED1R, OUTPUT);
+pinMode(DIGITLED1G, OUTPUT);
+pinMode(DIGITLED1B, OUTPUT);
+pinMode(DIGITLED2R, OUTPUT);
+pinMode(DIGITLED2G, OUTPUT);
+pinMode(DIGITLED2B, OUTPUT);
 Serial.begin(115200);
 Mode mode = MODE_Heure;
   
@@ -260,8 +231,8 @@ if (touch==4127850240) {
 
 // Ajustement leds
 LED1.set(255-r,255-g,255-b);
-analogWrite(BLUELEDRGB,255);
-analogWrite(GREENLEDRGB,255);
+analogWrite(DIGITLED2B,255);
+analogWrite(DIGITLED1G,255);
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -467,8 +438,12 @@ wait--;
 if (wait<0)  {
   analogWrite(BRIGHTNESS_PIN, 0);
   LED1.set(255,255,255);
-  analogWrite(BLUELEDRGB,255);
-  analogWrite(GREENLEDRGB,255);
+  digitalWrite(DIGITLED1R,1);
+  digitalWrite(DIGITLED1G,1);
+  digitalWrite(DIGITLED1B,1);
+  digitalWrite(DIGITLED2R,1);
+  digitalWrite(DIGITLED2G,1);
+  digitalWrite(DIGITLED2B,1);  
   wait=0;
   } 
 }
@@ -509,12 +484,12 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 void Ledalarm(){
 for (x=1;x<50; x++){ 
   LED1.set(0,255,255);
-  digitalWrite(BLUELEDRGB,0);
-  digitalWrite(GREENLEDRGB,1);
+  digitalWrite(DIGITLED2B,0);
+  digitalWrite(DIGITLED1G,1);
   delay(50);
   LED1.set(255,255,255);
-  digitalWrite(BLUELEDRGB,1);
-  digitalWrite(GREENLEDRGB,0);
+  digitalWrite(DIGITLED2B,1);
+  digitalWrite(DIGITLED1G,0);
   delay(50);
 }
 }
