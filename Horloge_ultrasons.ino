@@ -57,7 +57,7 @@ UltraSonicDistanceSensor distanceSensor(TRIGPIN, ECHOPIN);
 const uint8_t ALPIN[] = {3,4};
 
 // Boutons 
-const uint8_t BUTT[]={12,14};
+const uint8_t BUTT[]={14,12};
 
 // Affichage LCD
 #include "LiquidCrystal_I2C.h"
