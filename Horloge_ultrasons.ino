@@ -23,12 +23,12 @@ const int DS1307_SCL_PIN = A5;
 RGB_LED LED1(9,10,6);
 
 // Gestion des leds sur pin digitaux
-const int DIGITLED1R=0;//RXD
-const int DIGITLED1G=11;
-const int DIGITLED1B=13; 
-const int DIGITLED2R=15; //A1
-const int DIGITLED2G=16; //A2
-const int DIGITLED2B=17; //A3
+const int DIGITLED1R=15; //A1
+const int DIGITLED1G=16; //A2
+const int DIGITLED1B=17; //A3
+const int DIGITLED2R=13; 
+const int DIGITLED2G=11;
+
 
 // Gestion IR
 #include <IRremote.h>
@@ -114,9 +114,6 @@ if (! rtc.isrunning()) {
 /*
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
 rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));*/
-/*
-RtcDateTime now = Rtc.GetDateTime();
-Rtc.SetDateTime(compiled);*/
   
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
@@ -141,7 +138,6 @@ pinMode(DIGITLED1G, OUTPUT);
 pinMode(DIGITLED1B, OUTPUT);
 pinMode(DIGITLED2R, OUTPUT);
 pinMode(DIGITLED2G, OUTPUT);
-pinMode(DIGITLED2B, OUTPUT);
 Serial.begin(115200);
 Mode mode = MODE_Heure;
   
@@ -230,9 +226,8 @@ if (touch==4127850240) {
   }
 
 // Ajustement leds
-LED1.set(255-r,255-g,255-b);
-analogWrite(DIGITLED2B,255);
-analogWrite(DIGITLED1G,255);
+LED1.set(200-r,200-g,200-b);
+digitalWrite(DIGITLED1R,0);digitalWrite(DIGITLED1G,0);digitalWrite(DIGITLED1B,0);digitalWrite(DIGITLED2R,0);digitalWrite(DIGITLED2G,0);
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -443,7 +438,6 @@ if (wait<0)  {
   digitalWrite(DIGITLED1B,1);
   digitalWrite(DIGITLED2R,1);
   digitalWrite(DIGITLED2G,1);
-  digitalWrite(DIGITLED2B,1);  
   wait=0;
   } 
 }
@@ -484,11 +478,9 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 void Ledalarm(){
 for (x=1;x<50; x++){ 
   LED1.set(0,255,255);
-  digitalWrite(DIGITLED2B,0);
   digitalWrite(DIGITLED1G,1);
   delay(50);
   LED1.set(255,255,255);
-  digitalWrite(DIGITLED2B,1);
   digitalWrite(DIGITLED1G,0);
   delay(50);
 }
@@ -539,7 +531,7 @@ big.begin();
 
 void Checkserie(){
   
-  //Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
+  Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
  // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
   //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
 //delay(500);
