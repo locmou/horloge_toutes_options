@@ -1,15 +1,4 @@
-/*
-nterruptions matérielles : Les microcontrôleurs Arduino ont des broches spécifiques qui peuvent
- être configurées pour déclencher une interruption matérielle lorsqu'un certain événement se produit. 
- Par exemple, une interruption peut être déclenchée lorsqu'une broche change d'état (LOW à HIGH ou HIGH à LOW).
-
-Interruptions logicielles : En plus des interruptions matérielles, vous pouvez également utiliser des interruptions
-logicielles. Celles-ci sont générées par des événements logiciels spécifiques, comme une minuterie logicielle atteignant 
-une certaine valeur.
-
-Prévoir la gestion de la led lorsque l'alarme sonne
-Prévoir la gestion différente de l'alarme si semaine ou du lundi au vendredi
-*/
+/* REVEIL MULTIFONCTION */
 
 #include <RTClib.h>
 RTC_DS1307 rtc;
@@ -66,7 +55,8 @@ uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
-bool al[2]={false,false},antial[2]={false,false},we[2],pop[2]={false,false};
+bool al[2]={false,false},antial[2]={false,false},we[2],pop[2]={false,false},r1,b1,g1,r2,g2;
+DateTime now;
 
 // Déclaration des constantes pour les modes
 enum Mode {
@@ -96,6 +86,8 @@ void Turncolor();
 void Ledalarm();
 void Checkserie();
 
+////////////////////////////////////////////////////////////////
+
 
 void setup (){
 
@@ -110,8 +102,8 @@ if (! rtc.isrunning()) {
     // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
     }
 
-
 /*
+
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
 rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));*/
   
@@ -128,6 +120,7 @@ IrReceiver.begin(IR_PIN, DISABLE_LED_FEEDBACK);
 lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
+r=10;b=180;g=10;
 Retroeclairage();
   
 // Pin's
@@ -150,12 +143,13 @@ for (x=0;x<2;x++){
   }
 }
 
+///////////////////////////////////////////////////////////////////////////////
 
 void loop (){
   // Requete heure 
 //RtcDateTime now = Rtc.GetDateTime();
 
-DateTime now = rtc.now();
+//DateTime now = rtc.now();
 
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
@@ -212,7 +206,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
-  wait=800;
+  wait=500;
   mode=MODE_ALARM_INFO;ecrannet();
   }
 
@@ -226,8 +220,8 @@ if (touch==4127850240) {
   }
 
 // Ajustement leds
-LED1.set(200-r,200-g,200-b);
-digitalWrite(DIGITLED1R,0);digitalWrite(DIGITLED1G,0);digitalWrite(DIGITLED1B,0);digitalWrite(DIGITLED2R,0);digitalWrite(DIGITLED2G,0);
+//LED1.set(200-r,200-g,200-b);
+//digitalWrite(DIGITLED1R,0);digitalWrite(DIGITLED1G,0);digitalWrite(DIGITLED1B,0);digitalWrite(DIGITLED2R,0);digitalWrite(DIGITLED2G,0);
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -242,6 +236,9 @@ else memlewe(a);
 
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 // Affiche les heures des alarmes
 void infoalarm(uint8_t(x)) {
 Turncolor();
@@ -249,11 +246,14 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
-if (we[x-1]==1) lcd.print("we+"); else lcd.print("we-");
+if (we[x-1]==1) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
 iwait();
 }
+
+///////////////////////////////////////////////////////////////////////
+
 
 //Réglage des alarmes 1 et 2x
 void reglagealarme(uint8_t(x)){
@@ -270,7 +270,7 @@ else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
 iwait();
 }
 
-
+//////////////////////////////////////////////////////////////////////
 
 
 //Input demande si l'alarme fonctionne le we
@@ -298,6 +298,9 @@ mode=MODE_Heure;
 iwait();
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 //Réglage de l'heure et de la date
 void reglageheuredate(){
 Turncolor();
@@ -318,6 +321,9 @@ else if  (an==0) {     settime(9999);        an=nbr;}
 if (an!=0) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }    
 iwait();
 }
+
+////////////////////////////////////////////////////////////////////////
+
 
 // Permet la saisie de la date et des heures et alarmes
 void settime(int(maxi)){
@@ -364,9 +370,15 @@ wait=800;
 iwait();
 }
 
+////////////////////////////////////////////////////////////////////////
+
+
 void afficheinput(){
   lcd.setCursor(9,1);lcd.print(aff);delay(400);
 }
+
+///////////////////////////////////////////////////////////////////////
+
 
 void affectnbr(int maxi){
   nbr=atoi(aff);aff[0]=0;//Serial.println ("nbr: "+String(nbr));
@@ -374,11 +386,17 @@ if (nbr>=maxi) nbr=0;
 //Serial.println ("maxi: "+String(maxi));
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 void effaceinput(){
   lcd.setCursor(9,1);
   if (maxi!=9999) lcd.print("    ");
     else lcd.print("----");
 }
+
+////////////////////////////////////////////////////////////////////////
+
 
 void affichheure(){
   
@@ -424,6 +442,7 @@ if (al[0] == true && al[1] == true) {
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<80 and mes!=0) {
+  r=10;b=200;g=10;
   Retroeclairage();
   wait=800;
   }
@@ -442,6 +461,9 @@ if (wait<0)  {
   } 
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
 void touchir(){
 if (IrReceiver.decode())  {
@@ -451,13 +473,22 @@ if (IrReceiver.decode())  {
 IrReceiver.resume();// Receive the next value
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 // Ajuste le rétroéclairage en fonction de la mesure de luminosité ambiante
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
  //Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+ // Ajustement leds
+LED1.set(255-r,255-g,255-b);
+digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,0);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,0);
 }
+
+///////////////////////////////////////////////////////////////////////
+
 
 void Turncolor(){
 //LED
@@ -474,17 +505,28 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 //Serial.println ("rouge : "+ String(r)+", vert : "+String(g)+", bleu : "+String(b));
 }
 
+////////////////////////////////////////////////////////////////////////
+
+
 // Motif led alarm testé par la touche v+
 void Ledalarm(){
-for (x=1;x<50; x++){ 
+for (x=1;x<25; x++){ 
   LED1.set(0,255,255);
-  digitalWrite(DIGITLED1G,1);
-  delay(50);
+  digitalWrite(DIGITLED1R,0);
+  digitalWrite(DIGITLED2R,0);
+  
+  delay(150);
   LED1.set(255,255,255);
-  digitalWrite(DIGITLED1G,0);
-  delay(50);
+  digitalWrite(DIGITLED1R,1);
+  digitalWrite(DIGITLED2R,1);
+  
+  delay(150);
 }
+touch=0;
 }
+
+////////////////////////////////////////////////////////////////////////
+
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
 void telecir(){
@@ -513,6 +555,9 @@ if (touch==3041591040) strcpy(com,"9");
 touch=0;
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 //Renvoie vers l'affichage de l'heure après un temps d'inactivité dans les réglages d'heure ou d'alarme
 void iwait(){
 wait--;
@@ -523,11 +568,17 @@ if (wait<0) {
     }
 }
 
+///////////////////////////////////////////////////////////////////////
+
+
 //Nettoyage de l'écran LCD
 void ecrannet(){
 lcd.init();
 big.begin();
 }
+
+///////////////////////////////////////////////////////////////////////
+
 
 void Checkserie(){
   
