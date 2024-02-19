@@ -120,7 +120,7 @@ IrReceiver.begin(IR_PIN, DISABLE_LED_FEEDBACK);
 lcd.init(); // initialisation de l’afficheur
 big.begin();
 lcd.backlight();
-r=10;b=180;g=10;
+r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
 Retroeclairage();
   
 // Pin's
@@ -219,9 +219,6 @@ if (touch==4127850240) {
     }
   }
 
-// Ajustement leds
-//LED1.set(200-r,200-g,200-b);
-//digitalWrite(DIGITLED1R,0);digitalWrite(DIGITLED1G,0);digitalWrite(DIGITLED1B,0);digitalWrite(DIGITLED2R,0);digitalWrite(DIGITLED2G,0);
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -241,7 +238,8 @@ else memlewe(a);
 
 // Affiche les heures des alarmes
 void infoalarm(uint8_t(x)) {
-Turncolor();
+Turncolor();g1=g2=b1=false;
+if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala. "+String(x)+"->");
@@ -257,14 +255,15 @@ iwait();
 
 //Réglage des alarmes 1 et 2x
 void reglagealarme(uint8_t(x)){
-Turncolor();
+Turncolor();g1=g2=b1=false;
+if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=0) {   wait=100;rtc.writenvram(2*x, alh[x-1]);rtc.writenvram(1+(2*x), alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false;}
+  if (alm[x-1]!=0) {   wait=800;rtc.writenvram(2*x, alh[x-1]);rtc.writenvram(1+(2*x), alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false;}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -275,10 +274,10 @@ iwait();
 
 //Input demande si l'alarme fonctionne le we
 void memlewe(uint8_t(x)){
+Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
-Turncolor();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(x)+"le we?");
+lcd.print("Alarme "+String(x)+" le we?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
@@ -286,14 +285,18 @@ lcd.print("oui=tr+, non=tr-");
 if (touch==3141861120) {
   we[x-1]=true;
   rtc.writenvram(7+x, true);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage();
   mode=MODE_Heure;  
   }
 
 //tr+  
 if (touch==3208707840) {  
   we[x-1]=false;
-rtc.writenvram(7+x, false);  
-mode=MODE_Heure;  
+  rtc.writenvram(7+x, false);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage(); 
+  mode=MODE_Heure;  
   }
 iwait();
 }
@@ -303,7 +306,14 @@ iwait();
 
 //Réglage de l'heure et de la date
 void reglageheuredate(){
+  
 Turncolor();
+if (t%10==0) {
+  r1=random(2);
+  r2=random(2);
+  g1=random(2);
+  g2=random(2);
+  b1=random(2);}
 Retroeclairage();
 lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
@@ -318,7 +328,9 @@ else  if (jr==0) {   settime(32);        jr=nbr;}
 else  if (mo==0){   settime(13);        mo=nbr;}
 //réglage de l'année
 else if  (an==0) {     settime(9999);        an=nbr;}
-if (an!=0) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));        mode=MODE_Heure;        }    
+if (an!=0) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
+r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+Retroeclairage();      mode=MODE_Heure;        }    
 iwait();
 }
 
@@ -442,7 +454,7 @@ if (al[0] == true && al[1] == true) {
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 if (mes<80 and mes!=0) {
-  r=10;b=200;g=10;
+  r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();
   wait=800;
   }
@@ -481,10 +493,10 @@ void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
 analogWrite(BRIGHTNESS_PIN, bright);
- //Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+
  // Ajustement leds
 LED1.set(255-r,255-g,255-b);
-digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,0);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,0);
+digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1B,!b1);digitalWrite(DIGITLED2R,!r2);digitalWrite(DIGITLED2G,!g2);
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -492,7 +504,7 @@ digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,0)
 
 void Turncolor(){
 //LED
-t++;
+t++;t++;
 if (t>400) t=0;
 if (t<50)  { r=bright;  g=bright-(t*bright/50);  b=(t*bright/50);}
 else if (t>=50 and t<100) { r=bright-(t-50)*bright/50;  g=(t-50)*bright/50;  b=bright;}
@@ -502,7 +514,6 @@ else if (t>=200 and t<250) { r=(t-200)*bright/50;  g=bright-(t-200)*bright/50;  
 else if (t>=250 and t<300) { r=bright-(t-250)*bright/50;  g=(t-250)*bright/50;  b=0;}
 else if (t>=300 and t<350) { r=0;  g=bright;  b=(t-300)*bright/50;}
 else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
-//Serial.println ("rouge : "+ String(r)+", vert : "+String(g)+", bleu : "+String(b));
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -510,19 +521,18 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 // Motif led alarm testé par la touche v+
 void Ledalarm(){
+digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
 for (x=1;x<25; x++){ 
   LED1.set(0,255,255);
   digitalWrite(DIGITLED1R,0);
-  digitalWrite(DIGITLED2R,0);
-  
-  delay(150);
+  digitalWrite(DIGITLED2R,0);  
+  delay(180);
   LED1.set(255,255,255);
   digitalWrite(DIGITLED1R,1);
-  digitalWrite(DIGITLED2R,1);
-  
-  delay(150);
+  digitalWrite(DIGITLED2R,1); 
+  delay(50);
 }
-touch=0;
+touch=0;Retroeclairage();
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -563,7 +573,7 @@ void iwait(){
 wait--;
 if (wait<0) {
     wait=800;
-    mode=MODE_Heure;strcpy(aff,"--");
+    mode=MODE_Heure;strcpy(aff,"--");  r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
     Retroeclairage();ecrannet();
     }
 }
