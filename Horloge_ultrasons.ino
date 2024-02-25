@@ -1,5 +1,35 @@
 /* REVEIL MULTIFONCTION */
 
+/*
+ * Composants :
+ * ----------
+ * Detecteur par ultrasons : HC-SR04
+ * Horloge avec espaces mémoires : DS1307
+ * Detecteur infrarouge : TL1838
+ * résistance photosensible
+ * Ecran LCD I2C 16*2
+ * 3 leds RGB anodes communes
+ * 2 relais optocoupleurs
+ * Alimentation AC220/DC5V
+ * Arduino nano
+ * 
+ * 
+ *  
+ * Tableau espace mémoire :
+ * ----------------------
+ * al[5][2] => 5 lignes, 3 colonnes:
+ * 				al				ligne		1	|	2
+ * 				--------------------------------------
+ * 				colonne 					0	|	1
+ *
+ * 				On/off				0		15	|	16
+ * 				Memlewe				1		17	|	18
+ * 				Prise 1				2		19	|	20
+ * 				Prise 2				3		21	|	22
+ * 				Lumière A/B			4		23	|	24 *
+ * 
+ */
+  
 #include <RTClib.h>
 RTC_DS1307 rtc;
 
@@ -17,7 +47,6 @@ const int DIGITLED1G=16; //A2
 const int DIGITLED1B=17; //A3
 const int DIGITLED2R=13; 
 const int DIGITLED2G=11;
-
 
 // Gestion IR
 #include <IRremote.h>
@@ -55,7 +84,7 @@ uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
-bool al[2]={false,false},antial[2]={false,false},we[2],pop[2]={false,false},r1,b1,g1,r2,g2;
+bool al[5][2]={{false,false},{true,true},{false,false},{false,false},{false,false}},antial[2]={false,false},pop[2]={false,false},r1,b1,g1,r2,g2;
 DateTime now;
 
 // Déclaration des constantes pour les modes
@@ -136,20 +165,20 @@ Mode mode = MODE_Heure;
   
 for (x=0;x<2;x++){
   alh[x]=rtc.readnvram((x+1)*2);alm[x]=rtc.readnvram(1+((x+1)*2));
-  al[x]=rtc.readnvram(5+x);
-  we[x]=rtc.readnvram(7+x);
   pinMode(ALPIN[x], OUTPUT);
-  pinMode(BUTT[x], INPUT);
+  pinMode(BUTT[x], INPUT);  
+  al[0][x]=rtc.readnvram(15+x);//on/off
+  al[1][x]=rtc.readnvram(17+x);//memlewe
+  al[2][x]=rtc.readnvram(19+x);//prise1
+  al[3][x]=rtc.readnvram(21+x);//prise2
+  al[4][x]=rtc.readnvram(23+x);//lumière A/B
   }
 }
 
-///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////
+
 
 void loop (){
-  // Requete heure 
-//RtcDateTime now = Rtc.GetDateTime();
-
-//DateTime now = rtc.now();
 
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++){
@@ -158,7 +187,7 @@ for (x=0;x<2;x++){
       pop[x]=false;
       if (but[x]>2) {
         //Appui long= réglage alarm
-        al[x]= !al[x];rtc.writenvram(5+x, al[x]);
+        al[0][x]= !al[0][x];rtc.writenvram(15+x, al[x][0]);
         antial[x]=false;
         }
       else {
@@ -173,14 +202,11 @@ for (x=0;x<2;x++){
     but[x]++;
     }
   }
-
-
-
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
 for (x=1;x<3;x++){
-  if (al[x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
-  && (we[x-1]==true || (we[x-1]==false && now.dayOfTheWeek()<6 && now.dayOfTheWeek()>0))) {
+  if (al[0][x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
+  && (al[1][x-1]==true || (al[1][x-1]==false && now.dayOfTheWeek()<6 && now.dayOfTheWeek()>0))) {
     if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (ALPIN[x-1],LOW);  else  digitalWrite (ALPIN[x-1],HIGH);
     } 
@@ -219,7 +245,6 @@ if (touch==4127850240) {
     }
   }
 
-
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
 else if (mode==MODE_Reglage_h ) reglageheuredate();
@@ -227,10 +252,8 @@ else if (mode==MODE_ALARM_INFO) infoalarm(a);
 else if (mode==MODE_Reglage_al) reglagealarme(a);
 else memlewe(a);
 
-
 //Affichage serie des variables
 //Checkserie();
-
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -244,7 +267,7 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
-if (we[x-1]==1) lcd.print(" we+"); else lcd.print(" we-");
+if (al[1][x-1]==1) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
 iwait();
@@ -262,8 +285,12 @@ lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
-else{  settime(60);  alm[x-1]=nbr;Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=0) {   wait=800;rtc.writenvram(2*x, alh[x-1]);rtc.writenvram(1+(2*x), alm[x-1]); mode=MODE_memlewe   ;    ecrannet();antial[x-1]=false;}
+else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
+  if (alm[x-1]!=0) {wait=800;rtc.writenvram(2*x, alh[x-1]);
+	 rtc.writenvram(1+(2*x), alm[x-1]); 
+	 mode=MODE_memlewe;    
+	 ecrannet();
+	 antial[x-1]=false;}
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
   }
 iwait();
@@ -283,8 +310,8 @@ lcd.print("oui=tr+, non=tr-");
 
 //tr-
 if (touch==3141861120) {
-  we[x-1]=true;
-  rtc.writenvram(7+x, true);
+  al[1][x-1]=false;
+  rtc.writenvram(17+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();
   mode=MODE_Heure;  
@@ -292,8 +319,8 @@ if (touch==3141861120) {
 
 //tr+  
 if (touch==3208707840) {  
-  we[x-1]=false;
-  rtc.writenvram(7+x, false);
+  al[1][x-1]=true;
+  rtc.writenvram(17+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); 
   mode=MODE_Heure;  
@@ -308,7 +335,7 @@ iwait();
 void reglageheuredate(){
   
 Turncolor();
-if (t%10==0) {
+if (t%5==0) {
   r1=random(2);
   r2=random(2);
   g1=random(2);
@@ -411,16 +438,9 @@ void effaceinput(){
 
 
 void affichheure(){
-  
-  // Requete heure 
-//RtcDateTime now = Rtc.GetDateTime();
 
 DateTime now = rtc.now();
-   
 h=now.hour(), DEC;m=now.minute(), DEC;s=now.second(), DEC;jr=now.day(), DEC;mo=now.month(), DEC;an=now.year(), DEC;
-
-// Détection ultrasons?
-mes=(int)distanceSensor.measureDistanceCm()+1;
   
 // Affichage heure minutes  
 big.begin();
@@ -442,18 +462,23 @@ lcd.print(mo);
 
 // Affichage alarme 1/2 on/off
 lcd.setCursor (14,0); 
-if (al[0] == true && al[1] == true) {
+if (al[0][0] == true && al[0][1] == true) {
   lcd.write(165);lcd.write(58);
-} else if (al[0] == true) {
+} else if (al[0][0] == true) {
   lcd.print(F(" "));
   lcd.write(165);
-} else if (al[1] == true) {
+} else if (al[0][1] == true) {
    lcd.print(F(" "));
    lcd.write(58);
 } else lcd.print(F("  "));
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
+// Détection ultrasons?
+mes=(int)distanceSensor.measureDistanceCm()+1;
 if (mes<80 and mes!=0) {
+  //
+  Ledalarm();
+  //
   r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();
   wait=800;
@@ -491,8 +516,8 @@ IrReceiver.resume();// Receive the next value
 // Ajuste le rétroéclairage en fonction de la mesure de luminosité ambiante
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
-bright=255-(analogRead(LDR)/4);if (bright<0) bright=0;
-analogWrite(BRIGHTNESS_PIN, bright);
+bright=(analogRead(LDR)/4);
+analogWrite(BRIGHTNESS_PIN, 255-bright);
 
  // Ajustement leds
 LED1.set(255-r,255-g,255-b);
