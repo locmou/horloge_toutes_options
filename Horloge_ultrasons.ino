@@ -17,15 +17,15 @@
  *  
  * Tableau espace mémoire :
  * ----------------------
- * al[5][2] => 5 lignes, 3 colonnes:
- * 				al				ligne		1	|	2
+ * al[5][2] => 5 lignes, 2 colonnes:
+ * 				al				   ligne		1	|	2
  * 				--------------------------------------
- * 				colonne 					0	|	1
+ * 				colonne 	    				0	|	1
  *
- * 				On/off				0		15	|	16
- * 				Memlewe				1		17	|	18
- * 				Prise 1				2		19	|	20
- * 				Prise 2				3		21	|	22
+ * 				On/off		  		0		15	|	16
+ * 				Memlewe		  		1		17	|	18
+ * 				Prise 1		  		2		19	|	20
+ * 				Prise 2		  		3		21	|	22
  * 				Lumière A/B			4		23	|	24 *
  * 
  */
@@ -226,7 +226,7 @@ if (touch==3927310080) Ledalarm();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=0;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=99;
   }
 
 // délenché par 100+, 200+
@@ -241,7 +241,7 @@ if (touch==4127850240) {
   if (mode==MODE_ALARM_INFO){
     telecir();
     wait=800;
-    mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=0;
+    mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
     }
   }
 
@@ -284,9 +284,9 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
-if (alh[x-1]==0) {settime(24);alh[x-1]=nbr;}
+if (alh[x-1]==99) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=0) {wait=800;rtc.writenvram(2*x, alh[x-1]);
+  if (alm[x-1]!=99) {wait=800;rtc.writenvram(2*x, alh[x-1]);
 	 rtc.writenvram(1+(2*x), alm[x-1]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
@@ -335,7 +335,7 @@ iwait();
 void reglageheuredate(){
   
 Turncolor();
-if (t%5==0) {
+if (t%3==0) {
   r1=random(2);
   r2=random(2);
   g1=random(2);
@@ -345,17 +345,17 @@ Retroeclairage();
 lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
 //réglage de l'heure
-if (h==0) {  settime(24);  h=nbr; //Serial.println ("h : "+String(h)); 
+if (h==99) {  settime(24);  h=nbr; //Serial.println ("h : "+String(h)); 
 }
 //réglage des minutes
-else  if (m==0){   settime(60);    m=nbr;}
+else  if (m==99){   settime(60);    m=nbr;}
 //réglage du jour
-else  if (jr==0) {   settime(32);        jr=nbr;}
+else  if (jr==99) {   settime(32);        jr=nbr;}
 //réglage du mois
-else  if (mo==0){   settime(13);        mo=nbr;}
+else  if (mo==99){   settime(13);        mo=nbr;}
 //réglage de l'année
-else if  (an==0) {     settime(9999);        an=nbr;}
-if (an!=0) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
+else if  (an==99) {     settime(9999);        an=nbr;}
+if (an!=99) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
 r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
 Retroeclairage();      mode=MODE_Heure;        }    
 iwait();
@@ -378,7 +378,7 @@ else               lcd.print(F("Annee   :"));
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
-  if (maxi!=9999){
+  if (maxi!=99){
     if (aff[0]==0) {
       if ( atoi(com)<=int((maxi-1)/10)) {
        //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
@@ -430,7 +430,7 @@ if (nbr>=maxi) nbr=0;
 
 void effaceinput(){
   lcd.setCursor(9,1);
-  if (maxi!=9999) lcd.print("    ");
+  if (maxi!=99) lcd.print("    ");
     else lcd.print("----");
 }
 
@@ -475,7 +475,8 @@ if (al[0][0] == true && al[0][1] == true) {
 //Affichage lorsque les ultrasons détectent une présence <50cm
 // Détection ultrasons?
 mes=(int)distanceSensor.measureDistanceCm()+1;
-if (mes<80 and mes!=0) {
+if (mes<50 and mes!=0) {
+  if ((int)distanceSensor.measureDistanceCm()+1<50){
   //
   Ledalarm();
   //
@@ -483,6 +484,7 @@ if (mes<80 and mes!=0) {
   Retroeclairage();
   wait=800;
   }
+}
   
 //Coupe le rétroéclairage en cas d'inactivité prolongée
 wait--;
@@ -505,7 +507,6 @@ if (wait<0)  {
 void touchir(){
 if (IrReceiver.decode())  {
   touch=IrReceiver.decodedIRData.decodedRawData;
-  //Serial.println("Data decode :"+String(touch));
   }
 IrReceiver.resume();// Receive the next value
 }
@@ -520,7 +521,7 @@ bright=(analogRead(LDR)/4);
 analogWrite(BRIGHTNESS_PIN, 255-bright);
 
  // Ajustement leds
-LED1.set(255-r,255-g,255-b);
+LED1.set(255-r*(bright/255),255-g*(bright/255),255-b*(bright/255));
 digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1B,!b1);digitalWrite(DIGITLED2R,!r2);digitalWrite(DIGITLED2G,!g2);
 }
 
