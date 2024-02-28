@@ -478,7 +478,7 @@ mes=(int)distanceSensor.measureDistanceCm()+1;
 if (mes<50 and mes!=0) {
   if ((int)distanceSensor.measureDistanceCm()+1<50){
   //
-  Ledalarm();
+  //Ledalarm();
   //
   r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();
@@ -518,10 +518,11 @@ IrReceiver.resume();// Receive the next value
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=(analogRead(LDR)/4);
-analogWrite(BRIGHTNESS_PIN, 255-bright);
+analogWrite(BRIGHTNESS_PIN, 255-bright);Serial.println(bright);
 
  // Ajustement leds
-LED1.set(255-r*(bright/255),255-g*(bright/255),255-b*(bright/255));
+
+LED1.set(255-(r-r*bright/255),255-(g-g*bright/255),255-(b-b*bright/255));
 digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1B,!b1);digitalWrite(DIGITLED2R,!r2);digitalWrite(DIGITLED2G,!g2);
 }
 
