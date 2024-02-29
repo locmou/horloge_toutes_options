@@ -193,9 +193,9 @@ for (x=0;x<2;x++){
   if (digitalRead(BUTT[x]) == LOW) {
     if (pop[x]==true) {
       pop[x]=false;
-      if (but[x]>2) {
+      if (but[x]>3) {
         //Appui long= réglage alarm
-        al[0][x]= !al[0][x];rtc.writenvram(15+x, al[x][0]);
+        al[0][x]= !al[0][x];rtc.writenvram(15+x, al[0][x]);
         antial[x]=false;
         }
       else {
