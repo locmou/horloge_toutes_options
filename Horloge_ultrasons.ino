@@ -78,9 +78,10 @@ BigFont02_I2C  big(&lcd); // construct large font object, passing to it the name
 const uint8_t BRIGHTNESS_PIN=5;   // Must be a PWM pin
 const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
+// Déclaration des variables
 unsigned long touch;
 char aff[5],com[5];
-uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,alh[2],alm[2];
+uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
@@ -93,8 +94,12 @@ enum Mode {
   MODE_Reglage_h,
   MODE_ALARM_INFO,
   MODE_Reglage_al,
-  MODE_memlewe
+  MODE_memlewe,
+  MODE_P1,
+  MODE_P2,
+  MODE_alled
 };
+Mode mode;
 
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
@@ -108,6 +113,9 @@ void ecrannet();
 void settime(int maxi);
 void afficheinput();
 void memlewe(uint8_t x);
+void Prise1(uint8_t x);
+void Prise2(uint8_t x);
+void typeledalarm(uint8_t x);
 void affectnbr(int maxi);
 void afficheinput();
 void effaceinput();
@@ -131,10 +139,10 @@ if (! rtc.isrunning()) {
     // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
     }
 
-/*
+
 
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
-rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));*/
+rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
@@ -226,7 +234,7 @@ if (touch==3927310080) Ledalarm();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]=99;an=mo=jr=h=m=99;
   }
 
 // délenché par 100+, 200+
@@ -250,7 +258,10 @@ if (mode==MODE_Heure) affichheure();
 else if (mode==MODE_Reglage_h ) reglageheuredate();
 else if (mode==MODE_ALARM_INFO) infoalarm(a);
 else if (mode==MODE_Reglage_al) reglagealarme(a);
-else memlewe(a);
+else if (mode==MODE_memlewe) memlewe(a);
+else if (mode==MODE_P1) Prise1(a);
+else if (mode==MODE_P2) Prise2(a);
+else typeledalarm(a);
 
 //Affichage serie des variables
 //Checkserie();
@@ -313,8 +324,8 @@ if (touch==3141861120) {
   al[1][x-1]=false;
   rtc.writenvram(17+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();
-  mode=MODE_Heure;  
+  Retroeclairage();wait=800;touch=0;
+  mode=MODE_P1;  
   }
 
 //tr+  
@@ -322,7 +333,100 @@ if (touch==3208707840) {
   al[1][x-1]=true;
   rtc.writenvram(17+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); 
+  Retroeclairage(); wait=800;touch=0;
+  mode=MODE_P1;  
+  }
+iwait();
+}
+  
+///////////////////////////////////////////////////////////////////////
+
+
+void Prise1(uint8_t(x)){
+  Turncolor();g1=g2=r1=r2=false;b1=true;
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Al. "+String(x)+": prise 1?");
+lcd.setCursor(0,1);
+lcd.print("oui=tr+, non=tr-");
+
+//tr-
+if (touch==3141861120) {
+  al[2][x-1]=false;
+  rtc.writenvram(19+x, true);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage();wait=800;touch=0;
+  mode=MODE_P2;  
+  }
+
+//tr+  
+if (touch==3208707840) {  
+  al[2][x-1]=true;
+  rtc.writenvram(19+x, false);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage(); wait=800;touch=0;
+  mode=MODE_P2;  
+  }
+iwait();
+}
+
+///////////////////////////////////////////////////////////////////////
+
+
+void Prise2(uint8_t(x)){
+  Turncolor();g1=g2=r1=r2=false;b1=true;
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Al. "+String(x)+": prise 2?");
+lcd.setCursor(0,1);
+lcd.print("oui=tr+, non=tr-");
+
+//tr-
+if (touch==3141861120) {
+  al[3][x-1]=false;
+  rtc.writenvram(21+x, true);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage();wait=800;touch=0;
+  mode=MODE_alled;  
+  }
+
+//tr+  
+if (touch==3208707840) {  
+  al[3][x-1]=true;
+  rtc.writenvram(21+x, false);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage(); wait=800;touch=0;
+  mode=MODE_alled;  
+  }
+iwait();
+}
+
+///////////////////////////////////////////////////////////////////////
+
+
+void typeledalarm(uint8_t(x)){
+  Turncolor();g1=g2=r1=r2=false;b1=true;
+Retroeclairage();
+lcd.setCursor(0,0);
+lcd.print("Al. "+String(x)+": led cool?");
+lcd.setCursor(0,1);
+lcd.print("oui=tr+, non=tr-");
+
+//tr-
+if (touch==3141861120) {
+  al[4][x-1]=false;
+  rtc.writenvram(23+x, true);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage();wait=800;touch=0;
+  mode=MODE_Heure;  
+  }
+
+//tr+  
+if (touch==3208707840) {  
+  al[4][x-1]=true;
+  rtc.writenvram(23+x, false);
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
   }
 iwait();
@@ -366,7 +470,7 @@ iwait();
 
 // Permet la saisie de la date et des heures et alarmes
 void settime(int(maxi)){
-  nbr=0;
+  nbr=99;
 lcd.setCursor(0,1);
 if      (maxi==24) lcd.print(F("Heure   :"));
 else if (maxi==60) lcd.print(F("Minutes :"));
@@ -421,7 +525,7 @@ void afficheinput(){
 
 void affectnbr(int maxi){
   nbr=atoi(aff);aff[0]=0;//Serial.println ("nbr: "+String(nbr));
-if (nbr>=maxi) nbr=0;
+if (nbr>=maxi) nbr=99;
 //Serial.println ("maxi: "+String(maxi));
 }
 
@@ -476,10 +580,8 @@ if (al[0][0] == true && al[0][1] == true) {
 // Détection ultrasons?
 mes=(int)distanceSensor.measureDistanceCm()+1;
 if (mes<50 and mes!=0) {
+  // répétition pour éviter de détections parasites ...:
   if ((int)distanceSensor.measureDistanceCm()+1<50){
-  //
-  //Ledalarm();
-  //
   r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();
   wait=800;
@@ -623,21 +725,59 @@ void Checkserie(){
  // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
   //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
 //delay(500);
-/*
-  unsigned long touch;
-char aff[5],com[5];
-uint8_t r,g,b,x,a,nbr,h,m,mode,s,jr,mo,an,mes,bright,alh[2],alm[2];
-int t=0,wait=300,but[2];
-int maxi;
-//float maxi;
-bool al[2]={false,false},antial[2]={false,false},we[2],pop[2]={false,false};
-
-// Déclaration des constantes pour les modes
-enum Mode {
-  MODE_Heure,
-  MODE_Reglage_h,
-  MODE_ALARM_INFO,
-  MODE_Reglage_al,
-  MODE_memlewe*/
-
 }
+
+/*
+ 
+
+#include <LiquidCrystal_I2C.h>
+
+// set the LCD number of columns and rows
+int lcdColumns = 16;
+int lcdRows = 2;
+
+// set LCD address, number of columns and rows
+// if you don't know your display address, run an I2C scanner sketch
+LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
+
+String messageStatic = "Static message";
+String messageToScroll = "This is a scrolling message with more than 16 characters";
+
+// Function to scroll text
+// The function acepts the following arguments:
+// row: row number where the text will be displayed
+// message: message to scroll
+// delayTime: delay between each character shifting
+// lcdColumns: number of columns of your LCD
+void scrollText(int row, String message, int delayTime, int lcdColumns) {
+  for (int i=0; i < lcdColumns; i++) {
+    message = " " + message;  
+  } 
+  message = message + " "; 
+  for (int pos = 0; pos < message.length(); pos++) {
+    lcd.setCursor(0, row);
+    lcd.print(message.substring(pos, pos + lcdColumns));
+    delay(delayTime);
+  }
+}
+
+void setup(){
+  // initialize LCD
+  lcd.init();
+  // turn on LCD backlight                      
+  lcd.backlight();
+}
+
+void loop(){
+  // set cursor to first column, first row
+  lcd.setCursor(0, 0);
+  // print static message
+  lcd.print(messageStatic);
+  // print scrolling message
+  scrollText(1, messageToScroll, 250, lcdColumns);
+}
+View raw code
+
+After reading the previous section, you should be familiar on how this sketch works, so we’ll just take a look at the newly created function: scrollText()
+
+void scrollText(int row, String message, int delayTime, int  */
