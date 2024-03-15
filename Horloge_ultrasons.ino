@@ -18,7 +18,7 @@
  * Tableau espace mémoire :
  * ----------------------
  * al[5][2] => 5 lignes, 2 colonnes:
- * 				al				   ligne		1	|	2
+ * 				al				  ligne		1	|	2
  * 				--------------------------------------
  * 				colonne 	    				0	|	1
  *
@@ -26,7 +26,8 @@
  * 				Memlewe		  		1		17	|	18
  * 				Prise 1		  		2		19	|	20
  * 				Prise 2		  		3		21	|	22
- * 				Lumière A/B			4		23	|	24 *
+ * 				Lumière A/B			4		23	|	24 
+ *
  * 
  */
   
@@ -214,7 +215,7 @@ for (x=0;x<2;x++){
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
 for (x=1;x<3;x++){
   if (al[0][x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
-  && (al[1][x-1]==true || (al[1][x-1]==false && now.dayOfTheWeek()<6 && now.dayOfTheWeek()>0))) {
+  && (al[1][x-1]==true || (al[1][x-1]==false && now.dayOfTheWeek()<6))) {
     if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
     if (antial[x-1]==false) digitalWrite (ALPIN[x-1],LOW);  else  digitalWrite (ALPIN[x-1],HIGH);
     } 
@@ -278,7 +279,7 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
-if (al[1][x-1]==1) lcd.print(" we+"); else lcd.print(" we-");
+if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
 lcd.print("EQ pour modif");
 iwait();
@@ -297,7 +298,8 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==99) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=99) {wait=800;rtc.writenvram(2*x, alh[x-1]);
+  if (alm[x-1]!=99) {wait=800;
+	 rtc.writenvram(2*x, alh[x-1]);
 	 rtc.writenvram(1+(2*x), alm[x-1]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
