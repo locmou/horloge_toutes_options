@@ -235,7 +235,7 @@ if (touch==3927310080) Ledalarm();
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]=99;an=mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=99;
   }
 
 // délenché par 100+, 200+
@@ -431,6 +431,7 @@ if (touch==3208707840) {
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
   }
+  
 iwait();
 }
 
@@ -439,7 +440,8 @@ iwait();
 
 //Réglage de l'heure et de la date
 void reglageheuredate(){
-  
+
+// Jeux de couleurs des leds pendant le réglage
 Turncolor();
 if (t%3==0) {
   r1=random(2);
@@ -484,7 +486,7 @@ else               lcd.print(F("Annee   :"));
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
-  if (maxi!=99){
+  if (maxi!=9999){
     if (aff[0]==0) {
       if ( atoi(com)<=int((maxi-1)/10)) {
        //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
