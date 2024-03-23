@@ -733,17 +733,6 @@ void Checkserie(){
 
 /*
  
-
-#include <LiquidCrystal_I2C.h>
-
-// set the LCD number of columns and rows
-int lcdColumns = 16;
-int lcdRows = 2;
-
-// set LCD address, number of columns and rows
-// if you don't know your display address, run an I2C scanner sketch
-LiquidCrystal_I2C lcd(0x27, lcdColumns, lcdRows);  
-
 String messageStatic = "Static message";
 String messageToScroll = "This is a scrolling message with more than 16 characters";
 
