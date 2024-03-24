@@ -123,6 +123,7 @@ void effaceinput();
 void Turncolor();
 void Ledalarm();
 void Checkserie();
+void scrollText(int row, String message, int delayTime, int lcdColumns);
 
 ////////////////////////////////////////////////////////////////
 
@@ -281,10 +282,24 @@ lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-lcd.print("EQ pour modif");
+scrollText(1, "hello how are you because i feel good", 250, 16);
+//lcd.print("EQ pour modif");
 iwait();
 }
+/*
 
+void loop(){
+  // set cursor to first column, first row
+  lcd.setCursor(0, 0);
+  // print static message
+  lcd.print(messageStatic);
+  // print scrolling message
+  scrollText(1, messageToScroll, 250, lcdColumns);
+}
+
+
+
+*/
 ///////////////////////////////////////////////////////////////////////
 
 
@@ -731,17 +746,9 @@ void Checkserie(){
 //delay(500);
 }
 
-/*
- 
-String messageStatic = "Static message";
-String messageToScroll = "This is a scrolling message with more than 16 characters";
+////////////////////////////////////////////////////////////////////////
 
-// Function to scroll text
-// The function acepts the following arguments:
-// row: row number where the text will be displayed
-// message: message to scroll
-// delayTime: delay between each character shifting
-// lcdColumns: number of columns of your LCD
+
 void scrollText(int row, String message, int delayTime, int lcdColumns) {
   for (int i=0; i < lcdColumns; i++) {
     message = " " + message;  
@@ -753,24 +760,3 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     delay(delayTime);
   }
 }
-
-void setup(){
-  // initialize LCD
-  lcd.init();
-  // turn on LCD backlight                      
-  lcd.backlight();
-}
-
-void loop(){
-  // set cursor to first column, first row
-  lcd.setCursor(0, 0);
-  // print static message
-  lcd.print(messageStatic);
-  // print scrolling message
-  scrollText(1, messageToScroll, 250, lcdColumns);
-}
-View raw code
-
-After reading the previous section, you should be familiar on how this sketch works, so we’ll just take a look at the newly created function: scrollText()
-
-void scrollText(int row, String message, int delayTime, int  */
