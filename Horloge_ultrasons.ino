@@ -30,7 +30,7 @@
  *
  * 
  */
-  
+
 #include <RTClib.h>
 RTC_DS1307 rtc;
 
@@ -282,24 +282,11 @@ lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "hello how are you because i feel good", 250, 16);
+scrollText(1, "Prise 1 : "+ String(al[2][x-1])+", prise 2 : "+String(al[3][x-1])+", type d'alarme : "+String(al[4][x-1])+". EQ pour modif...", 100, 16);
 //lcd.print("EQ pour modif");
 iwait();
 }
-/*
 
-void loop(){
-  // set cursor to first column, first row
-  lcd.setCursor(0, 0);
-  // print static message
-  lcd.print(messageStatic);
-  // print scrolling message
-  scrollText(1, messageToScroll, 250, lcdColumns);
-}
-
-
-
-*/
 ///////////////////////////////////////////////////////////////////////
 
 
