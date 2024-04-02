@@ -144,7 +144,7 @@ if (! rtc.isrunning()) {
 
 
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
-rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+//rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
@@ -282,7 +282,7 @@ lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ String(al[2][x-1])+", prise 2 : "+String(al[3][x-1])+", type d'alarme : "+String(al[4][x-1])+". EQ pour modif...", 100, 16);
+scrollText(1, "Prise 1 : "+ String(al[2][x-1])+", prise 2 : "+String(al[3][x-1])+", type d'alarme : "+String(al[4][x-1])+". EQ pour modif...", 350, 16);
 //lcd.print("EQ pour modif");
 iwait();
 }
