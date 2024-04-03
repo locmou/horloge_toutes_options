@@ -242,7 +242,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
-  wait=3;
+  wait=2;
   mode=MODE_ALARM_INFO;ecrannet();
   }
 
