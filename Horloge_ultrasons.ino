@@ -759,8 +759,9 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     }
     // délenché par 100+, 200+
     if (touch==3860463360  ||touch==4061003520  ) {
+    pos=message.length();
     telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
-    wait=3;
+    wait=2;
     mode=MODE_ALARM_INFO;ecrannet();
     }
   }
