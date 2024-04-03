@@ -250,7 +250,7 @@ if (touch==3860463360  ||touch==4061003520  ) {
 if (touch==4127850240) {
   if (mode==MODE_ALARM_INFO){
     telecir();
-    wait=800;
+    wait=20;
     mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
     }
   }
