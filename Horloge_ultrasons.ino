@@ -242,7 +242,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
-  wait=5;
+  wait=3;
   mode=MODE_ALARM_INFO;ecrannet();
   }
 
@@ -282,7 +282,7 @@ lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ String(al[2][x-1])+", prise 2 : "+String(al[3][x-1])+", type d'alarme : "+String(al[4][x-1])+". EQ pour modif...", 350, 16);
+scrollText(1, "Prise 1 : "+ String(al[2][x-1])+", prise 2 : "+String(al[3][x-1])+", type d'alarme : "+String(al[4][x-1])+". EQ pour modif...", 300, 16);
 //lcd.print("EQ pour modif");
 iwait();
 }
@@ -747,16 +747,22 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     lcd.setCursor(0, row);
     lcd.print(message.substring(pos, pos + lcdColumns));
     delay(delayTime);
-    //déclenché par EQ
     touchir();
+    //déclenché par EQ
     if (touch==4127850240) {
       if (mode==MODE_ALARM_INFO){
         pos=message.length();
-        telecir();
+        //telecir();
         wait=800;
         mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
+      }
     }
-  }
+    // délenché par 100+, 200+
+    if (touch==3860463360  ||touch==4061003520  ) {
+    telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
+    wait=3;
+    mode=MODE_ALARM_INFO;ecrannet();
+    }
   }
   //Serial.println( wait); 
 }
