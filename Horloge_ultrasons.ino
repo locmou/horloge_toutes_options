@@ -242,7 +242,7 @@ if (touch==3125149440  ||touch==3091726080  ) {
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
-  wait=20;
+  wait=5;
   mode=MODE_ALARM_INFO;ecrannet();
   }
 
@@ -626,7 +626,8 @@ IrReceiver.resume();// Receive the next value
 void Retroeclairage(){
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=(analogRead(LDR)/4);
-analogWrite(BRIGHTNESS_PIN, 255-bright);Serial.println(bright);
+analogWrite(BRIGHTNESS_PIN, 255-bright);
+// Serial.println(bright);
 
  // Ajustement leds
 
@@ -737,6 +738,7 @@ void Checkserie(){
 
 
 void scrollText(int row, String message, int delayTime, int lcdColumns) {
+  
   for (int i=0; i < lcdColumns; i++) {
     message = " " + message;  
   } 
@@ -745,5 +747,16 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     lcd.setCursor(0, row);
     lcd.print(message.substring(pos, pos + lcdColumns));
     delay(delayTime);
+    //déclenché par EQ
+    touchir();
+    if (touch==4127850240) {
+      if (mode==MODE_ALARM_INFO){
+        pos=message.length();
+        telecir();
+        wait=800;
+        mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
+    }
   }
+  }
+  //Serial.println( wait); 
 }
