@@ -278,9 +278,19 @@ lcd.print("Ala. "+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ String(al[2][x-1])+", prise 2 : "+String(al[3][x-1])+", type d'alarme : "+String(al[4][x-1])+". EQ pour modif...", 300, 16);
+scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", type d'alarme : "+txt (4,x-1)+". EQ pour modif...", 300, 16);
 //lcd.print("EQ pour modif");
 iwait();
+}
+
+String txt(n,x){
+if (n<4) {
+  if (al[n][x]==0) return "off" else return "on"
+}
+else {
+  if (al[4][x]==0) return "Hard"else return "cool"
+}
+
 }
 
 ///////////////////////////////////////////////////////////////////////
