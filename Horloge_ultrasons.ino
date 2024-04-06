@@ -82,7 +82,7 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 // Déclaration des variables
 // unsigned long touch;
 char aff[5],com[5];
-uint8_t r,g,b,x,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
+uint8_t r,g,b,x,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait=300,but[2];
 int maxi;
 //float maxi;
@@ -283,12 +283,12 @@ scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", type d'ala
 iwait();
 }
 
-String txt(n,x){
+String txt(uint8_t n,uint8_t x){
 if (n<4) {
-  if (al[n][x]==0) return "off" else return "on"
+  if (al[n][x]==0) return "off"; else return "on";
 }
 else {
-  if (al[4][x]==0) return "Hard"else return "cool"
+  if (al[4][x]==0) return "Hard"; else return "cool";
 }
 
 }
@@ -334,7 +334,7 @@ if (touch==3141861120) {
   al[1][x-1]=false;
   rtc.writenvram(17+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;touch=0;
+  Retroeclairage();wait=800;//touch()=0;
   mode=MODE_P1;  
   }
 
@@ -343,7 +343,7 @@ if (touch==3208707840) {
   al[1][x-1]=true;
   rtc.writenvram(17+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;touch=0;
+  Retroeclairage(); wait=800;//touch()=0;
   mode=MODE_P1;  
   }
 iwait();
@@ -365,7 +365,7 @@ if (touch==3141861120) {
   al[2][x-1]=false;
   rtc.writenvram(19+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;touch=0;
+  Retroeclairage();wait=800;//touch()=0;
   mode=MODE_P2;  
   }
 
@@ -374,7 +374,7 @@ if (touch==3208707840) {
   al[2][x-1]=true;
   rtc.writenvram(19+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;touch=0;
+  Retroeclairage(); wait=800;//touch()=0;
   mode=MODE_P2;  
   }
 iwait();
@@ -396,7 +396,7 @@ if (touch()==3141861120) {
   al[3][x-1]=false;
   rtc.writenvram(21+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;touch=0;
+  Retroeclairage();wait=800;//touch()=0;
   mode=MODE_alled;  
   }
 
@@ -405,7 +405,7 @@ if (touch()==3208707840) {
   al[3][x-1]=true;
   rtc.writenvram(21+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;touch=0;
+  Retroeclairage(); wait=800;//touch()=0;
   mode=MODE_alled;  
   }
 iwait();
@@ -427,7 +427,7 @@ if (touch()==3141861120) {
   al[4][x-1]=false;
   rtc.writenvram(23+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;touch=0;
+  Retroeclairage();wait=800;//touch()=0;
   mode=MODE_Heure;  
   }
 
@@ -436,7 +436,7 @@ if (touch()==3208707840) {
   al[4][x-1]=true;
   rtc.writenvram(23+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;touch=0;
+  Retroeclairage(); wait=800;//touch()=0;
   mode=MODE_Heure;  
   }
   
@@ -683,7 +683,8 @@ for (x=1;x<25; x++){
   digitalWrite(DIGITLED2R,1); 
   delay(50);
 }
-touch=0;Retroeclairage();
+//touch()=0;
+Retroeclairage();
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -713,7 +714,7 @@ if (touch()==2774204160) strcpy(com,"6");
 if (touch()==3175284480) strcpy(com,"7"); 
 if (touch()==2907897600) strcpy(com,"8");  
 if (touch()==3041591040) strcpy(com,"9");
-touch()=0;
+//touch()=0;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -762,7 +763,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     lcd.setCursor(0, row);
     lcd.print(message.substring(pos, pos + lcdColumns));
     delay(delayTime);
-    touchir();
+    //touchir();
     //déclenché par EQ
     if (touch()==4127850240) {
       if (mode==MODE_ALARM_INFO){
