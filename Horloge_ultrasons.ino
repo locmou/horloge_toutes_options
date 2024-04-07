@@ -80,7 +80,7 @@ const uint8_t BRIGHTNESS_PIN=5;   // Must be a PWM pin
 const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 
 // Déclaration des variables
-// unsigned long touch;
+unsigned long touch;
 char aff[5],com[5];
 uint8_t r,g,b,x,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait=300,but[2];
@@ -106,7 +106,7 @@ Mode mode;
 void infoalarm(uint8_t x);
 void reglagealarme(uint8_t x);
 void affichheure();
-// void touchir();
+void touchir();
 void Retroeclairage();
 void telecir();
 void iwait();
@@ -222,28 +222,28 @@ for (x=1;x<3;x++){
   }
 
 // reception infrarouge ?
-//touchir();
+touchir();
 
 //
 // Provisoire pour déclencher l'alarme
 //
-if (touch() ==3927310080) Ledalarm();
+if (touch ==3927310080) Ledalarm();
 
 // déclenché par CH+ ou CH-
-if (touch()==3125149440  ||touch()==3091726080  ) {
+if (touch==3125149440  ||touch==3091726080  ) {
   wait=800;
   mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=99;
   }
 
 // délenché par 100+, 200+
-if (touch()==3860463360  ||touch()==4061003520  ) {
+if (touch==3860463360  ||touch==4061003520  ) {
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
   wait=2;
   mode=MODE_ALARM_INFO;ecrannet();
   }
 
 //déclenché par EQ
-if (touch()==4127850240) {
+if (touch==4127850240) {
   if (mode==MODE_ALARM_INFO){
     telecir();
     wait=800;
@@ -290,7 +290,6 @@ if (n<4) {
 else {
   if (al[4][x]==0) return "Hard"; else return "cool";
 }
-
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -334,7 +333,7 @@ if (touch==3141861120) {
   al[1][x-1]=false;
   rtc.writenvram(17+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;//touch()=0;
+  Retroeclairage();wait=800;touch=0;
   mode=MODE_P1;  
   }
 
@@ -343,7 +342,7 @@ if (touch==3208707840) {
   al[1][x-1]=true;
   rtc.writenvram(17+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;//touch()=0;
+  Retroeclairage(); wait=800;touch=0;
   mode=MODE_P1;  
   }
 iwait();
@@ -365,7 +364,7 @@ if (touch==3141861120) {
   al[2][x-1]=false;
   rtc.writenvram(19+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;//touch()=0;
+  Retroeclairage();wait=800;touch=0;
   mode=MODE_P2;  
   }
 
@@ -374,7 +373,7 @@ if (touch==3208707840) {
   al[2][x-1]=true;
   rtc.writenvram(19+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;//touch()=0;
+  Retroeclairage(); wait=800;touch=0;
   mode=MODE_P2;  
   }
 iwait();
@@ -392,20 +391,20 @@ lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
-if (touch()==3141861120) {
+if (touch==3141861120) {
   al[3][x-1]=false;
   rtc.writenvram(21+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;//touch()=0;
+  Retroeclairage();wait=800;touch=0;
   mode=MODE_alled;  
   }
 
 //tr+  
-if (touch()==3208707840) {  
+if (touch==3208707840) {  
   al[3][x-1]=true;
   rtc.writenvram(21+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;//touch()=0;
+  Retroeclairage(); wait=800;touch=0;
   mode=MODE_alled;  
   }
 iwait();
@@ -423,20 +422,20 @@ lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
-if (touch()==3141861120) {
+if (touch==3141861120) {
   al[4][x-1]=false;
   rtc.writenvram(23+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();wait=800;//touch()=0;
+  Retroeclairage();wait=800;touch=0;
   mode=MODE_Heure;  
   }
 
 //tr+  
-if (touch()==3208707840) {  
+if (touch==3208707840) {  
   al[4][x-1]=true;
   rtc.writenvram(23+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage(); wait=800;//touch()=0;
+  Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
   }
   
@@ -491,8 +490,8 @@ else if (maxi==13) lcd.print(F("Mois    :"));
 else               lcd.print(F("Annee   :"));
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
-if (touch()==3910598400 ||touch()==4077715200  ||touch()==3877175040 ||touch()==2707357440  ||touch()==4144561920  
-||touch()==3810328320  ||touch()==2774204160  ||touch()==3175284480 ||touch()==2907897600  ||touch()==3041591040   ) {
+if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
+||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
   telecir();
   if (maxi!=9999){
     if (aff[0]==0) {
@@ -616,15 +615,8 @@ if (wait<0)  {
 
 ///////////////////////////////////////////////////////////////////////
 
-unsigned long touch(){
-if (IrReceiver.decode())  {
-  return IrReceiver.decodedIRData.decodedRawData;
-  }
-else { return 0;}
-IrReceiver.resume();// Receive the next value
-}
 
-/*
+
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
 void touchir(){
 if (IrReceiver.decode())  {
@@ -632,7 +624,7 @@ if (IrReceiver.decode())  {
   }
 IrReceiver.resume();// Receive the next value
 }
-*/
+
 
 ///////////////////////////////////////////////////////////////////////
 
@@ -683,7 +675,7 @@ for (x=1;x<25; x++){
   digitalWrite(DIGITLED2R,1); 
   delay(50);
 }
-//touch()=0;
+touch=0;
 Retroeclairage();
 }
 
@@ -693,28 +685,28 @@ Retroeclairage();
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
 void telecir(){
 strcpy(com,"");
-if (touch()==3125149440) strcpy(com,"ch-");
-if (touch()==3108437760) strcpy(com,"ch"); 
-if (touch()==3091726080) strcpy(com,"ch+"); 
-if (touch()==3141861120) strcpy(com,"tr-");  
-if (touch()==3208707840) strcpy(com,"tr+");
-if (touch()==3158572800) strcpy(com,"pl"); 
-if (touch()==4161273600) strcpy(com,"v-"); 
-if (touch()==3927310080) strcpy(com,"v+");
-if (touch()==4127850240) strcpy(com,"eq");
-if (touch()==3910598400) strcpy(com,"0"); 
-if (touch()==3860463360) strcpy(com,"+100"); 
-if (touch()==4061003520) strcpy(com,"+200");  
-if (touch()==4077715200) strcpy(com,"1");
-if (touch()==3877175040) strcpy(com,"2"); 
-if (touch()==2707357440) strcpy(com,"3"); 
-if (touch()==4144561920) strcpy(com,"4");
-if (touch()==3810328320) strcpy(com,"5");
-if (touch()==2774204160) strcpy(com,"6"); 
-if (touch()==3175284480) strcpy(com,"7"); 
-if (touch()==2907897600) strcpy(com,"8");  
-if (touch()==3041591040) strcpy(com,"9");
-//touch()=0;
+if (touch==3125149440) strcpy(com,"ch-");
+if (touch==3108437760) strcpy(com,"ch"); 
+if (touch==3091726080) strcpy(com,"ch+"); 
+if (touch==3141861120) strcpy(com,"tr-");  
+if (touch==3208707840) strcpy(com,"tr+");
+if (touch==3158572800) strcpy(com,"pl"); 
+if (touch==4161273600) strcpy(com,"v-"); 
+if (touch==3927310080) strcpy(com,"v+");
+if (touch==4127850240) strcpy(com,"eq");
+if (touch==3910598400) strcpy(com,"0"); 
+if (touch==3860463360) strcpy(com,"+100"); 
+if (touch==4061003520) strcpy(com,"+200");  
+if (touch==4077715200) strcpy(com,"1");
+if (touch==3877175040) strcpy(com,"2"); 
+if (touch==2707357440) strcpy(com,"3"); 
+if (touch==4144561920) strcpy(com,"4");
+if (touch==3810328320) strcpy(com,"5");
+if (touch==2774204160) strcpy(com,"6"); 
+if (touch==3175284480) strcpy(com,"7"); 
+if (touch==2907897600) strcpy(com,"8");  
+if (touch==3041591040) strcpy(com,"9");
+touch=0;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -765,7 +757,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     delay(delayTime);
     //touchir();
     //déclenché par EQ
-    if (touch()==4127850240) {
+    if (touch==4127850240) {
       if (mode==MODE_ALARM_INFO){
         pos=message.length();
         //telecir();
@@ -774,7 +766,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
       }
     }
     // délenché par 100+, 200+
-    if (touch()==3860463360  ||touch()==4061003520  ) {
+    if (touch==3860463360  ||touch==4061003520  ) {
     pos=message.length();
     telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
     wait=2;
