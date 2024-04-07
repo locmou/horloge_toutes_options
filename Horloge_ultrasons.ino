@@ -274,12 +274,11 @@ Turncolor();g1=g2=b1=false;
 if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Ala. "+String(x)+"->");
+lcd.print("Ala."+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", type d'alarme : "+txt (4,x-1)+". EQ pour modif...", 300, 16);
-//lcd.print("EQ pour modif");
+scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", Leds : "+txt (4,x-1)+". modif: EQ ...", 300, 16);
 iwait();
 }
 
@@ -755,7 +754,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
     lcd.setCursor(0, row);
     lcd.print(message.substring(pos, pos + lcdColumns));
     delay(delayTime);
-    //touchir();
+    touchir();
     //déclenché par EQ
     if (touch==4127850240) {
       if (mode==MODE_ALARM_INFO){
