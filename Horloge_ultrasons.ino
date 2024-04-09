@@ -509,7 +509,8 @@ iwait();
 
 
 // Permet la saisie de la date et des heures et alarmes
-void settime(int(maxi)){
+void settime(int(maxi))
+{
   nbr=99;
 lcd.setCursor(0,1);
 if      (maxi==24) lcd.print(F("Heure   :"));
@@ -520,33 +521,48 @@ else               lcd.print(F("Annee   :"));
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
-||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) {
+||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
+{
   telecir();
-  if (maxi!=9999){
-    if (aff[0]==0) {
-      if ( atoi(com)<=int((maxi-1)/10)) {
+  if (maxi!=9999)
+  {
+    if (aff[0]==0) 
+    {
+      if ( atoi(com)<=int((maxi-1)/10)) 
+      {
        //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';afficheinput();
-       }
-      else {
+      }
+      else 
+      {
        aff[0]='0'; aff[1]=com[0]; afficheinput();
        affectnbr(maxi);effaceinput();
-       }
+      }
     }
-    else {
+    else 
+    {
       aff[1]=com[0];afficheinput();
       affectnbr(maxi);effaceinput();
     }
   } 
-  else {
-    if (aff[0]==0){
-      aff[0]=com[0];aff[1]='\-';aff[2]='\-';aff[3]='\-';afficheinput();}
-    else if (aff[1]=='\-') {
-      aff[1]=com[0];afficheinput();}
-    else if (aff[2]=='\-'){
-      aff[2]=com[0];afficheinput();}
-    else if (aff[3]=='\-'){
-      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]=0;}   
+  else 
+  {
+    if (aff[0]==0)
+    {
+      aff[0]=com[0];aff[1]='\-';aff[2]='\-';aff[3]='\-';afficheinput();
+    }
+    else if (aff[1]=='\-') 
+    {
+      aff[1]=com[0];afficheinput();
+    }
+    else if (aff[2]=='\-')
+    {
+      aff[2]=com[0];afficheinput();
+    }
+    else if (aff[3]=='\-')
+    {
+      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]=0;
+    }   
   }
 wait=800;
 }  
@@ -556,23 +572,25 @@ iwait();
 ////////////////////////////////////////////////////////////////////////
 
 
-void afficheinput(){
+void afficheinput()
+{
   lcd.setCursor(9,1);lcd.print(aff);delay(400);
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 
-void affectnbr(int maxi){
-  nbr=atoi(aff);aff[0]=0;//Serial.println ("nbr: "+String(nbr));
+void affectnbr(int maxi)
+{
+  nbr=atoi(aff);aff[0]=0;
 if (nbr>=maxi) nbr=99;
-//Serial.println ("maxi: "+String(maxi));
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 
-void effaceinput(){
+void effaceinput()
+{
   lcd.setCursor(9,1);
   if (maxi!=99) lcd.print("    ");
     else lcd.print("----");
@@ -581,7 +599,8 @@ void effaceinput(){
 ////////////////////////////////////////////////////////////////////////
 
 
-void affichheure(){
+void affichheure()
+{
 
 DateTime now = rtc.now();
 h=now.hour(), DEC;m=now.minute(), DEC;s=now.second(), DEC;jr=now.day(), DEC;mo=now.month(), DEC;an=now.year(), DEC;
@@ -606,31 +625,40 @@ lcd.print(mo);
 
 // Affichage alarme 1/2 on/off
 lcd.setCursor (14,0); 
-if (al[0][0] == true && al[0][1] == true) {
+if (al[0][0] == true && al[0][1] == true) 
+{
   lcd.write(165);lcd.write(58);
-} else if (al[0][0] == true) {
+} 
+else if (al[0][0] == true) 
+{
   lcd.print(F(" "));
   lcd.write(165);
-} else if (al[0][1] == true) {
+} 
+else if (al[0][1] == true) 
+{
    lcd.print(F(" "));
    lcd.write(58);
-} else lcd.print(F("  "));
+} 
+else lcd.print(F("  "));
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 // Détection ultrasons?
 mes=(int)distanceSensor.measureDistanceCm()+1;
-if (mes<50 and mes!=0) {
+if (mes<50 and mes!=0) 
+{
   // répétition pour éviter de détections parasites ...:
-  if ((int)distanceSensor.measureDistanceCm()+1<50){
-  r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
-  Retroeclairage();
-  wait=800;
+  if ((int)distanceSensor.measureDistanceCm()+1<50)
+  {
+    r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
+    Retroeclairage();
+    wait=800;
   }
 }
   
 //Coupe le rétroéclairage en cas d'inactivité prolongée
 wait--;
-if (wait<0)  {
+if (wait<0)  
+{
   analogWrite(BRIGHTNESS_PIN, 0);
   LED1.set(255,255,255);
   digitalWrite(DIGITLED1R,1);
@@ -639,7 +667,7 @@ if (wait<0)  {
   digitalWrite(DIGITLED2R,1);
   digitalWrite(DIGITLED2G,1);
   wait=0;
-  } 
+} 
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -647,10 +675,12 @@ if (wait<0)  {
 
 
 // Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
-void touchir(){
-if (IrReceiver.decode())  {
+void touchir()
+{
+if (IrReceiver.decode())  
+{
   touch=IrReceiver.decodedIRData.decodedRawData;
-  }
+}
 IrReceiver.resume();// Receive the next value
 }
 
@@ -659,7 +689,8 @@ IrReceiver.resume();// Receive the next value
 
 
 // Ajuste le rétroéclairage en fonction de la mesure de luminosité ambiante
-void Retroeclairage(){
+void Retroeclairage()
+{
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=(analogRead(LDR)/4);
 analogWrite(BRIGHTNESS_PIN, 255-bright);
@@ -674,7 +705,8 @@ digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1
 ///////////////////////////////////////////////////////////////////////
 
 
-void Turncolor(){
+void Turncolor()
+{
 //LED
 t++;t++;
 if (t>400) t=0;
@@ -692,9 +724,11 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 
 // Motif led alarm testé par la touche v+
-void Ledalarm(){
+void Ledalarm()
+{
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
-for (x=1;x<25; x++){ 
+for (x=1;x<25; x++)
+{ 
   LED1.set(0,255,255);
   digitalWrite(DIGITLED1R,0);
   digitalWrite(DIGITLED2R,0);  
@@ -712,7 +746,8 @@ Retroeclairage();
 
 
 // Assigne à la variable com la chaine correspondant au code infrarouge détécté.
-void telecir(){
+void telecir()
+{
 strcpy(com,"");
 if (touch==3125149440) strcpy(com,"ch-");
 if (touch==3108437760) strcpy(com,"ch"); 
@@ -742,20 +777,23 @@ touch=0;
 
 
 //Renvoie vers l'affichage de l'heure après un temps d'inactivité dans les réglages d'heure ou d'alarme
-void iwait(){
+void iwait()
+{
 wait--;
-if (wait<0) {
-    wait=800;
-    mode=MODE_Heure;strcpy(aff,"--");  r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
-    Retroeclairage();ecrannet();
-    }
+if (wait<0) 
+{
+  wait=800;
+  mode=MODE_Heure;strcpy(aff,"--");  r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage();ecrannet();
+}
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 
 //Nettoyage de l'écran LCD
-void ecrannet(){
+void ecrannet()
+{
 lcd.init();
 big.begin();
 }
@@ -763,7 +801,8 @@ big.begin();
 ///////////////////////////////////////////////////////////////////////
 
 
-void Checkserie(){
+void Checkserie()
+{
   
   Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
  // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
@@ -774,20 +813,24 @@ void Checkserie(){
 ////////////////////////////////////////////////////////////////////////
 
 
-void scrollText(int row, String message, int delayTime, int lcdColumns) {
-  
-  for (int i=0; i < lcdColumns; i++) {
+void scrollText(int row, String message, int delayTime, int lcdColumns) 
+{
+  for (int i=0; i < lcdColumns; i++) 
+  {
     message = " " + message;  
   } 
   message = message + " "; 
-  for (int pos = 0; pos < message.length(); pos++) {
+  for (int pos = 0; pos < message.length(); pos++) 
+  {
     lcd.setCursor(0, row);
     lcd.print(message.substring(pos, pos + lcdColumns));
     delay(delayTime);
     touchir();
     //déclenché par EQ
-    if (touch==4127850240) {
-      if (mode==MODE_ALARM_INFO){
+    if (touch==4127850240) 
+    {
+      if (mode==MODE_ALARM_INFO)
+      {
         pos=message.length();
         //telecir();
         wait=800;
@@ -795,12 +838,12 @@ void scrollText(int row, String message, int delayTime, int lcdColumns) {
       }
     }
     // délenché par 100+, 200+
-    if (touch==3860463360  ||touch==4061003520  ) {
+    if (touch==3860463360  ||touch==4061003520  ) 
+    {
     pos=message.length();
     telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
     wait=2;
     mode=MODE_ALARM_INFO;ecrannet();
     }
   }
-  //Serial.println( wait); 
 }
