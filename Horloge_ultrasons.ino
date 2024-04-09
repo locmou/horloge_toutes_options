@@ -86,7 +86,7 @@ uint8_t r,g,b,x,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait,but[2];
 int maxi;
 //float maxi;
-bool al[5][2],antial[2],pop[2],r1,b1,g1,r2,g2,alon[2]};
+bool al[5][2],antial[2],pop[2],r1,b1,g1,r2,g2,alon[2];
 DateTime now;
 
 // Déclaration des constantes pour les modes
@@ -105,9 +105,11 @@ Mode mode;
 // Déclarations de fonctions
 void infoalarm(uint8_t x);
 void reglagealarme(uint8_t x);
+void modifal(uint8_t x);
 void affichheure();
 void touchir();
 void Retroeclairage();
+void reglageheuredate();
 void telecir();
 void iwait();
 void ecrannet();
@@ -217,14 +219,16 @@ for (x=0;x<2;x++){
     if (alon[x]==false) {
       alon[x]=true;
       modifal(x);
-    }
     /*
     if (60*h+m==60*(alh[x])+(alm[x])+15) antial[x]=false;
     if (antial[x]==false) digitalWrite (ALPIN[x],LOW);  else  digitalWrite (ALPIN[x],HIGH);
     */
-    } 
-  else {
-    if (alon[x]==true) {
+    }
+  } 
+  else 
+  {
+    if (alon[x]==true) 
+    {
       alon[x]==false;
       modifal(x);
     /*
@@ -232,6 +236,7 @@ for (x=0;x<2;x++){
     */
     }
   }
+}
 
 // reception infrarouge ?
 touchir();
@@ -294,7 +299,7 @@ void modifal(uint8_t x){
 }
 
 // Affiche les heures des alarmes
-void infoalarm(uint8_t(x)) {
+void infoalarm(uint8_t x) {
 Turncolor();g1=g2=b1=false;
 if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
