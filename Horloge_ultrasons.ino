@@ -83,10 +83,10 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 unsigned long touch;
 char aff[5],com[5];
 uint8_t r,g,b,x,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
-int t=0,wait=300,but[2];
+int t=0,wait,but[2];
 int maxi;
 //float maxi;
-bool al[5][2]={{false,false},{true,true},{false,false},{false,false},{false,false}},antial[2]={false,false},pop[2]={false,false},r1,b1,g1,r2,g2;
+bool al[5][2],antial[2],pop[2],r1,b1,g1,r2,g2,alon[2]};
 DateTime now;
 
 // Déclaration des constantes pour les modes
@@ -143,7 +143,8 @@ if (! rtc.isrunning()) {
 
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
 //rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  
+
+
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
 rtc.writeSqwPinMode(DS1307_OFF);
@@ -168,17 +169,19 @@ pinMode(DIGITLED2R, OUTPUT);
 pinMode(DIGITLED2G, OUTPUT);
 Serial.begin(115200);
 Mode mode = MODE_Heure;
-  
+
+// Etalonnage des variables
 for (x=0;x<2;x++){
   alh[x]=rtc.readnvram((x+1)*2);alm[x]=rtc.readnvram(1+((x+1)*2));
   pinMode(ALPIN[x], OUTPUT);
   pinMode(BUTT[x], INPUT);  
-  al[0][x]=rtc.readnvram(15+x);//on/off
-  al[1][x]=rtc.readnvram(17+x);//memlewe
-  al[2][x]=rtc.readnvram(19+x);//prise1
-  al[3][x]=rtc.readnvram(21+x);//prise2
-  al[4][x]=rtc.readnvram(23+x);//lumière A/B
+  for (n=0;n<5;n++){
+   al[n][x]=rtc.readnvram(15+(2*n)+x);
+   }
+  antial[x+1]=false;
+  pop[x+1]=false;
   }
+  wait=300;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -207,17 +210,26 @@ for (x=0;x<2;x++){
     pop[x]=true;
     but[x]++;
     }
-  }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
-for (x=1;x<3;x++){
-  if (al[0][x-1]==true && 60*h+m>=(60*alh[x-1])+alm[x-1] && 60*h+m<=(60*alh[x-1])+alm[x-1]+15 
-  && (al[1][x-1]==true || (al[1][x-1]==false && now.dayOfTheWeek()<6))) {
-    if (60*h+m==60*(alh[x-1])+(alm[x-1])+15) antial[x-1]=false;
-    if (antial[x-1]==false) digitalWrite (ALPIN[x-1],LOW);  else  digitalWrite (ALPIN[x-1],HIGH);
+  if (al[0][x]==true && 60*h+m>=(60*alh[x])+alm[x] && 60*h+m<=(60*alh[x])+alm[x]+15 
+  && (al[1][x]==true || (al[1][x]==false && now.dayOfTheWeek()<6))) {
+    if (alon[x]==false) {
+      alon[x]=true;
+      modifal(x);
+    }
+    /*
+    if (60*h+m==60*(alh[x])+(alm[x])+15) antial[x]=false;
+    if (antial[x]==false) digitalWrite (ALPIN[x],LOW);  else  digitalWrite (ALPIN[x],HIGH);
+    */
     } 
   else {
-    if (antial[x-1]==false) digitalWrite (ALPIN[x-1],HIGH); else digitalWrite (ALPIN[x-1],LOW);
+    if (alon[x]==true) {
+      alon[x]==false;
+      modifal(x);
+    /*
+    if (antial[x]==false) digitalWrite (ALPIN[x],HIGH); else digitalWrite (ALPIN[x],LOW);
+    */
     }
   }
 
@@ -266,7 +278,20 @@ else typeledalarm(a);
 }
 
 ///////////////////////////////////////////////////////////////////////
+void modifal(uint8_t x){
+/*
 
+
+
+
+ A Compléter
+
+
+
+
+*/
+
+}
 
 // Affiche les heures des alarmes
 void infoalarm(uint8_t(x)) {
@@ -382,7 +407,7 @@ iwait();
 
 
 void Prise2(uint8_t(x)){
-  Turncolor();g1=g2=r1=r2=false;b1=true;
+Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Al. "+String(x)+": prise 2?");
