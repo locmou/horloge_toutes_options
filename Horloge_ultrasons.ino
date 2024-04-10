@@ -33,10 +33,8 @@
 
 #include <RTClib.h>
 RTC_DS1307 rtc;
-
 const int DS1307_SDA_PIN = A4;
 const int DS1307_SCL_PIN = A5;
-//RtcDateTime now;
 
 // Gestion des leds sur pin pwm 
 #include <RGB_LED.h>
