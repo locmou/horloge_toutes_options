@@ -211,7 +211,8 @@ for (x=0;x<2;x++)
       else 
       {
         // Appui court = on/off
-        antial[x]=!antial[x];
+        if (digitalRead (ALPIN[x])==LOW))  digitalWrite (ALPIN[x],HIGH);
+        if (digitalRead (ALPIN[x])==HIGH))  digitalWrite (ALPIN[x],LOW);
       }
        but[x]=0;
     }
@@ -255,7 +256,7 @@ touchir();
 //
 // Provisoire pour déclencher l'alarme
 //
-if (touch ==3927310080) Ledalarm();
+if (touch==3927310080) Ledalarm();
 
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  )
@@ -300,17 +301,33 @@ else typeledalarm(a);
 ///////////////////////////////////////////////////////////////////////
 void modifal(uint8_t x)
 {
-/*
-
-
-
-
- A Compléter
-
-
-
-
-*/
+// Alarme qui vient de démarrer
+if (alon[x]==true)
+{
+  //Ledalarm();
+  if (al[3][x]=true)
+  {
+    if (digitalRead (ALPIN[0])==LOW))  digitalWrite (ALPIN[0],HIGH);
+    if (digitalRead (ALPIN[0])==HIGH))  digitalWrite (ALPIN[0],LOW);
+  }
+  if (al[4][x]=true)
+  {
+    if (digitalRead (ALPIN[1])==LOW))  digitalWrite (ALPIN[1],HIGH);
+    if (digitalRead (ALPIN[1])==HIGH))  digitalWrite (ALPIN[1],LOW);
+  }
+}
+// Alarme qui vient de s'éteindre
+if (alon[x]==false)
+{
+    if (al[3][x]=true)
+  {
+    digitalWrite (ALPIN[0],LOW);
+  }
+  if (al[4][x]=true)
+  {
+    digitalWrite (ALPIN[1],LOW);
+  }
+}
 }
 
 // Affiche les heures des alarmes
