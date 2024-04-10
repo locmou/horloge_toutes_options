@@ -84,7 +84,8 @@ uint8_t r,g,b,x,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait,but[2];
 int maxi;
 //float maxi;
-bool al[5][2],antial[2],pop[2],r1,b1,g1,r2,g2,alon[2];
+bool al[5][2],pop[2],r1,b1,g1,r2,g2,alon[2];
+//bool antial[2];
 DateTime now;
 
 // Déclaration des constantes pour les modes
@@ -161,7 +162,9 @@ r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
 Retroeclairage();
   
 // Pin's
-pinMode(9,OUTPUT);pinMode(10,OUTPUT);pinMode(6,OUTPUT);
+pinMode(9,OUTPUT);
+pinMode(10,OUTPUT);
+pinMode(6,OUTPUT);
 pinMode(BRIGHTNESS_PIN, OUTPUT);
 pinMode(DIGITLED1R, OUTPUT);
 pinMode(DIGITLED1G, OUTPUT);
@@ -181,7 +184,7 @@ for (x=0;x<2;x++)
   {
    al[n][x]=rtc.readnvram(15+(2*n)+x);
   }
-  antial[x+1]=false;
+  //antial[x+1]=false;
   pop[x+1]=false;
 }
   wait=300;
@@ -204,7 +207,7 @@ for (x=0;x<2;x++)
       {
         //Appui long= réglage alarm
         al[0][x]= !al[0][x];rtc.writenvram(15+x, al[0][x]);
-        antial[x]=false;
+        //antial[x]=false;
       }
       else 
       {
@@ -380,7 +383,7 @@ else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
 	 rtc.writenvram(1+(2*x), alm[x-1]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
-	 antial[x-1]=false;
+	 //antial[x-1]=false;
   }
   //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
 }
