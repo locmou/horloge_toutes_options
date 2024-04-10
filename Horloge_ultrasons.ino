@@ -90,7 +90,8 @@ bool al[5][2],antial[2],pop[2],r1,b1,g1,r2,g2,alon[2];
 DateTime now;
 
 // Déclaration des constantes pour les modes
-enum Mode {
+enum Mode 
+{
   MODE_Heure,
   MODE_Reglage_h,
   MODE_ALARM_INFO,
@@ -130,8 +131,8 @@ void scrollText(int row, String message, int delayTime, int lcdColumns);
 ////////////////////////////////////////////////////////////////
 
 
-void setup (){
-
+void setup ()
+{
 rtc.begin();
 if (! rtc.isrunning()) {
     //Serial.println("RTC is NOT running, let's set the time!");
@@ -173,50 +174,60 @@ Serial.begin(115200);
 Mode mode = MODE_Heure;
 
 // Etalonnage des variables
-for (x=0;x<2;x++){
+for (x=0;x<2;x++)
+{
   alh[x]=rtc.readnvram((x+1)*2);alm[x]=rtc.readnvram(1+((x+1)*2));
   pinMode(ALPIN[x], OUTPUT);
   pinMode(BUTT[x], INPUT);  
-  for (n=0;n<5;n++){
+  for (n=0;n<5;n++)
+  {
    al[n][x]=rtc.readnvram(15+(2*n)+x);
-   }
+  }
   antial[x+1]=false;
   pop[x+1]=false;
-  }
+}
   wait=300;
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 
-void loop (){
-
+void loop ()
+{
 // Pression sur le bouton 10 al1 ou 12 al2
-for (x=0;x<2;x++){
-  if (digitalRead(BUTT[x]) == LOW) {
-    if (pop[x]==true) {
+for (x=0;x<2;x++)
+{
+  if (digitalRead(BUTT[x]) == LOW) 
+  {
+    if (pop[x]==true) 
+    {
       pop[x]=false;
-      if (but[x]>3) {
+      if (but[x]>3) 
+      {
         //Appui long= réglage alarm
         al[0][x]= !al[0][x];rtc.writenvram(15+x, al[0][x]);
         antial[x]=false;
-        }
-      else {
+      }
+      else 
+      {
         // Appui court = on/off
         antial[x]=!antial[x];
-        }
-       but[x]=0;
       }
+       but[x]=0;
     }
-  else {
+  }
+  else 
+  {
     pop[x]=true;
     but[x]++;
-    }
+  }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
   if (al[0][x]==true && 60*h+m>=(60*alh[x])+alm[x] && 60*h+m<=(60*alh[x])+alm[x]+15 
-  && (al[1][x]==true || (al[1][x]==false && now.dayOfTheWeek()<6))) {
-    if (alon[x]==false) {
+  && (al[1][x]==true || (al[1][x]==false && now.dayOfTheWeek()<6)))
+  {
+    if (alon[x]==false)
+    {
       alon[x]=true;
       modifal(x);
     /*
@@ -247,26 +258,30 @@ touchir();
 if (touch ==3927310080) Ledalarm();
 
 // déclenché par CH+ ou CH-
-if (touch==3125149440  ||touch==3091726080  ) {
+if (touch==3125149440  ||touch==3091726080  )
+{
   wait=800;
   mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=99;
-  }
+}
 
 // délenché par 100+, 200+
-if (touch==3860463360  ||touch==4061003520  ) {
+if (touch==3860463360  ||touch==4061003520  ) 
+{
   telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
   wait=2;
   mode=MODE_ALARM_INFO;ecrannet();
-  }
+}
 
 //déclenché par EQ
-if (touch==4127850240) {
-  if (mode==MODE_ALARM_INFO){
+if (touch==4127850240) 
+{
+  if (mode==MODE_ALARM_INFO)
+  {
     telecir();
     wait=800;
     mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
-    }
   }
+}
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -283,7 +298,8 @@ else typeledalarm(a);
 }
 
 ///////////////////////////////////////////////////////////////////////
-void modifal(uint8_t x){
+void modifal(uint8_t x)
+{
 /*
 
 
@@ -295,11 +311,11 @@ void modifal(uint8_t x){
 
 
 */
-
 }
 
 // Affiche les heures des alarmes
-void infoalarm(uint8_t x) {
+void infoalarm(uint8_t x)
+{
 Turncolor();g1=g2=b1=false;
 if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
@@ -312,8 +328,10 @@ scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", Leds : "+t
 iwait();
 }
 
-String txt(uint8_t n,uint8_t x){
-if (n<4) {
+String txt(uint8_t n,uint8_t x)
+{
+if (n<4) 
+{
   if (al[n][x]==0) return "off"; else return "on";
 }
 else {
@@ -325,7 +343,8 @@ else {
 
 
 //Réglage des alarmes 1 et 2x
-void reglagealarme(uint8_t(x)){
+void reglagealarme(uint8_t(x))
+{
 Turncolor();g1=g2=b1=false;
 if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
@@ -334,14 +353,17 @@ lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==99) {settime(24);alh[x-1]=nbr;}
 else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
-  if (alm[x-1]!=99) {wait=800;
+  if (alm[x-1]!=99)
+  {
+   wait=800;
 	 rtc.writenvram(2*x, alh[x-1]);
 	 rtc.writenvram(1+(2*x), alm[x-1]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
-	 antial[x-1]=false;}
-  //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
+	 antial[x-1]=false;
   }
+  //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
+}
 iwait();
 }
 
@@ -349,7 +371,8 @@ iwait();
 
 
 //Input demande si l'alarme fonctionne le we
-void memlewe(uint8_t(x)){
+void memlewe(uint8_t(x))
+{
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -358,30 +381,33 @@ lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
-if (touch==3141861120) {
+if (touch==3141861120)
+{
   al[1][x-1]=false;
   rtc.writenvram(17+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P1;  
-  }
+}
 
 //tr+  
-if (touch==3208707840) {  
+if (touch==3208707840)
+{  
   al[1][x-1]=true;
   rtc.writenvram(17+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_P1;  
-  }
+}
 iwait();
 }
   
 ///////////////////////////////////////////////////////////////////////
 
 
-void Prise1(uint8_t(x)){
-  Turncolor();g1=g2=r1=r2=false;b1=true;
+void Prise1(uint8_t(x))
+{
+Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Al. "+String(x)+": prise 1?");
@@ -389,29 +415,32 @@ lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
-if (touch==3141861120) {
+if (touch==3141861120)
+{
   al[2][x-1]=false;
   rtc.writenvram(19+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P2;  
-  }
+}
 
 //tr+  
-if (touch==3208707840) {  
+if (touch==3208707840)
+{  
   al[2][x-1]=true;
   rtc.writenvram(19+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_P2;  
-  }
+}
 iwait();
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 
-void Prise2(uint8_t(x)){
+void Prise2(uint8_t(x))
+{
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
@@ -420,30 +449,33 @@ lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
-if (touch==3141861120) {
+if (touch==3141861120)
+{
   al[3][x-1]=false;
   rtc.writenvram(21+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_alled;  
-  }
+}
 
 //tr+  
-if (touch==3208707840) {  
+if (touch==3208707840)
+{  
   al[3][x-1]=true;
   rtc.writenvram(21+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_alled;  
-  }
+}
 iwait();
 }
 
 ///////////////////////////////////////////////////////////////////////
 
 
-void typeledalarm(uint8_t(x)){
-  Turncolor();g1=g2=r1=r2=false;b1=true;
+void typeledalarm(uint8_t(x))
+{
+Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Al. "+String(x)+": led cool?");
@@ -451,22 +483,24 @@ lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
-if (touch==3141861120) {
+if (touch==3141861120)
+{
   al[4][x-1]=false;
   rtc.writenvram(23+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_Heure;  
-  }
+}
 
 //tr+  
-if (touch==3208707840) {  
+if (touch==3208707840)
+{  
   al[4][x-1]=true;
   rtc.writenvram(23+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
-  }
+}
   
 iwait();
 }
@@ -475,33 +509,61 @@ iwait();
 
 
 //Réglage de l'heure et de la date
-void reglageheuredate(){
+void reglageheuredate()
+{
 
 // Jeux de couleurs des leds pendant le réglage
 Turncolor();
-if (t%3==0) {
+if (t%3==0)
+{
   r1=random(2);
   r2=random(2);
   g1=random(2);
   g2=random(2);
-  b1=random(2);}
+  b1=random(2);
+}
 Retroeclairage();
 lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 
 //réglage de l'heure
-if (h==99) {  settime(24);  h=nbr; //Serial.println ("h : "+String(h)); 
+if (h==99)
+{
+  settime(24);  
+  h=nbr;
 }
 //réglage des minutes
-else  if (m==99){   settime(60);    m=nbr;}
+else  if (m==99)
+{
+  settime(60);
+  m=nbr;
+}
 //réglage du jour
-else  if (jr==99) {   settime(32);        jr=nbr;}
+else  if (jr==99)
+{
+  settime(32);
+  jr=nbr;
+}
 //réglage du mois
-else  if (mo==99){   settime(13);        mo=nbr;}
+else  if (mo==99)
+{
+  settime(13);
+  mo=nbr;
+}
 //réglage de l'année
-else if  (an==99) {     settime(9999);        an=nbr;}
-if (an!=99) {   ecrannet();        wait=300;        rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
-r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
-Retroeclairage();      mode=MODE_Heure;        }    
+else if  (an==99)
+{
+  settime(9999);
+  an=nbr;
+}
+if (an!=99)
+{
+  ecrannet();
+  wait=300;
+  rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
+  r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+  Retroeclairage();
+  mode=MODE_Heure;
+}    
 iwait();
 }
 
@@ -511,7 +573,7 @@ iwait();
 // Permet la saisie de la date et des heures et alarmes
 void settime(int(maxi))
 {
-  nbr=99;
+nbr=99;
 lcd.setCursor(0,1);
 if      (maxi==24) lcd.print(F("Heure   :"));
 else if (maxi==60) lcd.print(F("Minutes :"));
