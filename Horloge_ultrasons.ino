@@ -31,6 +31,33 @@
  * 
  */
 
+
+
+
+
+
+
+
+/*
+A finir: 
+alarme coupée par passage sur detecteur ultrason
+led alarme : rédiger les deux programmes
+vrifier l'effet du dgital write low ou high pour avoir de la tension au bout
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+*/
 #include <RTClib.h>
 RTC_DS1307 rtc;
 const int DS1307_SDA_PIN = A4;
@@ -337,7 +364,7 @@ lcd.print("Ala."+String(x)+"->");
 lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
 if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", Leds : "+txt (4,x-1)+". modif: EQ ...", 300, 16);
+scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", Leds : "+txt (4,x-1)+". modif: EQ ..", 300, 16);
 iwait();
 }
 
