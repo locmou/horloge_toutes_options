@@ -212,8 +212,10 @@ for (x=0;x<2;x++)
       else 
       {
         // Appui court = on/off
+        Serial.println(digitalRead (ALPIN[x]));
+
         if (digitalRead (ALPIN[x])==LOW)  digitalWrite (ALPIN[x],HIGH);
-        if (digitalRead (ALPIN[x])==HIGH)  digitalWrite (ALPIN[x],LOW);
+        else digitalWrite (ALPIN[x],LOW);
       }
        but[x]=0;
     }
@@ -296,7 +298,7 @@ else if (mode==MODE_P2) Prise2(a);
 else typeledalarm(a);
 
 //Affichage serie des variables
-Checkserie();
+// Checkserie();
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -311,12 +313,12 @@ if (alon[x]==true)
   if (al[3][x]=true)
   {
     if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
-    if (digitalRead (ALPIN[0])==HIGH)  digitalWrite (ALPIN[0],LOW);
+    else  digitalWrite (ALPIN[0],LOW);
   }
   if (al[4][x]=true)
   {
     if (digitalRead (ALPIN[1])==LOW)  digitalWrite (ALPIN[1],HIGH);
-    if (digitalRead (ALPIN[1])==HIGH)  digitalWrite (ALPIN[1],LOW);
+    else digitalWrite (ALPIN[1],LOW);
   }
 }
 // Alarme qui vient de s'éteindre
