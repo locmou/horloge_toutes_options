@@ -212,8 +212,8 @@ for (x=0;x<2;x++)
       else 
       {
         // Appui court = on/off
-        if (digitalRead (ALPIN[x])==LOW))  digitalWrite (ALPIN[x],HIGH);
-        if (digitalRead (ALPIN[x])==HIGH))  digitalWrite (ALPIN[x],LOW);
+        if (digitalRead (ALPIN[x])==LOW)  digitalWrite (ALPIN[x],HIGH);
+        if (digitalRead (ALPIN[x])==HIGH)  digitalWrite (ALPIN[x],LOW);
       }
        but[x]=0;
     }
