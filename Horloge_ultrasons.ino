@@ -296,7 +296,7 @@ else if (mode==MODE_P2) Prise2(a);
 else typeledalarm(a);
 
 //Affichage serie des variables
-//Checkserie();
+Checkserie();
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -883,18 +883,6 @@ lcd.init();
 big.begin();
 }
 
-///////////////////////////////////////////////////////////////////////
-
-
-void Checkserie()
-{
-
-  Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
- // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
-  //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
-//delay(500);
-}
-
 ////////////////////////////////////////////////////////////////////////
 
 
@@ -931,4 +919,17 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
     mode=MODE_ALARM_INFO;ecrannet();
     }
   }
+}
+
+///////////////////////////////////////////////////////////////////////
+
+
+void Checkserie()
+{
+Serial.println(digitalRead (ALPIN[0]));
+Serial.println(digitalRead (ALPIN[1]));
+ // Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
+ // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+  //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
+//delay(500);
 }
