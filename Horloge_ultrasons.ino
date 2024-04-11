@@ -310,13 +310,13 @@ if (alon[x]==true)
   //Ledalarm();
   if (al[3][x]=true)
   {
-    if (digitalRead (ALPIN[0])==LOW))  digitalWrite (ALPIN[0],HIGH);
-    if (digitalRead (ALPIN[0])==HIGH))  digitalWrite (ALPIN[0],LOW);
+    if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
+    if (digitalRead (ALPIN[0])==HIGH)  digitalWrite (ALPIN[0],LOW);
   }
   if (al[4][x]=true)
   {
-    if (digitalRead (ALPIN[1])==LOW))  digitalWrite (ALPIN[1],HIGH);
-    if (digitalRead (ALPIN[1])==HIGH))  digitalWrite (ALPIN[1],LOW);
+    if (digitalRead (ALPIN[1])==LOW)  digitalWrite (ALPIN[1],HIGH);
+    if (digitalRead (ALPIN[1])==HIGH)  digitalWrite (ALPIN[1],LOW);
   }
 }
 // Alarme qui vient de s'éteindre
