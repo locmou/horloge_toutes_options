@@ -234,10 +234,6 @@ for (x=0;x<2;x++)
     {
       alon[x]=true;
       modifal(x);
-    /*
-    if (60*h+m==60*(alh[x])+(alm[x])+15) antial[x]=false;
-    if (antial[x]==false) digitalWrite (ALPIN[x],LOW);  else  digitalWrite (ALPIN[x],HIGH);
-    */
     }
   } 
   else 
@@ -246,20 +242,12 @@ for (x=0;x<2;x++)
     {
       alon[x]=false;
       modifal(x);
-    /*
-    if (antial[x]==false) digitalWrite (ALPIN[x],HIGH); else digitalWrite (ALPIN[x],LOW);
-    */
     }
   }
 }
 
 // reception infrarouge ?
 touchir();
-
-//
-// Provisoire pour déclencher l'alarme
-//
-if (touch==3927310080) Ledalarm();
 
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  )
@@ -309,7 +297,7 @@ void modifal(uint8_t x)
 // Alarme qui vient de démarrer
 if (alon[x]==true)
 {
-  //Ledalarm();
+  Ledalarm();
   if (al[3][x]=true)
   {
     if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
@@ -377,7 +365,7 @@ lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(x));
 
 if (alh[x-1]==99) {settime(24);alh[x-1]=nbr;}
-else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
+else{  settime(60);  alm[x-1]=nbr;
   if (alm[x-1]!=99)
   {
    wait=800;
@@ -385,9 +373,7 @@ else{  settime(60);  alm[x-1]=nbr;//Serial.println ("alm : "+String(alm[x-1]));
 	 rtc.writenvram(1+(2*x), alm[x-1]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
-	 //antial[x-1]=false;
   }
-  //Serial.print ("heure: "+String(Rtc.GetMemory(2*x))+ " minutes :"+String(Rtc.GetMemory(1+(2*x))));delay(1000);
 }
 iwait();
 }
@@ -933,5 +919,5 @@ Serial.println(digitalRead (ALPIN[1]));
  // Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
  // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
   //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
-//delay(500);
+delay(100);
 }
