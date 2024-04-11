@@ -244,7 +244,7 @@ for (x=0;x<2;x++)
   {
     if (alon[x]==true) 
     {
-      alon[x]==false;
+      alon[x]=false;
       modifal(x);
     /*
     if (antial[x]==false) digitalWrite (ALPIN[x],HIGH); else digitalWrite (ALPIN[x],LOW);
