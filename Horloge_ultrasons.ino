@@ -341,6 +341,7 @@ scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", Leds : "+t
 iwait();
 }
 
+
 String txt(uint8_t n,uint8_t x)
 {
 if (n<4) 
@@ -390,7 +391,6 @@ lcd.setCursor(0,0);
 lcd.print("Alarme "+String(x)+" le we?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
-
 //tr-
 if (touch==3141861120)
 {
@@ -400,7 +400,6 @@ if (touch==3141861120)
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P1;  
 }
-
 //tr+  
 if (touch==3208707840)
 {  
@@ -424,7 +423,6 @@ lcd.setCursor(0,0);
 lcd.print("Al. "+String(x)+": prise 1?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
-
 //tr-
 if (touch==3141861120)
 {
@@ -434,7 +432,6 @@ if (touch==3141861120)
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P2;  
 }
-
 //tr+  
 if (touch==3208707840)
 {  
@@ -468,7 +465,6 @@ if (touch==3141861120)
   Retroeclairage();wait=800;touch=0;
   mode=MODE_alled;  
 }
-
 //tr+  
 if (touch==3208707840)
 {  
@@ -492,7 +488,6 @@ lcd.setCursor(0,0);
 lcd.print("Al. "+String(x)+": led cool?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
-
 //tr-
 if (touch==3141861120)
 {
@@ -502,7 +497,6 @@ if (touch==3141861120)
   Retroeclairage();wait=800;touch=0;
   mode=MODE_Heure;  
 }
-
 //tr+  
 if (touch==3208707840)
 {  
@@ -512,7 +506,6 @@ if (touch==3208707840)
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
 }
-  
 iwait();
 }
 
@@ -603,7 +596,6 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     {
       if ( atoi(com)<=int((maxi-1)/10)) 
       {
-       //Serial.println ("maxi: "+String(maxi)+ " aff :"+String(aff)+ " com :"+String(com));delay(200);
        aff[0]=com[0];aff[1]='\-';afficheinput();
       }
       else 
