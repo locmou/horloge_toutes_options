@@ -40,9 +40,10 @@
 
 /*
 A finir: 
-alarme coupée par passage sur detecteur ultrason
+alarme coupée par passage sur detecteur ultrason ==> Fait, à tester
+
 led alarme : rédiger les deux programmes
-vrifier l'effet du dgital write low ou high pour avoir de la tension au bout
+vérifier l'effet du dgital write low ou high pour avoir de la tension au bout = >> Fait à vérifier
 
 
 
@@ -234,7 +235,6 @@ for (x=0;x<2;x++)
       {
         //Appui long= réglage alarm
         al[0][x]= !al[0][x];rtc.writenvram(15+x, al[0][x]);
-        //antial[x]=false;
       }
       else 
       {
@@ -341,11 +341,11 @@ if (alon[x]==false)
 {
     if (al[3][x]=true)
   {
-    digitalWrite (ALPIN[0],LOW);
+    digitalWrite (ALPIN[0],HIGH);
   }
   if (al[4][x]=true)
   {
-    digitalWrite (ALPIN[1],LOW);
+    digitalWrite (ALPIN[1],HIGH);
   }
 }
 }
@@ -741,6 +741,13 @@ if (mes<50 and mes!=0)
   // répétition pour éviter de détections parasites ...:
   if ((int)distanceSensor.measureDistanceCm()+1<50)
   {
+    for (x=0;x<2;x++){
+      if (alon[x]==true) 
+      {
+        alon[x]=false;
+        modifal(x);
+      }
+    }
     r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
     Retroeclairage();
     wait=800;
