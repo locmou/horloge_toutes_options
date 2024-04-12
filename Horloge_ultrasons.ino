@@ -33,25 +33,12 @@
 
 
 
-
-
-
-
-
 /*
 A finir: 
 alarme coupée par passage sur detecteur ultrason ==> Fait, à tester
 
 led alarme : rédiger les deux programmes
 vérifier l'effet du dgital write low ou high pour avoir de la tension au bout = >> Fait à vérifier
-
-
-
-
-
-
-
-
 
 
 
