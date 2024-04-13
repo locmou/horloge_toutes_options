@@ -28,7 +28,10 @@
  * 				Prise 2		  		3		21	|	22
  * 				Lumière A/B			4		23	|	24 
  *
- * 
+ * Mémoire alh[0]  10
+ * Mémoire alm[0]  11
+ * Mémoire alh[1]  12
+ * Mémoire alm[1]  13
  */
 
 
@@ -39,10 +42,6 @@ alarme coupée par passage sur detecteur ultrason ==> Fait, à tester
 
 led alarme : rédiger les deux programmes
 vérifier l'effet du dgital write low ou high pour avoir de la tension au bout = >> Fait à vérifier
-
-
-
-
 
 
 */
@@ -138,7 +137,7 @@ void affectnbr(int maxi);
 void afficheinput();
 void effaceinput();
 void Turncolor();
-void Ledalarm();
+void Ledalarm(uint8_t x);
 void Checkserie();
 void scrollText(int row, String message, int delayTime, int lcdColumns);
 
@@ -192,15 +191,14 @@ Mode mode = MODE_Heure;
 // Etalonnage des variables
 for (x=0;x<2;x++)
 {
-  alh[x]=rtc.readnvram((x+1)*2);alm[x]=rtc.readnvram(1+((x+1)*2));
+  alh[x]=rtc.readnvram(10+(x*2));alm[x]=rtc.readnvram(11+(x*2));
   pinMode(ALPIN[x], OUTPUT);
   pinMode(BUTT[x], INPUT);  
   for (n=0;n<5;n++)
   {
    al[n][x]=rtc.readnvram(15+(2*n)+x);
   }
-  //antial[x+1]=false;
-  pop[x+1]=false;
+  pop[x]=false;
 }
   wait=300;
 }
@@ -273,7 +271,7 @@ if (touch==3125149440  ||touch==3091726080  )
 // délenché par 100+, 200+
 if (touch==3860463360  ||touch==4061003520  ) 
 {
-  telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
+  telecir(); if (strcmp(com,"+100")==0) a=0; else a=1;
   wait=2;
   mode=MODE_ALARM_INFO;ecrannet();
 }
@@ -285,7 +283,7 @@ if (touch==4127850240)
   {
     telecir();
     wait=800;
-    mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
+    mode=MODE_Reglage_al;ecrannet();alh[a]=alm[a]=99;
   }
 }
 
@@ -311,7 +309,7 @@ void modifal(uint8_t x)
 // Alarme qui vient de démarrer
 if (alon[x]==true)
 {
-  Ledalarm();
+  Ledalarm(x);
   if (al[3][x]=true)
   {
     if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
@@ -348,10 +346,10 @@ if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala."+String(x)+"->");
-lcd.print(String(alh[x-1])+ ":" +String(alm[x-1]));
-if (al[1][x-1]==true) lcd.print(" we+"); else lcd.print(" we-");
+lcd.print(String(alh[x])+ ":" +String(alm[x]));
+if (al[1][x]==true) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ txt (2,x-1)+", prise 2 : "+txt (3,x-1)+", Leds : "+txt (4,x-1)+". modif: EQ ..", 300, 16);
+scrollText(1, "Prise 1 : "+ txt (2,x)+", prise 2 : "+txt (3,x)+", Leds : "+txt (4,x)+". modif: EQ ..", 300, 16);
 iwait();
 }
 
@@ -374,18 +372,18 @@ else {
 void reglagealarme(uint8_t(x))
 {
 Turncolor();g1=g2=b1=false;
-if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
+if (x==0) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Reglage alarme "+String(x));
+lcd.print("Reglage alarme "+String(x+1));
 
-if (alh[x-1]==99) {settime(24);alh[x-1]=nbr;}
-else{  settime(60);  alm[x-1]=nbr;
-  if (alm[x-1]!=99)
+if (alh[x]==99) {settime(24);alh[x]=nbr;}
+else{  settime(60);  alm[x]=nbr;
+  if (alm[x]!=99)
   {
    wait=800;
-	 rtc.writenvram(2*x, alh[x-1]);
-	 rtc.writenvram(1+(2*x), alm[x-1]); 
+	 rtc.writenvram(2*(x+1), alh[x]);
+	 rtc.writenvram(1+(2*(x+1)), alm[x]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
   }
@@ -402,13 +400,13 @@ void memlewe(uint8_t(x))
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(x)+" le we?");
+lcd.print("Alarme "+String(x+1)+" le we?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[1][x-1]=false;
+  al[1][x]=false;
   rtc.writenvram(17+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
@@ -810,9 +808,11 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 
 // Motif led alarm testé par la touche v+
-void Ledalarm()
+void Ledalarm(uint8_t x)
 {
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
+// mode hard
+if al[4,x]
 for (x=1;x<25; x++)
 { 
   LED1.set(0,255,255);
