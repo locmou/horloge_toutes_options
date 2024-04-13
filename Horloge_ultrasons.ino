@@ -310,12 +310,12 @@ void modifal(uint8_t x)
 if (alon[x]==true)
 {
   Ledalarm(x);
-  if (al[3][x]=true)
+  if (al[2][x]=true)
   {
     if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
     else  digitalWrite (ALPIN[0],LOW);
   }
-  if (al[4][x]=true)
+  if (al[3][x]=true)
   {
     if (digitalRead (ALPIN[1])==LOW)  digitalWrite (ALPIN[1],HIGH);
     else digitalWrite (ALPIN[1],LOW);
@@ -324,11 +324,11 @@ if (alon[x]==true)
 // Alarme qui vient de s'éteindre
 if (alon[x]==false)
 {
-    if (al[3][x]=true)
+    if (al[2][x]=true)
   {
     digitalWrite (ALPIN[0],HIGH);
   }
-  if (al[4][x]=true)
+  if (al[3][x]=true)
   {
     digitalWrite (ALPIN[1],HIGH);
   }
@@ -382,8 +382,8 @@ else{  settime(60);  alm[x]=nbr;
   if (alm[x]!=99)
   {
    wait=800;
-	 rtc.writenvram(2*(x+1), alh[x]);
-	 rtc.writenvram(1+(2*(x+1)), alm[x]); 
+	 rtc.writenvram(10+(x*2), alh[x]);
+	 rtc.writenvram(11+(x*2)), alm[x]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
   }
@@ -415,7 +415,7 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[1][x-1]=true;
+  al[1][x]=true;
   rtc.writenvram(17+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
@@ -438,7 +438,7 @@ lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[2][x-1]=false;
+  al[2][x]=false;
   rtc.writenvram(19+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
@@ -447,7 +447,7 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[2][x-1]=true;
+  al[2][x]=true;
   rtc.writenvram(19+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
@@ -471,7 +471,7 @@ lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[3][x-1]=false;
+  al[3][x]=false;
   rtc.writenvram(21+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
@@ -480,7 +480,7 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[3][x-1]=true;
+  al[3][x]=true;
   rtc.writenvram(21+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
@@ -503,7 +503,7 @@ lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[4][x-1]=false;
+  al[4][x]=false;
   rtc.writenvram(23+x, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
@@ -512,7 +512,7 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[4][x-1]=true;
+  al[4][x]=true;
   rtc.writenvram(23+x, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
@@ -702,21 +702,25 @@ lcd.print(mo);
 
 // Affichage alarme 1/2 on/off
 lcd.setCursor (14,0); 
-if (al[0][0] == true && al[0][1] == true) 
+if (al[0][0] && al[0][1]) 
 {
-  lcd.write(165);lcd.write(58);
+  lcd.write(165);
+  lcd.write(58);
 } 
-else if (al[0][0] == true) 
+else if (al[0][0]) 
 {
   lcd.print(F(" "));
   lcd.write(165);
 } 
-else if (al[0][1] == true) 
+else if (al[0][1]) 
 {
-   lcd.print(F(" "));
-   lcd.write(58);
+  lcd.print(F(" "));
+  lcd.write(58);
 } 
-else lcd.print(F("  "));
+else 
+{
+  lcd.print(F("  "));
+}
 
 //Affichage lorsque les ultrasons détectent une présence <50cm
 // Détection ultrasons?
@@ -726,7 +730,8 @@ if (mes<50 and mes!=0)
   // répétition pour éviter de détections parasites ...:
   if ((int)distanceSensor.measureDistanceCm()+1<50)
   {
-    for (x=0;x<2;x++){
+    for (x=0;x<2;x++)
+    {
       if (alon[x]==true) 
       {
         alon[x]=false;
@@ -778,7 +783,6 @@ void Retroeclairage()
 //réglage de l'intensité lumineus du LCD selon la lumière ambiante
 bright=(analogRead(LDR)/4);
 analogWrite(BRIGHTNESS_PIN, 255-bright);
-// Serial.println(bright);
 
  // Ajustement leds
 
@@ -792,7 +796,7 @@ digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1
 void Turncolor()
 {
 //LED
-t++;t++;
+t=t+3;
 if (t>400) t=0;
 if (t<50)  { r=bright;  g=bright-(t*bright/50);  b=(t*bright/50);}
 else if (t>=50 and t<100) { r=bright-(t-50)*bright/50;  g=(t-50)*bright/50;  b=bright;}
@@ -812,17 +816,24 @@ void Ledalarm(uint8_t x)
 {
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
 // mode hard
-if al[4,x]
-for (x=1;x<25; x++)
-{ 
-  LED1.set(0,255,255);
-  digitalWrite(DIGITLED1R,0);
-  digitalWrite(DIGITLED2R,0);  
-  delay(180);
-  LED1.set(255,255,255);
-  digitalWrite(DIGITLED1R,1);
-  digitalWrite(DIGITLED2R,1); 
-  delay(50);
+if (!al[4][x]){
+  for (x=1;x<25; x++)
+  { 
+    LED1.set(0,255,255);
+    digitalWrite(DIGITLED1R,0);
+    digitalWrite(DIGITLED2R,0);  
+    delay(180);
+    LED1.set(255,255,255);
+    digitalWrite(DIGITLED1R,1);
+    digitalWrite(DIGITLED2R,1); 
+    delay(50);
+  }
+}
+// mode cool à créer
+else
+{
+  // a remplir
+
 }
 touch=0;
 Retroeclairage();
