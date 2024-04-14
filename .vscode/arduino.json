@@ -1,5 +1,0 @@
-{
-    "board": "esp32:esp32:nano_nora",
-    "programmer": "esptool",
-    "sketch": "Horloge_ultrasons.ino"
-}
