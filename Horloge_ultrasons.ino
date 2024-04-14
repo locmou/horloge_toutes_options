@@ -41,7 +41,6 @@ A finir:
 alarme coupée par passage sur detecteur ultrason ==> Fait, à tester
 
 led alarme : rédiger les deux programmes
-vérifier l'effet du dgital write low ou high pour avoir de la tension au bout = >> Fait à vérifier
 
 
 */
@@ -211,9 +210,9 @@ void loop ()
 // Pression sur le bouton 10 al1 ou 12 al2
 for (x=0;x<2;x++)
 {
-  if (digitalRead(BUTT[x]) == LOW) 
+  if (!digitalRead(BUTT[x])) 
   {
-    if (pop[x]==true) 
+    if (pop[x]) 
     {
       pop[x]=false;
       if (but[x]>3) 
@@ -226,7 +225,7 @@ for (x=0;x<2;x++)
         // Appui court = on/off
         Serial.println(digitalRead (ALPIN[x]));
 
-        if (digitalRead (ALPIN[x])==LOW)  digitalWrite (ALPIN[x],HIGH);
+        if (!digitalRead (ALPIN[x]))  digitalWrite (ALPIN[x],HIGH);
         else digitalWrite (ALPIN[x],LOW);
       }
        but[x]=0;
@@ -239,10 +238,10 @@ for (x=0;x<2;x++)
   }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure
-  if (al[0][x]==true && 60*h+m>=(60*alh[x])+alm[x] && 60*h+m<=(60*alh[x])+alm[x]+15 
-  && (al[1][x]==true || (al[1][x]==false && now.dayOfTheWeek()<6)))
+  if (al[0][x] && 60*h+m>=(60*alh[x])+alm[x] && 60*h+m<=(60*alh[x])+alm[x]+15 
+  && (al[1][x] || (!al[1][x] && now.dayOfTheWeek()<6)))
   {
-    if (alon[x]==false)
+    if (!alon[x])
     {
       alon[x]=true;
       modifal(x);
@@ -250,7 +249,7 @@ for (x=0;x<2;x++)
   } 
   else 
   {
-    if (alon[x]==true) 
+    if (alon[x]) 
     {
       alon[x]=false;
       modifal(x);
@@ -322,7 +321,7 @@ if (alon[x])
   }
 }
 // Alarme qui vient de s'éteindre
-if (alon[x]==false)
+if (!alon[x])
 {
     if (al[2][x])
   {
@@ -347,7 +346,7 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Ala."+String(x)+"->");
 lcd.print(String(alh[x])+ ":" +String(alm[x]));
-if (al[1][x]==true) lcd.print(" we+"); else lcd.print(" we-");
+if (al[1][x]) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
 scrollText(1, "Prise 1 : "+ txt (2,x)+", prise 2 : "+txt (3,x)+", Leds : "+txt (4,x)+". modif: EQ ..", 300, 16);
 iwait();
@@ -358,10 +357,10 @@ String txt(uint8_t n,uint8_t x)
 {
 if (n<4) 
 {
-  if (al[n][x]==0) return "off"; else return "on";
+  if (al[n][x]) return "on"; else return "off";
 }
 else {
-  if (al[4][x]==0) return "Hard"; else return "cool";
+  if (al[4][x]) return "cool"; else return "hard";
 }
 }
 
@@ -680,12 +679,7 @@ void affichheure()
 {
 
 DateTime now = rtc.now();
-/*h=now.hour(), DEC;
-m=now.minute(), DEC;
-s=now.second(), DEC;
-jr=now.day(), DEC;
-mo=now.month(), DEC;
-an=now.year(), DEC;*/
+
 h=now.hour();
 m=now.minute();
 s=now.second();
