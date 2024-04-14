@@ -307,15 +307,15 @@ else typeledalarm(a);
 void modifal(uint8_t x)
 {
 // Alarme qui vient de démarrer
-if (alon[x]==true)
+if (alon[x])
 {
   Ledalarm(x);
-  if (al[2][x]=true)
+  if (al[2][x])
   {
     if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
     else  digitalWrite (ALPIN[0],LOW);
   }
-  if (al[3][x]=true)
+  if (al[3][x])
   {
     if (digitalRead (ALPIN[1])==LOW)  digitalWrite (ALPIN[1],HIGH);
     else digitalWrite (ALPIN[1],LOW);
@@ -324,11 +324,11 @@ if (alon[x]==true)
 // Alarme qui vient de s'éteindre
 if (alon[x]==false)
 {
-    if (al[2][x]=true)
+    if (al[2][x])
   {
     digitalWrite (ALPIN[0],HIGH);
   }
-  if (al[3][x]=true)
+  if (al[3][x])
   {
     digitalWrite (ALPIN[1],HIGH);
   }
@@ -383,7 +383,7 @@ else{  settime(60);  alm[x]=nbr;
   {
    wait=800;
 	 rtc.writenvram(10+(x*2), alh[x]);
-	 rtc.writenvram(11+(x*2)), alm[x]); 
+	 rtc.writenvram(11+(x*2), alm[x]); 
 	 mode=MODE_memlewe;    
 	 ecrannet();
   }
@@ -608,7 +608,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     {
       if ( atoi(com)<=int((maxi-1)/10)) 
       {
-       aff[0]=com[0];aff[1]='\-';afficheinput();
+       aff[0]=com[0];aff[1]='-';afficheinput();
       }
       else 
       {
@@ -626,17 +626,17 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   {
     if (aff[0]==0)
     {
-      aff[0]=com[0];aff[1]='\-';aff[2]='\-';aff[3]='\-';afficheinput();
+      aff[0]=com[0];aff[1]='-';aff[2]='-';aff[3]='-';afficheinput();
     }
-    else if (aff[1]=='\-') 
+    else if (aff[1]=='-') 
     {
       aff[1]=com[0];afficheinput();
     }
-    else if (aff[2]=='\-')
+    else if (aff[2]=='-')
     {
       aff[2]=com[0];afficheinput();
     }
-    else if (aff[3]=='\-')
+    else if (aff[3]=='-')
     {
       aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]=0;
     }   
@@ -680,7 +680,18 @@ void affichheure()
 {
 
 DateTime now = rtc.now();
-h=now.hour(), DEC;m=now.minute(), DEC;s=now.second(), DEC;jr=now.day(), DEC;mo=now.month(), DEC;an=now.year(), DEC;
+/*h=now.hour(), DEC;
+m=now.minute(), DEC;
+s=now.second(), DEC;
+jr=now.day(), DEC;
+mo=now.month(), DEC;
+an=now.year(), DEC;*/
+h=now.hour();
+m=now.minute();
+s=now.second();
+jr=now.day();
+mo=now.month();
+an=now.year();
   
 // Affichage heure minutes  
 big.begin();
