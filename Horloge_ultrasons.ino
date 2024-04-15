@@ -18,15 +18,15 @@
  * Tableau espace mémoire :
  * ----------------------
  * al[5][2] => 5 lignes, 2 colonnes:
- * 				al				  ligne		1	|	2
- * 				--------------------------------------
- * 				colonne 	    				0	|	1
+ *         al          ligne   1 | 2
+ *        --------------------------------------
+ *        colonne               0 | 1
  *
- * 				On/off		  		0		15	|	16
- * 				Memlewe		  		1		17	|	18
- * 				Prise 1		  		2		19	|	20
- * 				Prise 2		  		3		21	|	22
- * 				Lumière A/B			4		23	|	24 
+ *        On/off          0   15  | 16
+ *        Memlewe         1   17  | 18
+ *        Prise 1         2   19  | 20
+ *        Prise 2         3   21  | 22
+ *        Lumière A/B     4   23  | 24 
  *
  * Mémoire alh[0]  10
  * Mémoire alm[0]  11
@@ -44,6 +44,9 @@ led alarme : rédiger les deux programmes
 
 
 */
+#include <Arduino.h>
+
+
 #include <RTClib.h>
 RTC_DS1307 rtc;
 const int DS1307_SDA_PIN = A4;
@@ -61,7 +64,7 @@ const int DIGITLED2R=13;
 const int DIGITLED2G=11;
 
 // Gestion IR
-#include <IRremote.h>
+#include <IRremote.hpp>
 const int IR_PIN = 2;
 
 // Detecteur ultrasons
@@ -381,10 +384,10 @@ else{  settime(60);  alm[x]=nbr;
   if (alm[x]!=99)
   {
    wait=800;
-	 rtc.writenvram(10+(x*2), alh[x]);
-	 rtc.writenvram(11+(x*2), alm[x]); 
-	 mode=MODE_memlewe;    
-	 ecrannet();
+   rtc.writenvram(10+(x*2), alh[x]);
+   rtc.writenvram(11+(x*2), alm[x]); 
+   mode=MODE_memlewe;    
+   ecrannet();
   }
 }
 iwait();
