@@ -64,7 +64,7 @@ const int DIGITLED2R=13;
 const int DIGITLED2G=11;
 
 // Gestion IR
-#include <IRremote.h>
+#include <IRremote.hpp>
 const int IR_PIN = 2;
 
 // Detecteur ultrasons
