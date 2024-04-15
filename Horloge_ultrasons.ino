@@ -44,6 +44,9 @@ led alarme : rédiger les deux programmes
 
 
 */
+#include <Arduino.h>
+
+
 #include <RTClib.h>
 RTC_DS1307 rtc;
 const int DS1307_SDA_PIN = A4;
