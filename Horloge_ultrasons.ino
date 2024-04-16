@@ -119,9 +119,9 @@ enum Mode
 Mode mode;
 
 // Déclarations de fonctions
-void infoalarm(uint8_t x);
-void reglagealarme(uint8_t x);
-void modifal(uint8_t x);
+void infoalarm(uint8_t a);
+void reglagealarme(uint8_t a);
+void modifal(uint8_t a);
 void affichheure();
 void touchir();
 void Retroeclairage();
@@ -131,15 +131,15 @@ void iwait();
 void ecrannet();
 void settime(int maxi);
 void afficheinput();
-void memlewe(uint8_t x);
-void Prise1(uint8_t x);
-void Prise2(uint8_t x);
-void typeledalarm(uint8_t x);
+void memlewe(uint8_t a);
+void Prise1(uint8_t a);
+void Prise2(uint8_t a);
+void typeledalarm(uint8_t a);
 void affectnbr(int maxi);
 void afficheinput();
 void effaceinput();
 void Turncolor();
-void Ledalarm(uint8_t x);
+void Ledalarm(uint8_t a);
 void Checkserie();
 void scrollText(int row, String message, int delayTime, int lcdColumns);
 
@@ -306,31 +306,31 @@ else typeledalarm(a);
 ///////////////////////////////////////////////////////////////////////
 
 
-void modifal(uint8_t x)
+void modifal(uint8_t a)
 {
 // Alarme qui vient de démarrer
-if (alon[x])
+if (alon[a])
 {
-  Ledalarm(x);
-  if (al[2][x])
+  Ledalarm(a);
+  if (al[2][a])
   {
     if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
     else  digitalWrite (ALPIN[0],LOW);
   }
-  if (al[3][x])
+  if (al[3][a])
   {
     if (digitalRead (ALPIN[1])==LOW)  digitalWrite (ALPIN[1],HIGH);
     else digitalWrite (ALPIN[1],LOW);
   }
 }
 // Alarme qui vient de s'éteindre
-if (!alon[x])
+if (!alon[a])
 {
-    if (al[2][x])
+    if (al[2][a])
   {
     digitalWrite (ALPIN[0],HIGH);
   }
-  if (al[3][x])
+  if (al[3][a])
   {
     digitalWrite (ALPIN[1],HIGH);
   }
@@ -341,29 +341,29 @@ if (!alon[x])
 
 
 // Affiche les heures des alarmes
-void infoalarm(uint8_t x)
+void infoalarm(uint8_t a)
 {
 Turncolor();g1=g2=b1=false;
-if (x==0) {r1=true;r2=false;} else {r1=false;r2=true;}
+if (a==0) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Ala."+String(x+1)+"->");
-lcd.print(String(alh[x])+ ":" +String(alm[x]));
-if (al[1][x]) lcd.print(" we+"); else lcd.print(" we-");
+lcd.print("Ala."+String(a+1)+"->");
+lcd.print(String(alh[a])+ ":" +String(alm[a]));
+if (al[1][a]) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
-scrollText(1, "Prise 1 : "+ txt (2,x)+", prise 2 : "+txt (3,x)+", Leds : "+txt (4,x)+". modif: EQ ..", 300, 16);
+scrollText(1, "Prise 1 : "+ txt (2,a)+", prise 2 : "+txt (3,a)+", Leds : "+txt (4,a)+". modif: EQ ..", 300, 16);
 iwait();
 }
 
 
-String txt(uint8_t n,uint8_t x)
+String txt(uint8_t n,uint8_t a)
 {
 if (n<4) 
 {
-  if (al[n][x]) return "on"; else return "off";
+  if (al[n][a]) return "on"; else return "off";
 }
 else {
-  if (al[4][x]) return "cool"; else return "hard";
+  if (al[4][a]) return "cool"; else return "hard";
 }
 }
 
@@ -371,21 +371,21 @@ else {
 
 
 //Réglage des alarmes 1 et 2x
-void reglagealarme(uint8_t(x))
+void reglagealarme(uint8_t(a))
 {
 Turncolor();g1=g2=b1=false;
-if (x==0) {r1=true;r2=false;} else {r1=false;r2=true;}
+if (a==0) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Reglage alarme "+String(x+1));
+lcd.print("Reglage alarme "+String(a+1));
 
-if (alh[x]==99) {settime(24);alh[x]=nbr;}
-else{  settime(60);  alm[x]=nbr;
-if (alm[x]!=99)
+if (alh[a]==99) {settime(24);alh[a]=nbr;}
+else{  settime(60);  alm[a]=nbr;
+if (alm[a]!=99)
   {
    wait=800;
-   rtc.writenvram(10+(x*2), alh[x]);
-   rtc.writenvram(11+(x*2), alm[x]); 
+   rtc.writenvram(10+(a*2), alh[a]);
+   rtc.writenvram(11+(a*2), alm[a]); 
    mode=MODE_memlewe;    
    ecrannet();
   }
@@ -397,19 +397,19 @@ iwait();
 
 
 //Input demande si l'alarme fonctionne le we
-void memlewe(uint8_t(x))
+void memlewe(uint8_t(a))
 {
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Alarme "+String(x+1)+" le we?");
+lcd.print("Alarme "+String(a+1)+" le we?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[1][x]=false;
-  rtc.writenvram(17+x, true);
+  al[1][a]=false;
+  rtc.writenvram(17+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P1;  
@@ -417,8 +417,8 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[1][x]=true;
-  rtc.writenvram(17+x, false);
+  al[1][a]=true;
+  rtc.writenvram(17+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_P1;  
@@ -429,19 +429,19 @@ iwait();
 ///////////////////////////////////////////////////////////////////////
 
 
-void Prise1(uint8_t(x))
+void Prise1(uint8_t(a))
 {
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Al. "+String(x+1)+": prise 1?");
+lcd.print("Al. "+String(a+1)+": prise 1?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[2][x]=false;
-  rtc.writenvram(19+x, true);
+  al[2][a]=false;
+  rtc.writenvram(19+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P2;  
@@ -449,8 +449,8 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[2][x]=true;
-  rtc.writenvram(19+x, false);
+  al[2][a]=true;
+  rtc.writenvram(19+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_P2;  
@@ -461,20 +461,20 @@ iwait();
 ///////////////////////////////////////////////////////////////////////
 
 
-void Prise2(uint8_t(x))
+void Prise2(uint8_t(a))
 {
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Al. "+String(x+1)+": prise 2?");
+lcd.print("Al. "+String(a+1)+": prise 2?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
 //tr-
 if (touch==3141861120)
 {
-  al[3][x]=false;
-  rtc.writenvram(21+x, true);
+  al[3][a]=false;
+  rtc.writenvram(21+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_alled;  
@@ -482,8 +482,8 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[3][x]=true;
-  rtc.writenvram(21+x, false);
+  al[3][a]=true;
+  rtc.writenvram(21+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_alled;  
@@ -494,19 +494,19 @@ iwait();
 ///////////////////////////////////////////////////////////////////////
 
 
-void typeledalarm(uint8_t(x))
+void typeledalarm(uint8_t(a))
 {
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Al. "+String(x+1)+": led cool?");
+lcd.print("Al. "+String(a+1)+": led cool?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[4][x]=false;
-  rtc.writenvram(23+x, true);
+  al[4][a]=false;
+  rtc.writenvram(23+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_Heure;  
@@ -514,8 +514,8 @@ if (touch==3141861120)
 //tr+  
 if (touch==3208707840)
 {  
-  al[4][x]=true;
-  rtc.writenvram(23+x, false);
+  al[4][a]=true;
+  rtc.writenvram(23+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
