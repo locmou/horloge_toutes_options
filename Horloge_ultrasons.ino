@@ -344,10 +344,10 @@ if (!alon[x])
 void infoalarm(uint8_t x)
 {
 Turncolor();g1=g2=b1=false;
-if (x==1) {r1=true;r2=false;} else {r1=false;r2=true;}
+if (x==0) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Ala."+String(x)+"->");
+lcd.print("Ala."+String(x+1)+"->");
 lcd.print(String(alh[x])+ ":" +String(alm[x]));
 if (al[1][x]) lcd.print(" we+"); else lcd.print(" we-");
 lcd.setCursor(0,1);
@@ -381,7 +381,7 @@ lcd.print("Reglage alarme "+String(x+1));
 
 if (alh[x]==99) {settime(24);alh[x]=nbr;}
 else{  settime(60);  alm[x]=nbr;
-  if (alm[x]!=99)
+if (alm[x]!=99)
   {
    wait=800;
    rtc.writenvram(10+(x*2), alh[x]);
@@ -434,7 +434,7 @@ void Prise1(uint8_t(x))
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Al. "+String(x)+": prise 1?");
+lcd.print("Al. "+String(x+1)+": prise 1?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 //tr-
@@ -466,7 +466,7 @@ void Prise2(uint8_t(x))
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Al. "+String(x)+": prise 2?");
+lcd.print("Al. "+String(x+1)+": prise 2?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 
@@ -499,7 +499,7 @@ void typeledalarm(uint8_t(x))
 Turncolor();g1=g2=r1=r2=false;b1=true;
 Retroeclairage();
 lcd.setCursor(0,0);
-lcd.print("Al. "+String(x)+": led cool?");
+lcd.print("Al. "+String(x+1)+": led cool?");
 lcd.setCursor(0,1);
 lcd.print("oui=tr+, non=tr-");
 //tr-
@@ -628,7 +628,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   {
     if (aff[0]==0)
     {
-      aff[0]=com[0];aff[1]='-';aff[2]='-';aff[3]='-';afficheinput();
+      aff[0]=com[0];aff[1]=aff[2]=aff[3]='-';afficheinput();
     }
     else if (aff[1]=='-') 
     {
