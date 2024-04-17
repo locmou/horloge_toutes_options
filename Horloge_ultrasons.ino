@@ -240,8 +240,8 @@ for (x=0;x<2;x++)
     but[x]++;
   }
  
-// Alarme qui se déclenche durant les 15' qui suivent l'heure
-  if (al[0][x] && 60*h+m>=(60*alh[x])+alm[x] && 60*h+m<=(60*alh[x])+alm[x]+15 
+// Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
+  if (al[0][x] && 60*h+m+1>=(60*alh[x])+alm[x] && 60*h+m+1<=(60*alh[x])+alm[x]+15 
   && (al[1][x] || (!al[1][x] && now.dayOfTheWeek()<6)))
   {
     if (!alon[x])
@@ -857,7 +857,7 @@ else
     else if (x>=300 and x<350) { r=240;  g=240;  b=x-167;digitalWrite(DIGITLED1G,1);;digitalWrite(DIGITLED2G,1)}
     else { r=240;  g=240;  b=200;digitalWrite(DIGITLED1B,1)}
     Retroeclairage();
-    delay(100);
+    delay(150);
   } 
   /*
 } */
