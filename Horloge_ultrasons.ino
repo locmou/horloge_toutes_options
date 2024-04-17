@@ -840,8 +840,19 @@ if (!al[4][x]){
 // mode cool à créer
 else
 {
-  // a remplir
-
+  for (x=1;x<401; x++)
+  { 
+    if (x<50)  { r=x;  g=2/3*x;  b=0;}
+    else if (x>=50 and x<100) { r=x;  g=2/3*x;  b=0;}
+    else if (x>=100 and x<150) { r=100+(2/3*(x-100));  g=x-33;  b=0;}
+    else if (x>=150 and x<200) { r=x-17;  g=x-33;  b=(2/3*(x-150));}
+    else if (x>=200 and x<250) { r=x-17;  g=x-33;  b=(x-167);}
+    else if (x>=250 and x<300) { r=240;  g=235;  b=x-167;}
+    else if (x>=300 and x<350) { r=240;  g=240;  b=x-167;}
+    else { r=240;  g=240;  b=200;}
+    Retroeclairage();
+    delay(100);
+  } 
 }
 touch=0;
 Retroeclairage();
