@@ -324,7 +324,7 @@ if (alon[a])
   }
 }
 // Alarme qui vient de s'éteindre
-if (!alon[a])
+else
 {
     if (al[2][a])
   {
@@ -927,14 +927,14 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
         pos=message.length();
         //telecir();
         wait=800;
-        mode=MODE_Reglage_al;ecrannet();alh[a-1]=alm[a-1]=99;
+        mode=MODE_Reglage_al;ecrannet();alh[a]=alm[a]=99;
       }
     }
     // délenché par 100+, 200+
     if (touch==3860463360  ||touch==4061003520  ) 
     {
     pos=message.length();
-    telecir(); if (strcmp(com,"+100")==0) a=1; else a=2;
+    telecir(); if (strcmp(com,"+100")==0) a=0; else a=1;
     wait=2;
     mode=MODE_ALARM_INFO;ecrannet();
     }
