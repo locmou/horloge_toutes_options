@@ -826,10 +826,13 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 // Motif led alarm testé par la touche v+
 void Ledalarm(uint8_t x)
 {
-digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
 /*
 // mode hard
+
+digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1B,!b1);digitalWrite(DIGITLED2R,!r2);digitalWrite(DIGITLED2G,!g2);
 if (!al[4][x]){
+
+digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
   for (x=1;x<25; x++)
   { 
     LED1.set(0,255,255);
@@ -846,16 +849,17 @@ if (!al[4][x]){
 else
 {
   */
+ r1=r2=g1=g2=b1=false;
   for (x=1;x<401; x++)
   { 
     if (x<50)  { r=x;  g=2/3*x;  b=0;}
     else if (x>=50 and x<100) { r=x;  g=2/3*x;  b=0;}
     else if (x>=100 and x<150) { r=100+(2/3*(x-100));  g=x-33;  b=0;}
     else if (x>=150 and x<200) { r=x-17;  g=x-33;  b=(2/3*(x-150));}
-    else if (x>=200 and x<250) { r=x-17;  g=x-33;  b=(x-167);digitalWrite(DIGITLED1R,0);}
-    else if (x>=250 and x<300) { r=240;  g=235;  b=x-167;digitalWrite(DIGITLED2R,0);}
-    else if (x>=300 and x<350) { r=240;  g=240;  b=x-167;digitalWrite(DIGITLED1G,0);;digitalWrite(DIGITLED2G,0);}
-    else { r=240;  g=240;  b=200;digitalWrite(DIGITLED1B,0);}
+    else if (x>=200 and x<250) { r=x-17;  g=x-33;  b=(x-167);r1=true;}
+    else if (x>=250 and x<300) { r=240;  g=235;  b=x-167;r2=true;}
+    else if (x>=300 and x<350) { r=240;  g=240;  b=x-167;g1=true;g2=true;}
+    else { r=240;  g=240;  b=200;b1=true;}
     Retroeclairage();
     delay(150);
   } 
