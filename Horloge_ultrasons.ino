@@ -850,15 +850,15 @@ else
 {
   */
  r1=r2=g1=g2=b1=false;
-  for (n=1;n<401; n++)
+  for (t=1;t<401; t++)
   { 
-    if (n<50)  { r=n;  g=2/3*n;  b=0;}
-    else if (n>=50 and n<100) { r=n;  g=2/3*n;  b=0;}
-    else if (n>=100 and n<150) { r=100+(2/3*(n-100));  g=n-33;  b=0;}
-    else if (n>=150 and n<200) { r=n-17;  g=n-33;  b=(2/3*(n-150));}
-    else if (n>=200 and n<250) { r=n-17;  g=n-33;  b=(n-167);r1=true;}
-    else if (n>=250 and n<300) { r=240;  g=235;  b=n-167;r2=true;}
-    else if (n>=300 and n<350) { r=240;  g=240;  b=n-167;g1=true;g2=true;}
+    if (t<50)  { r=t;  g=2/3*t;  b=0;}
+    else if (t>=50 and t<100) { r=t;  g=2/3*t;  b=0;}
+    else if (t>=100 and t<150) { r=100+(2/3*(t-100));  g=t-33;  b=0;}
+    else if (t>=150 and t<200) { r=t-17;  g=t-33;  b=(2/3*(t-150));}
+    else if (t>=200 and t<250) { r=t-17;  g=t-33;  b=(t-167);r1=true;}
+    else if (t>=250 and t<300) { r=240;  g=235;  b=t-167;r2=true;}
+    else if (t>=300 and t<350) { r=240;  g=240;  b=t-167;g1=true;g2=true;}
     else { r=240;  g=240;  b=200;b1=true;}
     Retroeclairage();
     delay(150);
