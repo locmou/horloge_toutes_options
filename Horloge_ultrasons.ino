@@ -260,6 +260,10 @@ for (x=0;x<2;x++)
   }
 }
 
+// Provisoire pour déclencher l'alarme
+//
+if (touch==3927310080) Ledalarm(1);
+
 // reception infrarouge ?
 touchir();
 
@@ -823,6 +827,7 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 void Ledalarm(uint8_t x)
 {
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
+/*
 // mode hard
 if (!al[4][x]){
   for (x=1;x<25; x++)
@@ -840,6 +845,7 @@ if (!al[4][x]){
 // mode cool à créer
 else
 {
+  */
   for (x=1;x<401; x++)
   { 
     if (x<50)  { r=x;  g=2/3*x;  b=0;}
@@ -853,9 +859,9 @@ else
     Retroeclairage();
     delay(100);
   } 
-}
+  /*
+} */
 touch=0;
-Retroeclairage();
 }
 
 ////////////////////////////////////////////////////////////////////////
