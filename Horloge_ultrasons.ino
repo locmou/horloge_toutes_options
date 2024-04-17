@@ -825,11 +825,11 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 // Motif led alarm testé par la touche v+
 void Ledalarm(uint8_t x)
-{
+{touch=0;
 /*
 // mode hard
 
-digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1B,!b1);digitalWrite(DIGITLED2R,!r2);digitalWrite(DIGITLED2G,!g2);
+
 if (!al[4][x]){
 
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
@@ -865,7 +865,7 @@ else
   } 
   /*
 } */
-touch=0;
+
 }
 
 ////////////////////////////////////////////////////////////////////////
