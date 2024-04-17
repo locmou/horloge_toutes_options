@@ -825,7 +825,7 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 // Motif led alarm testé par la touche v+
 void Ledalarm(uint8_t x)
-{touch=0;
+{
 /*
 // mode hard
 
@@ -850,22 +850,22 @@ else
 {
   */
  r1=r2=g1=g2=b1=false;
-  for (x=1;x<401; x++)
+  for (n=1;n<401; n++)
   { 
-    if (x<50)  { r=x;  g=2/3*x;  b=0;}
-    else if (x>=50 and x<100) { r=x;  g=2/3*x;  b=0;}
-    else if (x>=100 and x<150) { r=100+(2/3*(x-100));  g=x-33;  b=0;}
-    else if (x>=150 and x<200) { r=x-17;  g=x-33;  b=(2/3*(x-150));}
-    else if (x>=200 and x<250) { r=x-17;  g=x-33;  b=(x-167);r1=true;}
-    else if (x>=250 and x<300) { r=240;  g=235;  b=x-167;r2=true;}
-    else if (x>=300 and x<350) { r=240;  g=240;  b=x-167;g1=true;g2=true;}
+    if (n<50)  { r=n;  g=2/3*n;  b=0;}
+    else if (n>=50 and n<100) { r=n;  g=2/3*n;  b=0;}
+    else if (n>=100 and n<150) { r=100+(2/3*(n-100));  g=n-33;  b=0;}
+    else if (n>=150 and n<200) { r=n-17;  g=n-33;  b=(2/3*(n-150));}
+    else if (n>=200 and n<250) { r=n-17;  g=n-33;  b=(n-167);r1=true;}
+    else if (n>=250 and n<300) { r=240;  g=235;  b=n-167;r2=true;}
+    else if (n>=300 and n<350) { r=240;  g=240;  b=n-167;g1=true;g2=true;}
     else { r=240;  g=240;  b=200;b1=true;}
     Retroeclairage();
     delay(150);
   } 
   /*
 } */
-
+touch=0;
 }
 
 ////////////////////////////////////////////////////////////////////////
