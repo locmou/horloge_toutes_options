@@ -844,7 +844,7 @@ digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1)
     delay(50);
   }
 }
-// mode cool à créer
+// mode cool
 else
 {
  r1=r2=g1=g2=b1=false;
@@ -963,7 +963,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
 
 ///////////////////////////////////////////////////////////////////////
 
-
+/*
 void Checkserie()
 {
 Serial.println(digitalRead (ALPIN[0]));
@@ -973,3 +973,4 @@ Serial.println(digitalRead (ALPIN[1]));
   //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
 delay(100);
 }
+*/
