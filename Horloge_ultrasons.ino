@@ -37,13 +37,14 @@
 
 
 /*
-A finir: 
-alarme coupée par passage sur detecteur ultrason ==> Fait, à tester
-
-led alarme : rédiger les deux programmes
-
-
+********************************************
+******Il semblerait bien que ça marche******
+********************************************
 */
+
+
+
+
 #include <Arduino.h>
 #include <SPI.h> 
 
