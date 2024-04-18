@@ -778,7 +778,7 @@ if (wait<0)
 
 
 
-// Renseigne dans la variable touch le code infrarouge détecté lorsque c'est le cas
+// Renseigne dans la variable touch le code infrarouge si détecté 
 void touchir()
 {
 if (IrReceiver.decode())  
