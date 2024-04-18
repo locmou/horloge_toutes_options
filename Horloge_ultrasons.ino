@@ -45,7 +45,7 @@ led alarme : rédiger les deux programmes
 
 */
 #include <Arduino.h>
-
+#include <SPI.h> 
 
 #include <RTClib.h>
 RTC_DS1307 rtc;
@@ -858,7 +858,7 @@ else
     else if (t>=300 and t<350) { r=14+(t-300)/6;  g=9+(t-300)/10;  b=0;r1=true;}
     else if (t>=350 and t<400) { r=23+(t-350)/4;  g=14+(t-350)/5;  b=2;r2=true;}
     else if (t>=400 and t<450) { r=35+(t-400)*4;  g=24+(t-400)*4;  b=t-398;g1=true;g2=true;}
-    else { r=255;  g=2455;  b=255;b1=true;}
+    else { r=255;  g=255;  b=255;b1=true;}
     Retroeclairage();
     delay(150);
   }
@@ -932,7 +932,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
     message = " " + message;  
   } 
   message = message + " "; 
-  for (int pos = 0; pos < message.length(); pos++) 
+  for (int pos = 0; pos < int(message.length()); pos++) 
   {
     lcd.setCursor(0, row);
     lcd.print(message.substring(pos, pos + lcdColumns));
