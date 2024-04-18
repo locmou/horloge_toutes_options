@@ -260,9 +260,11 @@ for (x=0;x<2;x++)
   }
 }
 
+/*
 // Provisoire pour déclencher l'alarme
 //
 if (touch==3927310080) Ledalarm(1);
+*/
 
 // reception infrarouge ?
 touchir();
@@ -826,12 +828,8 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 // Motif led alarm testé par la touche v+
 void Ledalarm(uint8_t x)
 {
-/*
 // mode hard
-
-
 if (!al[4][x]){
-
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
   for (x=1;x<25; x++)
   { 
@@ -848,23 +846,23 @@ digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1)
 // mode cool à créer
 else
 {
-  */
  r1=r2=g1=g2=b1=false;
-  for (t=1;t<401; t++)
+  for (t=1;t<511; t++)
   { 
-    if (t<50)  { r=t;  g=2/3*t;  b=0;}
-    else if (t>=50 and t<100) { r=t;  g=2/3*t;  b=0;}
-    else if (t>=100 and t<150) { r=100+(2/3*(t-100));  g=t-33;  b=0;}
-    else if (t>=150 and t<200) { r=t-17;  g=t-33;  b=(2/3*(t-150));}
-    else if (t>=200 and t<250) { r=t-17;  g=t-33;  b=(t-167);r1=true;}
-    else if (t>=250 and t<300) { r=240;  g=235;  b=t-167;r2=true;}
-    else if (t>=300 and t<350) { r=240;  g=240;  b=t-167;g1=true;g2=true;}
-    else { r=240;  g=240;  b=200;b1=true;}
+    if (t<50)  { r=1;  g=0;  b=0;}
+    else if (t>=50 and t<100) { r=1;  g=0;  b=0;}
+    else if (t>=100 and t<150) { r=2;  g=1;  b=0;}
+    else if (t>=150 and t<200) { r=2;  g=1;  b=0;}
+    else if (t>=200 and t<250) { r=2+(t-200)/10;  g=1+(t-200)/15;  b=0;}
+    else if (t>=250 and t<300) { r=7+(t-250)/8;  g=5+(t-250)/15;  b=0;}
+    else if (t>=300 and t<350) { r=14+(t-300)/6;  g=9+(t-300)/10;  b=0;r1=true;}
+    else if (t>=350 and t<400) { r=23+(t-350)/4;  g=14+(t-350)/5;  b=2;r2=true;}
+    else if (t>=400 and t<450) { r=35+(t-400)*4;  g=24+(t-400)*4;  b=t-398;g1=true;g2=true;}
+    else { r=255;  g=2455;  b=255;b1=true;}
     Retroeclairage();
     delay(150);
-  } 
-  /*
-} */
+  }
+} 
 touch=0;
 }
 
