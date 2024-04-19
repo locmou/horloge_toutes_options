@@ -97,7 +97,7 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 // Déclaration des variables
 unsigned long touch;
 char aff[5],com[5];
-uint8_t r,g,b,x,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
+uint8_t r,g,b,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
 int t=0,wait,but[2];
 int maxi;
 //float maxi;
@@ -192,16 +192,16 @@ Serial.begin(115200);
 Mode mode = MODE_Heure;
 
 // Etalonnage des variables
-for (x=0;x<2;x++)
+for (a=0;a<2;a++)
 {
-  alh[x]=rtc.readnvram(10+(x*2));alm[x]=rtc.readnvram(11+(x*2));
-  pinMode(ALPIN[x], OUTPUT);
-  pinMode(BUTT[x], INPUT);  
+  alh[a]=rtc.readnvram(10+(a*2));alm[a]=rtc.readnvram(11+(a*2));
+  pinMode(ALPIN[a], OUTPUT);
+  pinMode(BUTT[a], INPUT);  
   for (n=0;n<5;n++)
   {
-   al[n][x]=rtc.readnvram(15+(2*n)+x);
+   al[n][a]=rtc.readnvram(15+(2*n)+a);
   }
-  pop[x]=false;
+  pop[a]=false;
 }
   wait=300;
 }
@@ -212,51 +212,51 @@ for (x=0;x<2;x++)
 void loop ()
 {
 // Pression sur le bouton 10 al1 ou 12 al2
-for (x=0;x<2;x++)
+for (a=0;a<2;a++)
 {
-  if (!digitalRead(BUTT[x])) 
+  if (!digitalRead(BUTT[a])) 
   {
-    if (pop[x]) 
+    if (pop[a]) 
     {
-      pop[x]=false;
-      if (but[x]>3) 
+      pop[a]=false;
+      if (but[a]>3) 
       {
         //Appui long= réglage alarm
-        al[0][x]= !al[0][x];rtc.writenvram(15+x, al[0][x]);
+        al[0][a]= !al[0][a];rtc.writenvram(15+a, al[0][a]);
       }
       else 
       {
         // Appui court = on/off
-        Serial.println(digitalRead (ALPIN[x]));
+        Serial.println(digitalRead (ALPIN[a]));
 
-        if (!digitalRead (ALPIN[x]))  digitalWrite (ALPIN[x],HIGH);
-        else digitalWrite (ALPIN[x],LOW);
+        if (!digitalRead (ALPIN[a]))  digitalWrite (ALPIN[a],HIGH);
+        else digitalWrite (ALPIN[a],LOW);
       }
-       but[x]=0;
+       but[a]=0;
     }
   }
   else 
   {
-    pop[x]=true;
-    but[x]++;
+    pop[a]=true;
+    but[a]++;
   }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
-  if (al[0][x] && 60*h+m+1>=(60*alh[x])+alm[x] && 60*h+m+1<=(60*alh[x])+alm[x]+15 
-  && (al[1][x] || (!al[1][x] && now.dayOfTheWeek()<6)))
+  if (al[0][a] && 60*h+m+1>=(60*alh[a])+alm[a] && 60*h+m+1<=(60*alh[a])+alm[a]+15 
+  && (al[1][a] || (!al[1][a] && now.dayOfTheWeek()<6)))
   {
-    if (!alon[x])
+    if (!alon[a])
     {
-      alon[x]=true;
-      modifal(x);
+      alon[a]=true;
+      modifal(a);
     }
   } 
   else 
   {
-    if (alon[x]) 
+    if (alon[a]) 
     {
-      alon[x]=false;
-      modifal(x);
+      alon[a]=false;
+      modifal(a);
     }
   }
 }
@@ -745,12 +745,12 @@ if (mes<50 and mes!=0)
   // répétition pour éviter de détections parasites ...:
   if ((int)distanceSensor.measureDistanceCm()+1<50)
   {
-    for (x=0;x<2;x++)
+    for (a=0;a<2;a++)
     {
-      if (alon[x]==true) 
+      if (alon[a]) 
       {
-        alon[x]=false;
-        modifal(x);
+        alon[a]=false;
+        modifal(a);
       }
     }
     r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
@@ -827,12 +827,12 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 
 
 // Motif led alarm testé par la touche v+
-void Ledalarm(uint8_t x)
+void Ledalarm(uint8_t a)
 {
 // mode hard
-if (!al[4][x]){
+if (!al[4][a]){
 digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
-  for (x=1;x<25; x++)
+  for (t=1;t<25; t++)
   { 
     LED1.set(0,255,255);
     digitalWrite(DIGITLED1R,0);
