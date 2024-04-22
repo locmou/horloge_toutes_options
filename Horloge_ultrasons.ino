@@ -194,7 +194,7 @@ Mode mode = MODE_Heure;
 // Etalonnage des variables
 for (a=0;a<2;a++)
 {
-  alh[a]=rtc.readnvram(10+(a*2));alm[a]=rtc.readnvram(11+(a*2));
+  alh[a]=rtc.readnvram(10+(a*2));alm[n]=rtc.readnvram(11+(a*2));
   pinMode(ALPIN[a], OUTPUT);
   pinMode(BUTT[a], INPUT);  
   for (n=0;n<5;n++)
@@ -212,51 +212,51 @@ for (a=0;a<2;a++)
 void loop ()
 {
 // Pression sur le bouton 10 al1 ou 12 al2
-for (a=0;a<2;a++)
+for (n=0;n<2;n++)
 {
-  if (!digitalRead(BUTT[a])) 
+  if (!digitalRead(BUTT[n])) 
   {
-    if (pop[a]) 
+    if (pop[n]) 
     {
-      pop[a]=false;
-      if (but[a]>3) 
+      pop[n]=false;
+      if (but[n]>3) 
       {
         //Appui long= réglage alarm
-        al[0][a]= !al[0][a];rtc.writenvram(15+a, al[0][a]);
+        al[0][n]= !al[0][n];rtc.writenvram(15+n, al[0][n]);
       }
       else 
       {
         // Appui court = on/off
-        Serial.println(digitalRead (ALPIN[a]));
+        Serial.println(digitalRead (ALPIN[n]));
 
-        if (!digitalRead (ALPIN[a]))  digitalWrite (ALPIN[a],HIGH);
-        else digitalWrite (ALPIN[a],LOW);
+        if (!digitalRead (ALPIN[n]))  digitalWrite (ALPIN[n],HIGH);
+        else digitalWrite (ALPIN[n],LOW);
       }
-       but[a]=0;
+       but[n]=0;
     }
   }
   else 
   {
-    pop[a]=true;
-    but[a]++;
+    pop[n]=true;
+    but[n]++;
   }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
-  if (al[0][a] && 60*h+m+1>=(60*alh[a])+alm[a] && 60*h+m+1<=(60*alh[a])+alm[a]+15 
-  && (al[1][a] || (!al[1][a] && now.dayOfTheWeek()<6)))
+  if (al[0][n] && 60*h+m+1>=(60*alh[n])+alm[n] && 60*h+m+1<=(60*alh[n])+alm[n]+15 
+  && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()<6)))
   {
-    if (!alon[a])
+    if (!alon[n])
     {
-      alon[a]=true;
-      modifal(a);
+      alon[n]=true;
+      modifal(n);
     }
   } 
   else 
   {
-    if (alon[a]) 
+    if (alon[n]) 
     {
-      alon[a]=false;
-      modifal(a);
+      alon[n]=false;
+      modifal(n);
     }
   }
 }
@@ -745,12 +745,12 @@ if (mes<50 and mes!=0)
   // répétition pour éviter de détections parasites ...:
   if ((int)distanceSensor.measureDistanceCm()+1<50)
   {
-    for (a=0;a<2;a++)
+    for (n=0;n<2;n++)
     {
-      if (alon[a]) 
+      if (alon[n]) 
       {
-        alon[a]=false;
-        modifal(a);
+        alon[n]=false;
+        modifal(n);
       }
     }
     r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
