@@ -194,7 +194,7 @@ Mode mode = MODE_Heure;
 // Etalonnage des variables
 for (a=0;a<2;a++)
 {
-  alh[a]=rtc.readnvram(10+(a*2));alm[n]=rtc.readnvram(11+(a*2));
+  alh[a]=rtc.readnvram(10+(a*2));alm[a]=rtc.readnvram(11+(a*2));
   pinMode(ALPIN[a], OUTPUT);
   pinMode(BUTT[a], INPUT);  
   for (n=0;n<5;n++)
