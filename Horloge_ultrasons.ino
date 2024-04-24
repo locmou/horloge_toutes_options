@@ -274,7 +274,7 @@ touchir();
 if (touch==3125149440  ||touch==3091726080  )
 {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]=0;an=mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]='-';aff[1]='-';an=mo=jr=h=m=99;
 }
 
 // délenché par 100+, 200+
@@ -292,7 +292,7 @@ if (touch==4127850240)
   {
     telecir();
     wait=800;
-    mode=MODE_Reglage_al;ecrannet();alh[a]=alm[a]=99;
+    mode=MODE_Reglage_al;ecrannet();aff[0]='-';aff[1]='-';alh[a]=alm[a]=99;
   }
 }
 
@@ -610,25 +610,25 @@ else               lcd.print(F("Annee   :"));
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
 {
-  telecir();
+  afficheinput();telecir();
   if (maxi!=9999)
   {
-    if (aff[0]==0) 
+    if (aff[0]=='-') 
     {
       if ( atoi(com)<=int((maxi-1)/10)) 
       {
-       aff[0]=com[0];aff[1]='-';afficheinput();
+       aff[0]=com[0];afficheinput();
       }
       else 
       {
        aff[0]='0'; aff[1]=com[0]; afficheinput();
-       affectnbr(maxi);effaceinput();
+       affectnbr(maxi);delay(400);effaceinput();
       }
     }
     else 
     {
       aff[1]=com[0];afficheinput();
-      affectnbr(maxi);effaceinput();
+      affectnbr(maxi);delay(400);effaceinput();
     }
   } 
   else 
@@ -660,7 +660,7 @@ iwait();
 
 void afficheinput()
 {
-  lcd.setCursor(9,1);lcd.print(aff);delay(400);
+  lcd.setCursor(9,1);lcd.print(aff);
 }
 
 ///////////////////////////////////////////////////////////////////////
