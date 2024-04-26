@@ -415,8 +415,8 @@ lcd.print("oui=tr+, non=tr-");
 //tr-
 if (touch==3141861120)
 {
-  al[1][a]=false;
-  rtc.writenvram(17+a, true);
+  al[1][a]= false;
+  rtc.writenvram(17+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P1;  
@@ -425,7 +425,7 @@ if (touch==3141861120)
 if (touch==3208707840)
 {  
   al[1][a]=true;
-  rtc.writenvram(17+a, false);
+  rtc.writenvram(17+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_P1;  
@@ -448,7 +448,7 @@ lcd.print("oui=tr+, non=tr-");
 if (touch==3141861120)
 {
   al[2][a]=false;
-  rtc.writenvram(19+a, true);
+  rtc.writenvram(19+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_P2;  
@@ -457,7 +457,7 @@ if (touch==3141861120)
 if (touch==3208707840)
 {  
   al[2][a]=true;
-  rtc.writenvram(19+a, false);
+  rtc.writenvram(19+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_P2;  
@@ -481,7 +481,7 @@ lcd.print("oui=tr+, non=tr-");
 if (touch==3141861120)
 {
   al[3][a]=false;
-  rtc.writenvram(21+a, true);
+  rtc.writenvram(21+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_alled;  
@@ -490,7 +490,7 @@ if (touch==3141861120)
 if (touch==3208707840)
 {  
   al[3][a]=true;
-  rtc.writenvram(21+a, false);
+  rtc.writenvram(21+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_alled;  
@@ -513,7 +513,7 @@ lcd.print("oui=tr+, non=tr-");
 if (touch==3141861120)
 {
   al[4][a]=false;
-  rtc.writenvram(23+a, true);
+  rtc.writenvram(23+a, false);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();wait=800;touch=0;
   mode=MODE_Heure;  
@@ -522,7 +522,7 @@ if (touch==3141861120)
 if (touch==3208707840)
 {  
   al[4][a]=true;
-  rtc.writenvram(23+a, false);
+  rtc.writenvram(23+a, true);
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage(); wait=800;touch=0;
   mode=MODE_Heure;  
