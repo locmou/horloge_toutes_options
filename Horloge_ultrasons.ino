@@ -38,7 +38,7 @@
 
 /*
 ************************************************
-******Il semblerait bien que ça marche - 3******
+******Reglgage alarme à revoir ******
 ************************************************
 */
 
@@ -647,7 +647,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     }
     else if (aff[3]=='-')
     {
-      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]=0;
+      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]='-';
     }   
   }
 wait=800;
@@ -668,7 +668,7 @@ void afficheinput()
 
 void affectnbr(int maxi)
 {
-  nbr=atoi(aff);aff[0]=0;
+  nbr=atoi(aff);//aff[0]=0;
 if (nbr>=maxi) nbr=99;
 }
 
