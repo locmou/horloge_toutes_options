@@ -613,6 +613,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
 {
   afficheinput();telecir();
+  Serial.println( " aff0 : "+String(aff[0])+", aff1 :"+String(aff[1])+", com0 :"+String(com[0])+", nbr :"+String(nbr)+", maxi :"+String(maxi));
   if (maxi!=9999)
   {
     if (aff[0]=='-') 
@@ -627,7 +628,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
        aff[0]='0';aff[1]=com[0];afficheinput();
        affectnbr(maxi);delay(400);effaceinput();
       }
-      Serial.println( " aff0 : "+String(aff[0])+", aff1 :"+String(aff[1])+", com0 :"+String(com[0])+", nbr :"+String(nbr)+", maxi :"+String(maxi));
+      
     }
     else 
     {
