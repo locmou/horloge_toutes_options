@@ -274,7 +274,7 @@ touchir();
 if (touch==3125149440  ||touch==3091726080  )
 {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]='-';aff[1]='-';an=mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]='-';aff[1]='-';an=10000;mo=jr=h=m=99;
 }
 
 // délenché par 100+, 200+
@@ -285,6 +285,7 @@ if (touch==3860463360  ||touch==4061003520  )
   mode=MODE_ALARM_INFO;ecrannet();
 }
 
+/*
 //déclenché par EQ
 if (touch==4127850240) 
 {
@@ -295,6 +296,7 @@ if (touch==4127850240)
     mode=MODE_Reglage_al;ecrannet();aff[0]='-';aff[1]='-';alh[a]=alm[a]=99;
   }
 }
+*/
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -575,12 +577,12 @@ else  if (mo==99)
   mo=nbr;
 }
 //réglage de l'année
-else if  (an==99)
+else if  (an==10000)
 {
-  settime(9999);
+  settime(10000);
   an=nbr;
 }
-if (an!=99)
+if (an!=10000)
 {
   ecrannet();
   wait=300;
@@ -611,19 +613,21 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
 {
   afficheinput();telecir();
-  if (maxi!=9999)
+  if (maxi!=10000)
   {
     if (aff[0]=='-') 
     {
       if ( atoi(com)<=int((maxi-1)/10)) 
       {
        aff[0]=com[0];afficheinput();
+
       }
       else 
       {
-       aff[0]='0'; aff[1]=com[0]; afficheinput();
+       aff[0]='0';aff[1]=com[0];afficheinput();
        affectnbr(maxi);delay(400);effaceinput();
       }
+      Serial.println( " aff0 : "+String(aff[0])+", aff1 :"+String(aff[1])+", com0 :"+String(com[0])+", nbr :"+String(nbr)+", maxi :"+String(maxi));
     }
     else 
     {
@@ -633,7 +637,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
   } 
   else 
   {
-    if (aff[0]==0)
+    if (aff[0]=='0')
     {
       aff[0]=com[0];aff[1]=aff[2]=aff[3]='-';afficheinput();
     }
@@ -669,7 +673,10 @@ void afficheinput()
 void affectnbr(int maxi)
 {
   nbr=atoi(aff);//aff[0]=0;
-if (nbr>=maxi) nbr=99;
+
+if (nbr>=maxi) {
+  if (maxi!=99)  nbr=10000; else nbr=99;
+}
 }
 
 ///////////////////////////////////////////////////////////////////////
