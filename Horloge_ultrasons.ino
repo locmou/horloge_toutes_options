@@ -97,9 +97,9 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 // Déclaration des variables
 unsigned long touch;
 char aff[5],com[5];
-uint8_t r,g,b,n,a,nbr,h,m,s,jr,mo,an,mes,bright,alh[2],alm[2];
+uint8_t r,g,b,n,a,h,m,s,jr,mo,mes,bright,alh[2],alm[2];
 int t=0,wait,but[2];
-int maxi;
+int maxi,nbr,an;
 //float maxi;
 bool al[5][2],pop[2],r1,b1,g1,r2,g2,alon[2];
 //bool antial[2];
@@ -274,7 +274,7 @@ touchir();
 if (touch==3125149440  ||touch==3091726080  )
 {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]='-';aff[1]='-';an=10000;mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();aff[0]='-';aff[1]='-';an=9999;mo=jr=h=m=99;
 }
 
 // délenché par 100+, 200+
@@ -577,12 +577,12 @@ else  if (mo==99)
   mo=nbr;
 }
 //réglage de l'année
-else if  (an==10000)
+else if  (an==9999)
 {
-  settime(10000);
+  settime(9999);
   an=nbr;
 }
-if (an!=10000)
+if (an!=9999)
 {
   ecrannet();
   wait=300;
@@ -613,7 +613,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
 {
   afficheinput();telecir();
-  if (maxi!=10000)
+  if (maxi!=9999)
   {
     if (aff[0]=='-') 
     {
@@ -675,7 +675,7 @@ void affectnbr(int maxi)
   nbr=atoi(aff);//aff[0]=0;
 
 if (nbr>=maxi) {
-  if (maxi!=99)  nbr=10000; else nbr=99;
+  if (maxi!=99)  nbr=9999; else nbr=99;
 }
 }
 
