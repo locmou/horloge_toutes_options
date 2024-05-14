@@ -955,7 +955,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
         pos=message.length();
         //telecir();
         wait=800;
-        mode=MODE_Reglage_al;ecrannet();alh[a]=alm[a]=99;
+        mode=MODE_Reglage_al;ecrannet();aff[0]='-';aff[1]='-';alh[a]=alm[a]=99;
       }
     }
     // délenché par 100+, 200+
