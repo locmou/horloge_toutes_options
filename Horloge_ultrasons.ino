@@ -274,7 +274,7 @@ touchir();
 if (touch==3125149440  ||touch==3091726080  )
 {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();aff[0]='-';aff[1]='-';an=9999;mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();an=9999;mo=jr=h=m=99;
 }
 
 // délenché par 100+, 200+
@@ -607,12 +607,13 @@ else if (maxi==60) lcd.print(F("Minutes :"));
 else if (maxi==32) lcd.print(F("Jour    :"));
 else if (maxi==13) lcd.print(F("Mois    :"));
 else               lcd.print(F("Annee   :"));
+afficheinput();
 
 // S'execute lorsqu'un chiffre est saisi sur la commande infrarouge
 if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==2707357440  ||touch==4144561920  
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
 {
-  afficheinput();telecir();
+  telecir();
   Serial.println( " aff0 : "+String(aff[0])+", aff1 :"+String(aff[1])+", com0 :"+String(com[0])+", nbr :"+String(nbr)+", maxi :"+String(maxi));
   if (maxi!=9999)
   {
@@ -626,19 +627,19 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       else 
       {
        aff[0]='0';aff[1]=com[0];afficheinput();
-       affectnbr(maxi);delay(400);effaceinput();
+       affectnbr(maxi);aff[0]=='-';aff[1]=='-';delay(400);effaceinput();
       }
       
     }
     else 
     {
       aff[1]=com[0];afficheinput();
-      affectnbr(maxi);delay(400);effaceinput();
+      affectnbr(maxi);aff[0]=='-';aff[1]=='-';delay(400);effaceinput();
     }
   } 
   else 
   {
-    if (aff[0]=='0')
+    if (aff[0]=='-')
     {
       aff[0]=com[0];aff[1]=aff[2]=aff[3]='-';afficheinput();
     }
