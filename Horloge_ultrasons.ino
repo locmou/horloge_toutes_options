@@ -161,7 +161,7 @@ if (! rtc.isrunning()) {
     }
 
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
-//rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+// rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
 
 
 // never assume the Rtc was last configured by you, so
@@ -242,7 +242,9 @@ for (n=0;n<2;n++)
   }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
-Serial.println( " al[0][n] : "+String(al[0][n])+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
+//
+//Serial.println( " al[0][n] : "+String(al[0][n])+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
+//
   if (al[0][n] && 60*h+m+1>=(60*alh[n])+alm[n] && 60*h+m+1<=(60*alh[n])+alm[n]+15 
   && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()<6 && now.dayOfTheWeek()>0)))
   {
