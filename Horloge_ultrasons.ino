@@ -242,8 +242,9 @@ for (n=0;n<2;n++)
   }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
+Serial.println( " al[0][n] : "+String(al[0][n])+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
   if (al[0][n] && 60*h+m+1>=(60*alh[n])+alm[n] && 60*h+m+1<=(60*alh[n])+alm[n]+15 
-  && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()<6)))
+  && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()<6 && now.dayOfTheWeek()>0)))
   {
     if (!alon[n])
     {
@@ -387,7 +388,6 @@ if (a==0) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a+1));
-
 if (alh[a]==99) {settimeal(24);alh[a]=nbr;}
 else{  settimeal(60);  alm[a]=nbr;
 if (alm[a]!=99)
@@ -614,7 +614,6 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
 ||touch==3810328320  ||touch==2774204160  ||touch==3175284480 ||touch==2907897600  ||touch==3041591040   ) 
 {
   telecir();
-  Serial.println( " aff0 : "+String(aff[0])+", aff1 :"+String(aff[1])+", com0 :"+String(com[0])+", nbr :"+String(nbr)+", maxi :"+String(maxi));
   if (maxi!=9999)
   {
     if (aff[0]=='-') 
