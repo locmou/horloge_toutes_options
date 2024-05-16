@@ -130,7 +130,7 @@ void reglageheuredate();
 void telecir();
 void iwait();
 void ecrannet();
-void settimeal(int maxi);
+void settime(int maxi);
 void afficheinput();
 void memlewe(uint8_t a);
 void Prise1(uint8_t a);
@@ -390,8 +390,8 @@ if (a==0) {r1=true;r2=false;} else {r1=false;r2=true;}
 Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a+1));
-if (alh[a]==99) {settimeal(24);alh[a]=nbr;}
-else{  settimeal(60);  alm[a]=nbr;
+if (alh[a]==99) {settime(24);alh[a]=nbr;}
+else{  settime(60);  alm[a]=nbr;
 if (alm[a]!=99)
   {
    wait=800;
@@ -557,31 +557,82 @@ lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 //réglage de l'heure
 if (h==99)
 {
-  settimeal(24);  
+  settime(24);  
   h=nbr;
 }
 //réglage des minutes
 else  if (m==99)
 {
-  settimeal(60);
+  settime(60);
   m=nbr;
 }
 //réglage du jour
 else  if (jr==99)
 {
-  settimeal(32);
+  settime(32);
   jr=nbr;
 }
 //réglage du mois
 else  if (mo==99)
 {
-  settimeal(13);
+  settime(13);
   mo=nbr;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //réglage de l'année
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 else if  (an==9999)
 {
-  settimeal(9999);
+  settime(9999);// aff[0]=aff[1]=aff[2]=aff[3]='-';
   an=nbr;
 }
 if (an!=9999)
@@ -600,7 +651,7 @@ iwait();
 
 
 // Permet la saisie de la date et des heures et alarmes
-void settimeal(int(maxi))
+void settime(int(maxi))
 {
 nbr=99;
 lcd.setCursor(0,1);
@@ -635,14 +686,41 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     else 
     {
       aff[1]=com[0];afficheinput();
-      affectnbr(maxi);aff[0]='-';aff[1]='-';delay(400);effaceinput();
+      affectnbr(maxi);aff[0]='-';aff[1]='-';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      if (maxi==32) {aff[2]='-';aff[3]='-';}
+      delay(400);effaceinput();
     }
   } 
   else 
   {
     if (aff[0]=='-')
     {
-      aff[0]=com[0];aff[1]=aff[2]=aff[3]='-';afficheinput();
+      aff[0]=com[0];afficheinput();
     }
     else if (aff[1]=='-') 
     {
@@ -654,7 +732,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     }
     else if (aff[3]=='-')
     {
-      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[1]=aff[2]=aff[3]='-';
+      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[0]=aff[1]=aff[2]=aff[3]='-';
     }   
   }
 wait=800;
@@ -754,15 +832,9 @@ if (mes<50 and mes!=0)
 {
   // répétition pour éviter de détections parasites ...:
   if ((int)distanceSensor.measureDistanceCm()+1<50)
-  {
-    for (n=0;n<2;n++)
-    {
-      if (alon[n]) 
-      {
-        alon[n]=false;
-        modifal(n);
-      }
-    }
+  {   
+    if (digitalRead (ALPIN[0])==LOW)  digitalWrite (ALPIN[0],HIGH);
+    if (digitalRead (ALPIN[1])==LOW)  digitalWrite (ALPIN[1],HIGH);        
     r=10;b=200;g=10;r1=r2=b1=false;g1=g2=true;
     Retroeclairage();
     wait=800;
