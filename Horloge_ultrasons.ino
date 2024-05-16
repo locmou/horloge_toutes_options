@@ -130,7 +130,7 @@ void reglageheuredate();
 void telecir();
 void iwait();
 void ecrannet();
-void settime(int maxi);
+void settimeal(int maxi);
 void afficheinput();
 void memlewe(uint8_t a);
 void Prise1(uint8_t a);
@@ -388,8 +388,8 @@ Retroeclairage();
 lcd.setCursor(0,0);
 lcd.print("Reglage alarme "+String(a+1));
 
-if (alh[a]==99) {settime(24);alh[a]=nbr;}
-else{  settime(60);  alm[a]=nbr;
+if (alh[a]==99) {settimeal(24);alh[a]=nbr;}
+else{  settimeal(60);  alm[a]=nbr;
 if (alm[a]!=99)
   {
    wait=800;
@@ -555,31 +555,31 @@ lcd.setCursor(0,0);lcd.print(F("Reglage pendule"));
 //réglage de l'heure
 if (h==99)
 {
-  settime(24);  
+  settimeal(24);  
   h=nbr;
 }
 //réglage des minutes
 else  if (m==99)
 {
-  settime(60);
+  settimeal(60);
   m=nbr;
 }
 //réglage du jour
 else  if (jr==99)
 {
-  settime(32);
+  settimeal(32);
   jr=nbr;
 }
 //réglage du mois
 else  if (mo==99)
 {
-  settime(13);
+  settimeal(13);
   mo=nbr;
 }
 //réglage de l'année
 else if  (an==9999)
 {
-  settime(9999);
+  settimeal(9999);
   an=nbr;
 }
 if (an!=9999)
@@ -598,7 +598,7 @@ iwait();
 
 
 // Permet la saisie de la date et des heures et alarmes
-void settime(int(maxi))
+void settimeal(int(maxi))
 {
 nbr=99;
 lcd.setCursor(0,1);
@@ -627,14 +627,14 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       else 
       {
        aff[0]='0';aff[1]=com[0];afficheinput();
-       affectnbr(maxi);aff[0]=='-';aff[1]=='-';delay(400);effaceinput();
+       affectnbr(maxi);aff[0]='-';aff[1]='-';delay(400);effaceinput();
       }
       
     }
     else 
     {
       aff[1]=com[0];afficheinput();
-      affectnbr(maxi);aff[0]=='-';aff[1]=='-';delay(400);effaceinput();
+      affectnbr(maxi);aff[0]='-';aff[1]='-';delay(400);effaceinput();
     }
   } 
   else 
