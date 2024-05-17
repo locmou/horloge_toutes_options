@@ -609,7 +609,6 @@ else if  (an==9999)
 }
 if (an!=9999)
 {
-  aff[2]=aff[3]='';
   ecrannet();
   wait=300;
   rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
