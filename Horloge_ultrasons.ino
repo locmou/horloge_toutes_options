@@ -602,34 +602,6 @@ else  if (mo==99)
 
 
 //réglage de l'année
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 else if  (an==9999)
 {
   settime(9999);// aff[0]=aff[1]=aff[2]=aff[3]='-';
@@ -637,6 +609,7 @@ else if  (an==9999)
 }
 if (an!=9999)
 {
+  aff[2]=aff[3]='';
   ecrannet();
   wait=300;
   rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
@@ -680,39 +653,13 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       {
        aff[0]='0';aff[1]=com[0];afficheinput();
        affectnbr(maxi);aff[0]='-';aff[1]='-';delay(400);effaceinput();
-      }
-      
+      }     
     }
     else 
     {
       aff[1]=com[0];afficheinput();
-      affectnbr(maxi);aff[0]='-';aff[1]='-';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      if (maxi==32) {aff[2]='-';aff[3]='-';}
+      affectnbr(maxi);aff[0]=aff[1]='-';
+      if (maxi==32) {aff[2]=aff[3]='-';}
       delay(400);effaceinput();
     }
   } 
