@@ -853,7 +853,8 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 void Ledalarm(uint8_t a)
 {
 // mode hard
-if (!al[4][a]){
+if (!al[4][a])
+{
   digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
   for (t=1;t<25; t++)
   { 
