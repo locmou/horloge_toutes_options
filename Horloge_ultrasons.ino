@@ -277,7 +277,7 @@ touchir();
 if (touch==3125149440  ||touch==3091726080  )
 {
   wait=800;
-  mode=MODE_Reglage_h ;ecrannet();an=9999;mo=jr=h=m=99;
+  mode=MODE_Reglage_h ;ecrannet();an=9999;mo=jr=h=m=99;aff[0]=aff[1]='-';aff[2]=aff[3]=0;
 }
 
 // délenché par 100+, 200+
@@ -579,28 +579,6 @@ else  if (mo==99)
   mo=nbr;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //réglage de l'année
 else if  (an==9999)
 {
@@ -652,19 +630,19 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
       else 
       {
        aff[0]='0';aff[1]=com[0];afficheinput();
-       affectnbr(maxi);aff[0]='-';aff[1]='-';delay(400);effaceinput();
+       affectnbr(maxi);
       }     
     }
     else 
     {
       aff[1]=com[0];afficheinput();
-      affectnbr(maxi);aff[0]=aff[1]='-';
-      if (maxi==32) {aff[2]=aff[3]='-';}
-      delay(400);effaceinput();
+      affectnbr(maxi);
+      
     }
   } 
   else 
   {
+    nbr=9999;
     if (aff[0]=='-')
     {
       aff[0]=com[0];afficheinput();
@@ -679,7 +657,7 @@ if (touch==3910598400 ||touch==4077715200  ||touch==3877175040 ||touch==27073574
     }
     else if (aff[3]=='-')
     {
-      aff[3]=com[0];affectnbr(maxi);afficheinput();aff[0]=aff[1]=aff[2]=aff[3]='-';
+      aff[3]=com[0];affectnbr(maxi);afficheinput();
     }   
   }
 wait=800;
@@ -700,11 +678,28 @@ void afficheinput()
 
 void affectnbr(int maxi)
 {
-  nbr=atoi(aff);//aff[0]=0;
-
-if (nbr>=maxi) {
-  if (maxi!=99)  nbr=9999; else nbr=99;
-}
+  if (nbr<maxi) 
+  {
+    nbr=atoi(aff);
+    aff[0]='-';aff[1]='-';
+    delay(400);
+    effaceinput();
+    if (maxi==32) {aff[2]=aff[3]='-';}
+    if (maxi==9999) {aff[0]=aff[1]=aff[2]=aff[3]=0;}
+  }
+  else
+  {
+    if (maxi!=99)
+    {
+      aff[0]=aff[1]=aff[2]=aff[3]='-';
+      nbr=9999;
+    } 
+    else 
+    {
+      aff[0]=aff[1]='-';aff[2]=aff[3]=0;
+      nbr=99;
+    }
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////
