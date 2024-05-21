@@ -582,12 +582,11 @@ else  if (mo==99)
 //réglage de l'année
 else if  (an==9999)
 {
-  settime(9999);// aff[0]=aff[1]=aff[2]=aff[3]='-';
+  settime(9999);
   an=nbr;
 }
 if (an!=9999)
 {
-  //aff=ensemble vide...??
   ecrannet();
   wait=300;
   rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
@@ -855,7 +854,7 @@ void Ledalarm(uint8_t a)
 {
 // mode hard
 if (!al[4][a]){
-digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
+  digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1);digitalWrite(DIGITLED2R,1);digitalWrite(DIGITLED2G,1);
   for (t=1;t<25; t++)
   { 
     LED1.set(0,255,255);
@@ -871,7 +870,7 @@ digitalWrite(DIGITLED1R,1);digitalWrite(DIGITLED1G,1);digitalWrite(DIGITLED1B,1)
 // mode cool
 else
 {
- r1=r2=g1=g2=b1=false;
+  r1=r2=g1=g2=b1=false;
   for (t=1;t<511; t++)
   { 
     if (t<50)  { r=1;  g=0;  b=0;}
@@ -888,7 +887,7 @@ else
     delay(150);
   }
 } 
-touch=0;
+touch=0;r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
 }
 
 ////////////////////////////////////////////////////////////////////////
