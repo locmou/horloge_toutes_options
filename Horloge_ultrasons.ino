@@ -677,26 +677,27 @@ void afficheinput()
 
 void affectnbr(int maxi)
 {
+  nbr=atoi(aff);
+  if (maxi==32) {aff[2]=aff[3]='-';}
+  if (maxi==9999) {aff[0]=aff[1]=aff[2]=aff[3]=0;}
   if (nbr<maxi) 
   {
-    nbr=atoi(aff);
     aff[0]='-';aff[1]='-';
     delay(400);
     effaceinput();
-    if (maxi==32) {aff[2]=aff[3]='-';}
-    if (maxi==9999) {aff[0]=aff[1]=aff[2]=aff[3]=0;}
+
   }
   else
   {
-    if (maxi!=99)
-    {
-      aff[0]=aff[1]=aff[2]=aff[3]='-';
-      nbr=9999;
-    } 
-    else 
+    if (maxi!=9999)
     {
       aff[0]=aff[1]='-';aff[2]=aff[3]=0;
       nbr=99;
+    } 
+    else 
+    {
+      aff[0]=aff[1]=aff[2]=aff[3]='-';
+      nbr=9999;
     }
   }
 }
