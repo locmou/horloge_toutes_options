@@ -678,13 +678,15 @@ void afficheinput()
 void affectnbr(int maxi)
 {
   nbr=atoi(aff);
-  if (maxi==9999) {aff[0]=aff[1]=aff[2]=aff[3]='-';}
   if (nbr<maxi) 
   {
     aff[0]='-';aff[1]='-';
     delay(400);
     effaceinput();
-
+    if (maxi==13) 
+    {
+      aff[0]=aff[1]=aff[2]=aff[3]='-';
+    }
   }
   else
   {
