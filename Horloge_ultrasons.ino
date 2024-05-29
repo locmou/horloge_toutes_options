@@ -713,7 +713,7 @@ void effaceinput()
   lcd.setCursor(9,1);
   if (maxi==13) {aff[0]=aff[1]=aff[2]=aff[3]='-';}
   else {aff[0]=aff[1]='-';aff[2]=aff[3]=0;}
-  afficheinput()  
+  afficheinput()  ;
 }
 
 ////////////////////////////////////////////////////////////////////////
