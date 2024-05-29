@@ -590,7 +590,8 @@ if (an!=9999)
 {
   ecrannet();
   wait=300;
-  rtc.adjust(DateTime(an, mo, jr, h, m, 0));  
+  rtc.adjust(DateTime(an, mo, jr, h, m, 0)); 
+  aff[0]=aff[1]='-';aff[2]=aff[3]=0; 
   r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
   Retroeclairage();
   mode=MODE_Heure;
@@ -685,7 +686,7 @@ void affectnbr(int maxi)
   nbr=atoi(aff);
   if (nbr<maxi) 
   {
-    aff[0]='-';aff[1]='-';
+    if (maxi!=9999) {aff[0]='-';aff[1]='-';}
     if (maxi==13) {aff[2]=aff[3]='-';}
     delay(400);
     effaceinput();
@@ -710,10 +711,10 @@ void affectnbr(int maxi)
 
 void effaceinput()
 {
-  lcd.setCursor(9,1);
+  lcd.setCursor(9,1);/*
   if (maxi==9999) {aff[0]=aff[1]=aff[2]=aff[3]='-';}
-  else {aff[0]=aff[1]='-';aff[2]=aff[3]=0;}
-  afficheinput()  ;
+  else {aff[0]=aff[1]='-';aff[2]=aff[3]=0;}*/
+  afficheinput();
 }
 
 ////////////////////////////////////////////////////////////////////////
