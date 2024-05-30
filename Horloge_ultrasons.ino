@@ -245,7 +245,7 @@ for (n=0;n<2;n++)
 //
 //Serial.println( " al[0][n] : "+String(al[0][n])+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
 //
-  if (al[0][n] && 60*h+m+1>=(60*alh[n])+alm[n] && 60*h+m+1<=(60*alh[n])+alm[n]+15 
+  if (al[0][n] && 60*h+m>=(60*alh[n])+alm[n] && 60*h+m<=(60*alh[n])+alm[n]+15 
   && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()>1)))
   {
     if (!alon[n])
