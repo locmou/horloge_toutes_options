@@ -270,9 +270,9 @@ for (n=0;n<2;n++)
 // reception infrarouge ?
 touchir();
 
-// Provisoire pour déclencher l'alarme
+// Provisoire pour afficher les variables
 //
-if (touch==3927310080) Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek()));
+if (touch==3927310080) Checkserie();
 
 
 
@@ -996,14 +996,15 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
 
 ///////////////////////////////////////////////////////////////////////
 
-/*
+
 void Checkserie()
 {
-Serial.println(digitalRead (ALPIN[0]));
-Serial.println(digitalRead (ALPIN[1]));
- // Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
- // Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
-  //Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
+// Serial.println(digitalRead (ALPIN[0]));
+// Serial.println(digitalRead (ALPIN[1]));
+Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek()));
+Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
+Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
+Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
 delay(100);
 }
-*/
+
