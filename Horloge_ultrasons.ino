@@ -149,6 +149,8 @@ void scrollText(int row, String message, int delayTime, int lcdColumns);
 
 void setup ()
 {
+Serial.begin(115200);
+
 rtc.begin();
 if (! rtc.isrunning()) {
     //Serial.println("RTC is NOT running, let's set the time!");
@@ -188,8 +190,7 @@ pinMode(DIGITLED1G, OUTPUT);
 pinMode(DIGITLED1B, OUTPUT);
 pinMode(DIGITLED2R, OUTPUT);
 pinMode(DIGITLED2G, OUTPUT);
-Serial.begin(115200);
-Mode mode = MODE_Heure;
+
 
 // Etalonnage des variables
 for (a=0;a<2;a++)
@@ -203,7 +204,9 @@ for (a=0;a<2;a++)
   }
   pop[a]=false;
 }
-  wait=300;
+
+wait=300;
+Mode mode = MODE_Heure;
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -243,7 +246,7 @@ for (n=0;n<2;n++)
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
 //
-//Serial.println( " al[0][n] : "+String(al[0][n])+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
+//Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek())+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
 //
   if (al[0][n] && 60*h+m>=(60*alh[n])+alm[n] && 60*h+m<=(60*alh[n])+alm[n]+15 
   && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()>1)))
@@ -264,14 +267,14 @@ for (n=0;n<2;n++)
   }
 }
 
-/*
-// Provisoire pour déclencher l'alarme
-//
-if (touch==3927310080) Ledalarm(1);
-*/
-
 // reception infrarouge ?
 touchir();
+
+// Provisoire pour déclencher l'alarme
+//
+if (touch==3927310080) Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek()));
+
+
 
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  )
