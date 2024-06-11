@@ -100,9 +100,7 @@ char aff[5],com[5];
 uint8_t r,g,b,n,a,h,m,s,jr,mo,mes,bright,alh[2],alm[2];
 int t=0,wait,but[2];
 int maxi,nbr,an;
-//float maxi;
 bool al[5][2],pop[2],r1,b1,g1,r2,g2,alon[2];
-//bool antial[2];
 DateTime now;
 
 // Déclaration des constantes pour les modes
@@ -249,7 +247,7 @@ for (n=0;n<2;n++)
 //Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek())+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
 //
   if (al[0][n] && 60*h+m>=(60*alh[n])+alm[n] && 60*h+m<=(60*alh[n])+alm[n]+15 
-  && (al[1][n] || (!al[1][n] && now.dayOfTheWeek()>1)))
+  && (al[1][n] || (!al[1][n] && rtc.now().dayOfTheWeek()<6)))
   {
     if (!alon[n])
     {
@@ -1001,7 +999,7 @@ void Checkserie()
 {
 // Serial.println(digitalRead (ALPIN[0]));
 // Serial.println(digitalRead (ALPIN[1]));
-Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek()));
+Serial.println( " DAY OF THE WEEK : "+String(rtc.now().dayOfTheWeek()));
 Serial.println( " h : "+String(h)+", m :"+String(m)+", jr :"+String(jr)+", mo :"+String(mo)+", an :"+String(an));
 Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :"+String(mes)+", bright :"+String(bright));
 Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
