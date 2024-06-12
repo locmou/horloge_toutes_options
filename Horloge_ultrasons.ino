@@ -152,7 +152,7 @@ void setup ()
 
 rtc.begin();
 if (! rtc.isrunning()) 
-  {
+{
   //Serial.println("RTC is NOT running, let's set the time!");
   // When time needs to be set on a new device, or after a power loss, the
   // following line sets the RTC to the date & time this sketch was compiled
@@ -160,11 +160,10 @@ if (! rtc.isrunning())
   // This line sets the RTC with an explicit date & time, for example to set
   // January 21, 2014 at 3am you would call:
   // rtc.adjust(DateTime(2014, 1, 21, 3, 0, 0));
-  }
+}
 
 // Pour remettre à l'heure lorsque le port série est relié à l'ordi
 // rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-
 
 // never assume the Rtc was last configured by you, so
 // just clear them to your needed state
@@ -190,7 +189,6 @@ pinMode(DIGITLED1G, OUTPUT);
 pinMode(DIGITLED1B, OUTPUT);
 pinMode(DIGITLED2R, OUTPUT);
 pinMode(DIGITLED2G, OUTPUT);
-
 
 // Etalonnage des variables
 for (a=0;a<2;a++)
@@ -381,7 +379,6 @@ lcd.setCursor(0,1);
 scrollText(1, "Prise 1 : "+ txt (2,a)+", prise 2 : "+txt (3,a)+", Leds : "+txt (4,a)+". modif: EQ ..", 300, 16);
 iwait();
 }
-
 
 String txt(uint8_t n,uint8_t a)
 {
@@ -815,7 +812,6 @@ if (wait<0)
 ///////////////////////////////////////////////////////////////////////
 
 
-
 // Renseigne dans la variable touch le code infrarouge si détecté 
 void touchir()
 {
@@ -825,7 +821,6 @@ if (IrReceiver.decode())
 }
 IrReceiver.resume();// Receive the next value
 }
-
 
 ///////////////////////////////////////////////////////////////////////
 
