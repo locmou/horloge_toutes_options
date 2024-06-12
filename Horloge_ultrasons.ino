@@ -97,7 +97,7 @@ const uint8_t LDR=A7;  // composante photorésistance sur la pin A7
 // Déclaration des variables
 unsigned long touch;
 char aff[5],com[5];
-uint8_t r,g,b,n,a,h,m,s,jr,mo,mes,bright,alh[2],alm[2];
+uint8_t r,g,b,n,a,h,m,s,jr,mo,mes,bright,alh[2],alm[2],brightmin;
 int t=0,wait,but[2];
 int maxi,nbr,an;
 bool al[5][2],pop[2],r1,b1,g1,r2,g2,alon[2];
@@ -228,8 +228,6 @@ for (n=0;n<2;n++)
       else 
       {
         // Appui court = on/off
-        Serial.println(digitalRead (ALPIN[n]));
-
         if (!digitalRead (ALPIN[n]))  digitalWrite (ALPIN[n],HIGH);
         else digitalWrite (ALPIN[n],LOW);
       }
@@ -272,8 +270,6 @@ touchir();
 //
 if (touch==3927310080) Checkserie();
 
-
-
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  )
 {
@@ -291,18 +287,34 @@ if (touch==3860463360  ||touch==4061003520  )
   mode=MODE_ALARM_INFO;ecrannet();
 }
 
-/*
-//déclenché par EQ
-if (touch==4127850240) 
+// délenché par v+ ou v- : réglage de la luminosité minimum
+if (touch==3927310080  ||touch==4161273600  ) 
 {
-  if (mode==MODE_ALARM_INFO)
+  if (touch==4161273600)
   {
-    telecir();
-    wait=800;
-    mode=MODE_Reglage_al;ecrannet();aff[0]='-';aff[1]='-';alh[a]=alm[a]=99;
+    brightmin=brightmin-3;if (brightmin<0) brightmin=0;
+  }
+  else 
+  {
+    brightmin=brightmin+3;if (brightmin>30) brightmin=30;
+  }
+  
+}
+
+// délenché par 1, 2, alume ou eteint les prises 1 et 2
+if (touch==4077715200  ||touch==3877175040  ) 
+{
+  if (touch==4077715200)
+  {
+    if (!digitalRead (ALPIN[0]))  digitalWrite (ALPIN[0],HIGH);
+    else digitalWrite (ALPIN[0],LOW);
+  }
+  else
+  {
+    if (!digitalRead (ALPIN[1]))  digitalWrite (ALPIN[1],HIGH);
+    else digitalWrite (ALPIN[1],LOW);
   }
 }
-*/
 
 //Depart vers les sous programmes
 if (mode==MODE_Heure) affichheure();
@@ -793,7 +805,7 @@ if (mes<50 and mes!=0)
 wait--;
 if (wait<0)  
 {
-  analogWrite(BRIGHTNESS_PIN, 0);
+  analogWrite(BRIGHTNESS_PIN, brightmin);
   LED1.set(255,255,255);
   digitalWrite(DIGITLED1R,1);
   digitalWrite(DIGITLED1G,1);
@@ -984,11 +996,20 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
     // délenché par 100+, 200+
     if (touch==3860463360  ||touch==4061003520  ) 
     {
-    pos=message.length();
-    telecir(); if (strcmp(com,"+100")==0) a=0; else a=1;
-    wait=2;
-    mode=MODE_ALARM_INFO;ecrannet();
-    }
+      if ((touch==3860463360 &a==0)||(touch==4061003520 &a==1)) 
+      {
+        r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
+        Retroeclairage(); wait=800;touch=0;
+        mode=MODE_Heure;
+      }
+      else 
+      {
+        pos=message.length();
+        telecir();
+        if (strcmp(com,"+100")==0) a=0; else a=1;
+        wait=2;
+        mode=MODE_ALARM_INFO;ecrannet();
+      }
   }
 }
 
