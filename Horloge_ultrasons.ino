@@ -38,7 +38,7 @@
 
 /*
 ************************************************
-******réglage de l'heure et de la date à controler ******
+******réglage Fonctionnerait ? ******
 ************************************************
 */
 
@@ -115,6 +115,7 @@ enum Mode
   MODE_P2,
   MODE_alled
 };
+
 Mode mode;
 
 // Déclarations de fonctions
@@ -147,7 +148,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns);
 
 void setup ()
 {
-Serial.begin(115200);
+// Serial.begin(115200);
 
 rtc.begin();
 if (! rtc.isrunning()) {
@@ -241,9 +242,6 @@ for (n=0;n<2;n++)
   }
  
 // Alarme qui se déclenche durant les 15' qui suivent l'heure -1mn
-//
-//Serial.println( " DAY OF THE WEEK : "+String(now.dayOfTheWeek())+", 60*alh[n])+alm[n] :"+String((60*alh[n])+alm[n])+", 60*h+m+1 :"+String(60*h+m+1)+", now.dayOfTheWeek :"+String(now.dayOfTheWeek()));  
-//
   if (al[0][n] && 60*h+m>=(60*alh[n])+alm[n] && 60*h+m<=(60*alh[n])+alm[n]+15 
   && (al[1][n] || (!al[1][n] && rtc.now().dayOfTheWeek()<6)))
   {
@@ -266,9 +264,10 @@ for (n=0;n<2;n++)
 // reception infrarouge ?
 touchir();
 
+/*
 // Provisoire pour afficher les variables
-//
 if (touch==3927310080) Checkserie();
+*/
 
 // déclenché par CH+ ou CH-
 if (touch==3125149440  ||touch==3091726080  )
@@ -724,9 +723,7 @@ void affectnbr(int maxi)
 
 void effaceinput()
 {
-  lcd.setCursor(9,1);/*
-  if (maxi==9999) {aff[0]=aff[1]=aff[2]=aff[3]='-';}
-  else {aff[0]=aff[1]='-';aff[2]=aff[3]=0;}*/
+  lcd.setCursor(9,1);
   afficheinput();
 }
 
@@ -735,9 +732,7 @@ void effaceinput()
 
 void affichheure()
 {
-
 DateTime now = rtc.now();
-
 h=now.hour();
 m=now.minute();
 s=now.second();
@@ -842,7 +837,6 @@ bright=(analogRead(LDR)/4);
 analogWrite(BRIGHTNESS_PIN, 255-bright);
 
  // Ajustement leds
-
 LED1.set(255-(r-r*bright/255),255-(g-g*bright/255),255-(b-b*bright/255));
 digitalWrite(DIGITLED1R,!r1);digitalWrite(DIGITLED1G,!g1);digitalWrite(DIGITLED1B,!b1);digitalWrite(DIGITLED2R,!r2);digitalWrite(DIGITLED2G,!g2);
 }
@@ -868,7 +862,7 @@ else { r=(t-350)*bright/50;  g=bright;  b=bright-(t-350)*bright/50;}
 ////////////////////////////////////////////////////////////////////////
 
 
-// Motif led alarm testé par la touche v+
+// Motif led alarm
 void Ledalarm(uint8_t a)
 {
 // mode hard
@@ -1015,7 +1009,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
 
 ///////////////////////////////////////////////////////////////////////
 
-
+/*
 void Checkserie()
 {
 // Serial.println(digitalRead (ALPIN[0]));
@@ -1026,4 +1020,4 @@ Serial.println("r : "+ String(r) + ", g : "+String(g)+", b :"+String(b)+", mes :
 Serial.println("alh[0] : "+ String(alh[0]) + ", alm[0] : "+String(alm[0])+", alh[1] :"+String(alh[1])+", alm[1] :"+String(alm[1]) +", wait :"+String(wait)+", maxi :"+String(maxi));
 Serial.println( " mode ");Serial.print(mode);
 }
-
+*/
