@@ -990,13 +990,12 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
       {
         r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
         Retroeclairage(); wait=800;touch=0;
-        mode=MODE_Heure;
+        mode=MODE_Heure;ecrannet();
       }
       else 
       {
         pos=message.length();
-        telecir();
-        if (strcmp(com,"+100")==0) a=0; else a=1;
+        if (touch==3860463360) a=0; else a=1;
         wait=2;
         mode=MODE_ALARM_INFO;ecrannet();
       }
