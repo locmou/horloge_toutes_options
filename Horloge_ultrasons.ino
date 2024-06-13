@@ -986,7 +986,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
     // délenché par 100+, 200+
     if (touch==3860463360  ||touch==4061003520  ) 
     {
-      if ((touch==3860463360 &a==0)||(touch==4061003520 &a==1)) 
+      if ((touch==3860463360 && a==0)||(touch==4061003520 && a==1)) 
       {
         r=10;b=180;g=10;r1=r2=b1=false;g1=g2=true;
         Retroeclairage(); wait=800;touch=0;
@@ -1000,6 +1000,7 @@ void scrollText(int row, String message, int delayTime, int lcdColumns)
         wait=2;
         mode=MODE_ALARM_INFO;ecrannet();
       }
+    }
   }
 }
 
