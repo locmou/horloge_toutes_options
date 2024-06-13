@@ -296,7 +296,7 @@ if (touch==3927310080  ||touch==4161273600  )
   {
     brightmin=brightmin+3;if (brightmin>30) brightmin=30;
   }
-  
+  touch=0;
 }
 
 // délenché par 1, 2, alume ou eteint les prises 1 et 2
@@ -312,6 +312,7 @@ if (touch==4077715200  ||touch==3877175040  )
     if (!digitalRead (ALPIN[1]))  digitalWrite (ALPIN[1],HIGH);
     else digitalWrite (ALPIN[1],LOW);
   }
+  touch=0;
 }
 
 //Depart vers les sous programmes
