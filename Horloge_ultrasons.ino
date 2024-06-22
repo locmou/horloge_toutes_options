@@ -313,8 +313,8 @@ if (touch==4077715200  ||touch==3877175040  )
       if (!digitalRead (ALPIN[1]))  digitalWrite (ALPIN[1],HIGH);
       else digitalWrite (ALPIN[1],LOW);
     }
+    touch=0;
   }
-  touch=0;
 }
 
 //Depart vers les sous programmes
