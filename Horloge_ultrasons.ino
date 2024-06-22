@@ -302,15 +302,17 @@ if (touch==3927310080  ||touch==4161273600  )
 // délenché par 1, 2, alume ou eteint les prises 1 et 2
 if (touch==4077715200  ||touch==3877175040  ) 
 {
-  if (touch==4077715200)
-  {
-    if (!digitalRead (ALPIN[0]))  digitalWrite (ALPIN[0],HIGH);
-    else digitalWrite (ALPIN[0],LOW);
-  }
-  else
-  {
-    if (!digitalRead (ALPIN[1]))  digitalWrite (ALPIN[1],HIGH);
-    else digitalWrite (ALPIN[1],LOW);
+  if (mode==MODE_Heure ){
+   if (touch==4077715200)
+    {
+     if (!digitalRead (ALPIN[0]))  digitalWrite (ALPIN[0],HIGH);
+     else digitalWrite (ALPIN[0],LOW);
+    }
+    else
+    {
+      if (!digitalRead (ALPIN[1]))  digitalWrite (ALPIN[1],HIGH);
+      else digitalWrite (ALPIN[1],LOW);
+    }
   }
   touch=0;
 }
