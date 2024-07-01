@@ -38,7 +38,7 @@
 
 /*
 ************************************************
-****** C'est-y pas ok?                    ******
+******      C'est-y pas ok?               ******
 ************************************************
 */
 
@@ -327,8 +327,7 @@ else if (mode==MODE_P1) Prise1(a);
 else if (mode==MODE_P2) Prise2(a);
 else typeledalarm(a);
 
-//Affichage serie des variables
-// Checkserie();
+
 }
 
 ///////////////////////////////////////////////////////////////////////
